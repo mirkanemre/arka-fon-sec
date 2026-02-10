@@ -35,7 +35,6 @@
         .card img { width: 100%; height: 100%; object-fit: cover; }
         .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; }
 
-        /* TAM EKRAN ÖNİZLEME (MODAL) */
         #preview-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 1000; display: none;
@@ -45,7 +44,6 @@
         }
         #preview-img { width: 100%; height: 70vh; object-fit: contain; transition: 0.3s; }
         
-        /* OK TUŞLARI */
         .nav-btn {
             position: absolute; top: 45%; transform: translateY(-50%);
             background: rgba(255,255,255,0.15); color: white; border: none;
@@ -95,11 +93,11 @@
 
     <div id="category-view" class="grid">
         <div class="card" onclick="renderSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_01.jpeg?v=5" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001.jpeg?v=1" onerror="handleError(this)"></div>
             <div class="card-title">İç Mekan</div>
         </div>
         <div class="card" onclick="renderSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_01.jpeg?v=5" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dismekan_0001.jpeg?v=1" onerror="handleError(this)"></div>
             <div class="card-title">Dış Mekan</div>
         </div>
     </div>
@@ -140,10 +138,16 @@
             "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"
         ];
 
-        // --- GÜNCELLEME: İsimler tırnak içinde ve virgülle ayrılmış olmalı ---
+        // --- TAM LİSTE: Supabase'deki anahtar isimler ---
         const config = {
-            ic_mekan: ['ic_01', 'ic_02'], 
-            dis_mekan: ['dis_01'] 
+            ic_mekan: [
+                'icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 
+                'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 
+                'icmekan_0009', 'icmekan_0010', 'icmekan_0011'
+            ], 
+            dis_mekan: [
+                'dismekan_0001', 'dismekan_0002'
+            ] 
         };
 
         const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
@@ -160,8 +164,8 @@
             currentCategoryItems = config[cat].map((fileName, index) => {
                 const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
                 return {
-                    id: fileName,
-                    url: `${baseUrl}${folder}${fileName}.jpeg?v=5`,
+                    id: fileName, 
+                    url: `${baseUrl}${folder}${fileName}.jpeg?v=1`, 
                     title: creativeNames[index] || `Konsept ${index + 1}`
                 };
             });
@@ -198,13 +202,10 @@
             const item = currentCategoryItems[currentIndex];
             document.getElementById('preview-img').src = item.url;
             document.getElementById('preview-title').innerText = item.title;
-            
-            // Okların durumunu kontrol et (Garantici yaklaşım)
             document.getElementById('prev-btn').classList.toggle('disabled', currentIndex === 0);
             document.getElementById('next-btn').classList.toggle('disabled', currentIndex === currentCategoryItems.length - 1);
         }
 
-        // SWIPE MANTIĞI (Okların yanında destek olarak kalsın)
         const modal = document.getElementById('preview-modal');
         modal.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
         modal.addEventListener('touchend', e => {
@@ -237,7 +238,11 @@
             fetch('https://entertaining-multimedia-ladder-potato.trycloudflare.com/webhook/fon-secimi-kaydet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: String(userId), secili_fon: selectedItem.id })
+                // BURASI TAM İSTEDİĞİN GİBİ: Örn: dismekan_0001_a.jpeg
+                body: JSON.stringify({ 
+                    chat_id: String(userId), 
+                    secili_fon: selectedItem.id + "_a.jpeg" 
+                })
             })
             .then(res => {
                 if(res.ok) {
