@@ -138,6 +138,7 @@
             "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"
         ];
 
+        // --- GÜNCELLEME: GitHub'daki kök isimler ---
         const config = {
             ic_mekan: [
                 'icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 
@@ -149,8 +150,7 @@
             ] 
         };
 
-        // Raw bağlantısı doğru formatta
-        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img";
+        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
 
         function renderSubMenu(cat, title) {
             document.getElementById('category-view').style.display = 'none';
@@ -162,13 +162,13 @@
             document.getElementById('back-btn').style.display = 'block';
 
             currentCategoryItems = config[cat].map((fileName, index) => {
-                const folder = cat === 'ic_mekan' ? 'ic' : 'dis';
-                // Vitrin resimleri _c.jpeg olduğu için buraya ekledik
-                const finalUrl = `${baseUrl}/${folder}/${fileName}_c.jpeg`;
+                const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
+                // DİKKAT: GitHub'daki "Full" resimlerin sonu _c.jpeg olduğu için buraya ekledik
+                const finalUrl = `${baseUrl}${folder}${fileName}_c.jpeg`;
                 
                 return {
-                    id: fileName, 
-                    url: finalUrl, 
+                    id: fileName,
+                    url: finalUrl,
                     title: creativeNames[index] || `Konsept ${index + 1}`
                 };
             });
@@ -177,9 +177,7 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="img-wrapper">
-                        <img src="${item.url}" loading="lazy" onerror="handleError(this)">
-                    </div>
+                    <div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div>
                     <div class="card-title">${item.title}</div>
                 `;
                 card.onclick = () => openPreview(index);
@@ -243,7 +241,7 @@
             fetch('https://entertaining-multimedia-ladder-potato.trycloudflare.com/webhook/fon-secimi-kaydet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // n8n'e giden isim _a.jpeg (boş olan)
+                // n8n'e giden isim: icmekan_0001_a.jpeg (Boş olan hammadde)
                 body: JSON.stringify({ 
                     chat_id: String(userId), 
                     secili_fon: selectedItem.id + "_a.jpeg" 
