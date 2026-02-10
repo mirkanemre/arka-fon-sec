@@ -30,7 +30,7 @@
             transition: all 0.3s ease; position: relative;
         }
         .card:active { transform: scale(0.96); }
-        .img-wrapper { width: 100%; height: 120px; background: #2d3748; overflow: hidden; }
+        .img-wrapper { width: 100%; height: 120px; background: #2d3748; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .card img { width: 100%; height: 100%; object-fit: cover; }
         .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; }
 
@@ -51,7 +51,7 @@
             position: absolute; top: 40px; right: 20px;
             background: rgba(255,255,255,0.2); color: white;
             border: none; border-radius: 50%; width: 40px; height: 40px;
-            font-size: 20px; cursor: pointer; backdrop-filter: blur(10px);
+            font-size: 20px; cursor: pointer; backdrop-filter: blur(10px); z-index: 1001;
         }
 
         .btn-save {
@@ -73,16 +73,16 @@
 
     <div class="header">
         <h2 id="view-title">Stüdyo Sahnesi</h2>
-        <p style="color:var(--text-dim); font-size: 0.85rem;">Bir kategori seçip görsellere göz atın.</p>
+        <p id="view-desc" style="color:var(--text-dim); font-size: 0.85rem;">Bir kategori seçip görsellere göz atın.</p>
     </div>
 
     <div id="category-view" class="grid">
-        <div class="card" onclick="showSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_01.jpeg?v=3" onerror="handleError(this)"></div>
+        <div class="card" onclick="renderSubMenu('ic_mekan', 'İç Mekan Fonları')">
+            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_01.jpeg?v=4" onerror="handleError(this)"></div>
             <div class="card-title">İç Mekan</div>
         </div>
-        <div class="card" onclick="showSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_01.jpeg?v=3" onerror="handleError(this)"></div>
+        <div class="card" onclick="renderSubMenu('dis_mekan', 'Dış Mekan Fonları')">
+            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_01.jpeg?v=4" onerror="handleError(this)"></div>
             <div class="card-title">Dış Mekan</div>
         </div>
     </div>
@@ -109,35 +109,42 @@
 
         let currentSelectedId = null;
 
-        const data = {
-            ic_mekan: [
-                {id: 'ic_01', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_01.jpeg?v=3', title: 'Modern Showroom'},
-                {id: 'ic_02', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_02.jpeg?v=3', title: 'Endüstriyel Garaj'},
-                {id: 'ic_03', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_03.jpeg?v=3', title: 'Lüks Galeri'}
-            ],
-            dis_mekan: [
-                {id: 'dis_01', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_01.jpeg?v=3', title: 'Şehir Merkezi'},
-                {id: 'dis_02', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_02.jpeg?v=3', title: 'Doğa Yolu'},
-                {id: 'dis_03', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_03.jpeg?v=3', title: 'Deniz Kenarı'}
-            ]
+        // YARATICI İSİM HAVUZU (Sırayla Atanır)
+        const creativeNames = [
+            "Safir Kristal", "Zümrüt Galeri", "Modern Loft", "Endüstriyel Garaj", 
+            "Platin Showroom", "Kuzey Işığı", "Vip Konsept", "Lüks Odak", 
+            "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"
+        ];
+
+        // --- SADECE BURAYI GÜNCELLEMEN YETERLİ ---
+        const config = {
+            ic_mekan: ['ic_01', 'ic_02', 'ic_03'], // Yeni resim ekleyince buraya 'ic_04' yazman yeterli
+            dis_mekan: ['dis_01', 'dis_02', 'dis_03']
         };
 
-        function showSubMenu(cat, title) {
+        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
+
+        function renderSubMenu(cat, title) {
             document.getElementById('category-view').style.display = 'none';
             const iv = document.getElementById('image-view');
             iv.innerHTML = '';
             iv.style.display = 'grid';
             document.getElementById('view-title').innerText = title;
+            document.getElementById('view-desc').innerText = 'Fonları tam ekran incelemek için üzerine tıklayın.';
             document.getElementById('back-btn').style.display = 'block';
 
-            data[cat].forEach(item => {
+            config[cat].forEach((fileName, index) => {
+                const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
+                const fullUrl = `${baseUrl}${folder}${fileName}.jpeg?v=4`;
+                const titleText = creativeNames[index] || `Konsept ${index + 1}`;
+
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div>
-                    <div class="card-title">${item.title}</div>
+                    <div class="img-wrapper"><img src="${fullUrl}" onerror="handleError(this)"></div>
+                    <div class="card-title">${titleText}</div>
                 `;
-                card.onclick = () => openPreview(item.id, item.url, item.title);
+                card.onclick = () => openPreview(fileName, fullUrl, titleText);
                 iv.appendChild(card);
             });
         }
@@ -158,6 +165,7 @@
             document.getElementById('image-view').style.display = 'none';
             document.getElementById('category-view').style.display = 'grid';
             document.getElementById('view-title').innerText = 'Stüdyo Sahnesi';
+            document.getElementById('view-desc').innerText = 'Bir kategori seçip görsellere göz atın.';
             document.getElementById('back-btn').style.display = 'none';
         }
 
@@ -180,7 +188,7 @@
             .catch(() => {
                 btn.innerText = "✅ Bu Fonu Kullan";
                 btn.disabled = false;
-                tg.showAlert("⚠️ Bir sorun oluştu. n8n tüneli açık mı?");
+                tg.showAlert("⚠️ Kaydedilemedi. n8n tünelinin açık olduğundan emin olun.");
             });
         }
 
