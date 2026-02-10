@@ -1,71 +1,46 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>AI Stüdyo</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { background: #1e293b; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
-        img { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; }
-        button { background: #007AFF; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; cursor: pointer; width: 100%; }
-        /* Basit Slider CSS */
-        .slider-nav { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .nav-btn { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; cursor: pointer; }
-    </style>
+  <meta charset="utf-8">
+  <title>Fon Seç</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+      body { background: #000; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+      button { padding: 20px; font-size: 20px; background: #007AFF; color: white; border: none; border-radius: 10px; cursor: pointer; }
+  </style>
 </head>
 <body>
-    <h3>Bir Fon Seç</h3>
-    
-    <div class="card">
-        <img id="preview-img" src="">
-        <p id="img-name" style="margin-top:10px; color:#94a3b8;"></p>
-    </div>
 
-    <div class="slider-nav">
-        <div class="nav-btn" onclick="change(-1)">❮ Önceki</div>
-        <div class="nav-btn" onclick="change(1)">Sonraki ❯</div>
-    </div>
+  <button onclick="sec()">🔴 SEÇ VE GÖNDER 🔴</button>
 
-    <button onclick="saveSelection()">✅ SEÇ VE GÖNDER</button>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready(); // KRİTİK: Bot'a hazırım mesajı gönderir
-        tg.expand();
+    function sec() {
+      // Telegram User ID'yi alıyoruz
+      const userId = tg.initDataUnsafe?.user?.id || "bilinmeyen_user";
+      
+      // Butona tıklandığını belli edelim
+      document.querySelector('button').innerText = "İşleniyor...";
 
-        const images = [
-            "icmekan_0001", "icmekan_0002", "icmekan_0003", 
-            "dismekan_0001", "dismekan_0002"
-        ];
-        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/"; // Klasör yapına göre düzenle
-        let idx = 0;
+      // HİLE BURADA: n8n Webhook adresine verileri ekliyoruz
+      // GET isteği olduğu için veriler URL'in ucunda gider (?chat_id=...&fon=...)
+      const n8nUrl = `https://asininventory.com/webhook/fon-secimi-kaydet?chat_id=${userId}&secili_fon=icmekan_0001_a.jpeg`;
 
-        function update() {
-            // Basitlik için sadece iç mekan yolunu koydum, sen kendi array mantığını buraya koyabilirsin
-            document.getElementById('preview-img').src = baseUrl + images[idx] + "_c.jpeg";
-            document.getElementById('img-name').innerText = images[idx];
-        }
+      // Görünmez bir resim nesnesi oluşturuyoruz
+      const img = new Image();
+      
+      // Resmin kaynağını n8n adresi yapıyoruz. 
+      // Tarayıcı "Resim indireceğim" sanıp n8n'e isteği ÇAKAR.
+      img.src = n8nUrl;
 
-        function change(step) {
-            idx = (idx + step + images.length) % images.length;
-            update();
-            tg.HapticFeedback.impactOccurred('light');
-        }
-
-        function saveSelection() {
-            const selectedId = images[idx] + "_a.jpeg";
-            
-            // 🔥 NATIVE TELEGRAM GÖNDERİMİ
-            tg.sendData(JSON.stringify({
-                secili_fon: selectedId
-            }));
-            
-            // Veri gittikten sonra pencereyi kapat
-            tg.close();
-        }
-
-        update();
-    </script>
+      // İstek gittikten kısa süre sonra ekranı kapatıyoruz
+      setTimeout(() => {
+        tg.close();
+      }, 500);
+    }
+  </script>
 </body>
 </html>
