@@ -20,6 +20,8 @@
             padding: 20px; 
             color: var(--text);
             padding-bottom: 100px;
+            -webkit-user-select: none;
+            user-select: none;
         }
         .header { text-align: center; margin-bottom: 25px; }
         .header h2 { font-size: 1.5rem; margin: 0; font-weight: 700; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -36,18 +38,50 @@
             border: 2px solid transparent; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            animation: fadeIn 0.5s ease-out;
         }
         .card:active { transform: scale(0.96); }
-        .card img { width: 100%; height: 140px; object-fit: cover; filter: brightness(0.8); transition: 0.3s; }
+        
+        /* Resim Alanı */
+        .img-wrapper {
+            width: 100%;
+            height: 140px;
+            background: #2d3748; /* Resim yüklenene kadar görünecek renk */
+            position: relative;
+        }
+        .card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            filter: brightness(0.8); 
+            transition: 0.3s;
+            display: block;
+        }
+        
         .card.selected { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 0 20px rgba(0, 122, 255, 0.4); }
         .card.selected img { filter: brightness(1.1); }
         
         .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; }
         
-        .badge { position: absolute; top: 8px; right: 8px; background: var(--primary); border-radius: 50%; width: 20px; height: 20px; display: none; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .badge { 
+            position: absolute; 
+            top: 8px; 
+            right: 8px; 
+            background: var(--primary); 
+            border-radius: 50%; 
+            width: 24px; 
+            height: 24px; 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 14px; 
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
         .card.selected .badge { display: flex; }
 
-        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); z-index: 100; }
+        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); z-index: 100; }
         button { 
             width: 100%; 
             padding: 16px; 
@@ -59,13 +93,11 @@
             font-size: 1rem; 
             cursor: pointer; 
             transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
-        #back-btn { background: #334155; margin-bottom: 12px; font-size: 0.9rem; padding: 12px; }
+        #back-btn { background: #334155; margin-bottom: 12px; font-size: 0.9rem; padding: 12px; display: none; }
+        #main-btn { display: none; }
         
-        /* Animasyonlar */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .grid { animation: fadeIn 0.4s ease-out; }
     </style>
 </head>
 <body>
@@ -77,44 +109,48 @@
 
     <div id="category-view" class="grid">
         <div class="card" onclick="showSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <img src="img/ic/ic_01.jpg"> <div class="card-title">Lüks Showroom</div>
+            <div class="img-wrapper"><img src="./img/ic/ic_01.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Iç+Mekan'"></div>
+            <div class="card-title">Lüks Showroom</div>
         </div>
         <div class="card" onclick="showSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <img src="img/dis/dis_01.jpg"> <div class="card-title">Dış Mekan / Şehir</div>
+            <div class="img-wrapper"><img src="./img/dis/dis_01.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Dış+Mekan'"></div>
+            <div class="card-title">Dış Mekan / Şehir</div>
         </div>
         <div class="card" onclick="showSubMenu('ozel', 'Özel İşletme')">
-            <img src="img/ozel/ozel_01.jpg"> <div class="card-title">Özel Konsept</div>
+            <div class="img-wrapper"><img src="./img/ozel/ozel_01.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Özel+Konsept'"></div>
+            <div class="card-title">Özel Konsept</div>
         </div>
     </div>
 
     <div id="image-view" class="grid" style="display: none;"></div>
 
     <div class="btn-container">
-        <button id="back-btn" onclick="showCategoryMenu()" style="display: none;">← Kategorilere Dön</button>
-        <button id="main-btn" onclick="saveSelection()" style="display: none;">Tasarımı Onayla ve Kaydet</button>
+        <button id="back-btn" onclick="showCategoryMenu()">← Kategorilere Dön</button>
+        <button id="main-btn" onclick="saveSelection()">Tasarımı Onayla ve Kaydet</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
-        tg.headerColor = "#0f172a"; // Telegram başlık rengini body ile eşle
+        tg.headerColor = "#0f172a";
 
         let selectedId = null;
 
+        // VERİ YAPISI - ./img/ ile yolları garantiye aldık
         const data = {
             ic_mekan: [
-                {id: 'ic_01', url: 'img/ic/ic_01.jpg', title: 'Modern Showroom'},
-                {id: 'ic_02', url: 'img/ic/ic_02.jpg', title: 'Endüstriyel Garaj'},
-                {id: 'ic_03', url: 'img/ic/ic_03.jpg', title: 'Lüks Galeri'}
+                {id: 'ic_01', url: './img/ic/ic_01.jpg', title: 'Modern Showroom'},
+                {id: 'ic_02', url: './img/ic/ic_02.jpg', title: 'Endüstriyel Garaj'},
+                {id: 'ic_03', url: './img/ic/ic_03.jpg', title: 'Lüks Galeri'}
             ],
             dis_mekan: [
-                {id: 'dis_01', url: 'img/dis/dis_01.jpg', title: 'Şehir Merkezi'},
-                {id: 'dis_02', url: 'img/dis/dis_02.jpg', title: 'Doğa Yolu'},
-                {id: 'dis_03', url: 'img/dis/dis_03.jpg', title: 'Deniz Kenarı'}
+                {id: 'dis_01', url: './img/dis/dis_01.jpg', title: 'Şehir Merkezi'},
+                {id: 'dis_02', url: './img/dis/dis_02.jpg', title: 'Doğa Yolu'},
+                {id: 'dis_03', url: './img/dis/dis_03.jpg', title: 'Deniz Kenarı'}
             ],
             ozel: [
-                {id: 'ozel_01', url: 'img/ozel/ozel_01.jpg', title: 'Özel İşletme Fonu'}
+                {id: 'ozel_01', url: './img/ozel/ozel_01.jpg', title: 'Özel İşletme Fonu'}
             ]
         };
 
@@ -131,11 +167,13 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.id = item.id;
-                if(selectedId === item.id) card.className += ' selected';
+                if(selectedId === item.id) card.classList.add('selected');
                 
                 card.innerHTML = `
                     <div class="badge">✓</div>
-                    <img src="${item.url}">
+                    <div class="img-wrapper">
+                        <img src="${item.url}" onerror="this.src='https://via.placeholder.com/300x200?text=Resim+Bulunamadı'">
+                    </div>
                     <div class="card-title">${item.title}</div>
                 `;
                 card.onclick = () => selectImage(item.id);
@@ -160,14 +198,17 @@
             selectedId = id;
             document.getElementById(id).classList.add('selected');
             document.getElementById('main-btn').style.display = 'block';
-            tg.HapticFeedback.impactOccurred('medium'); // Seçince telefona hafif bir titreşim verir
+            tg.HapticFeedback.impactOccurred('medium');
         }
 
         function saveSelection() {
             if (!selectedId) return;
             const userId = tg.initDataUnsafe?.user?.id;
 
-            // n8n'e veriyi gönder ve Supabase'i güncelle
+            const btn = document.getElementById('main-btn');
+            btn.disabled = true;
+            btn.innerText = "Kaydediliyor...";
+
             fetch('https://entertaining-multimedia-ladder-potato.trycloudflare.com/webhook/fon-secimi-kaydet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -178,12 +219,16 @@
             })
             .then(res => {
                 if(res.ok) {
-                    tg.showAlert("✅ Fonunuz başarıyla güncellendi. Artık çekimlere hazırsınız!", () => tg.close());
+                    tg.showAlert("✅ Fonunuz başarıyla güncellendi!", () => tg.close());
                 } else {
-                    tg.showAlert("Hata oluştu, lütfen tekrar deneyin.");
+                    throw new Error();
                 }
             })
-            .catch(() => tg.showAlert("Bağlantı hatası. n8n'in açık olduğundan emin olun."));
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerText = "Tasarımı Onayla ve Kaydet";
+                tg.showAlert("⚠️ Bağlantı hatası! Lütfen n8n ve tünelin açık olduğundan emin olun.");
+            });
         }
     </script>
 </body>
