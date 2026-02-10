@@ -6,20 +6,71 @@
     <title>AI Stüdyo | Arka Plan Seçimi</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #007AFF; --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --text-dim: #94a3b8; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); padding-bottom: 100px; }
+        :root {
+            --primary: #007AFF;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 20px; 
+            color: var(--text);
+            padding-bottom: 110px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
         .header { text-align: center; margin-bottom: 25px; }
-        .header h2 { font-size: 1.5rem; margin: 0; color: #fff; }
+        .header h2 { font-size: 1.5rem; margin: 0; font-weight: 700; color: #fff; }
+        .header p { font-size: 0.85rem; color: var(--text-dim); margin-top: 5px; }
+
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; cursor: pointer; border: 2px solid transparent; position: relative; transition: 0.3s; }
-        .card.selected { border-color: var(--primary); transform: translateY(-4px); }
-        .img-wrapper { width: 100%; height: 120px; background: #2d3748; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .card img { width: 100%; height: 100%; object-fit: cover; }
-        .error-text { position: absolute; font-size: 10px; color: #ff4d4d; padding: 5px; text-align: center; }
-        .card-title { padding: 10px; text-align: center; font-weight: 600; font-size: 0.8rem; }
-        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); }
-        button { width: 100%; padding: 16px; border: none; border-radius: 14px; background: var(--primary); color: white; font-weight: 700; cursor: pointer; }
-        #back-btn { background: #334155; margin-bottom: 12px; display: none; }
+        
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); 
+            cursor: pointer; 
+            border: 2px solid transparent; 
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .card:active { transform: scale(0.96); }
+        .card.selected { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 0 20px rgba(0, 122, 255, 0.4); }
+        
+        .img-wrapper {
+            width: 100%;
+            height: 120px;
+            background: #2d3748;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .card img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        
+        .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; }
+        
+        .badge { 
+            position: absolute; top: 8px; right: 8px; background: var(--primary); 
+            border-radius: 50%; width: 22px; height: 22px; display: none; 
+            align-items: center; justify-content: center; font-size: 12px; font-weight: bold; z-index: 2;
+        }
+        .card.selected .badge { display: flex; }
+
+        .error-msg { position: absolute; font-size: 10px; color: #ff4d4d; text-align: center; padding: 5px; }
+
+        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); z-index: 100; }
+        button { 
+            width: 100%; padding: 16px; border: none; border-radius: 14px; 
+            background: var(--primary); color: white; font-weight: 700; font-size: 1rem; cursor: pointer; 
+        }
+        #back-btn { background: #334155; margin-bottom: 12px; font-size: 0.9rem; display: none; }
         #main-btn { display: none; }
     </style>
 </head>
@@ -27,20 +78,20 @@
 
     <div class="header">
         <h2 id="view-title">Stüdyo Sahnesi</h2>
-        <p style="color:var(--text-dim); font-size: 0.8rem;">Görseller görünmüyorsa dosya isimlerini kontrol edin.</p>
+        <p id="view-desc">Araçlarınız için profesyonel bir fon seçin.</p>
     </div>
 
     <div id="category-view" class="grid">
         <div class="card" onclick="showSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <div class="img-wrapper"><img src="img/ic/ic_01.jpg" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="img/ic/ic_01.jpeg" onerror="handleError(this)"></div>
             <div class="card-title">İç Mekan</div>
         </div>
         <div class="card" onclick="showSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <div class="img-wrapper"><img src="img/dis/dis_01.jpg" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="img/dis/dis_01.jpeg" onerror="handleError(this)"></div>
             <div class="card-title">Dış Mekan</div>
         </div>
         <div class="card" onclick="showSubMenu('ozel', 'Özel İşletmeniz')">
-            <div class="img-wrapper"><img src="img/ozel/ozel_01.jpg" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="img/ozel/ozel_01.jpeg" onerror="handleError(this)"></div>
             <div class="card-title">Özel İşletme</div>
         </div>
     </div>
@@ -55,28 +106,34 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        tg.headerColor = "#0f172a";
 
+        let selectedId = null;
+
+        // Resim bulunamazsa linki ekranda gösterir (Hata ayıklama için)
         function handleError(img) {
             const wrapper = img.parentElement;
             const src = img.getAttribute('src');
             img.style.display = 'none';
             const err = document.createElement('div');
-            err.className = 'error-text';
-            err.innerText = "Kayıp: " + src;
+            err.className = 'error-msg';
+            err.innerText = "Bulunamadı:\n" + src;
             wrapper.appendChild(err);
         }
 
         const data = {
             ic_mekan: [
-                {id: 'ic_01', url: 'img/ic/ic_01.jpg', title: 'Modern Stüdyo'},
-                {id: 'ic_02', url: 'img/ic/ic_02.jpg', title: 'Işıklı Galeri'}
+                {id: 'ic_01', url: 'img/ic/ic_01.jpeg', title: 'Modern Showroom'},
+                {id: 'ic_02', url: 'img/ic/ic_02.jpeg', title: 'Endüstriyel Garaj'},
+                {id: 'ic_03', url: 'img/ic/ic_03.jpeg', title: 'Lüks Galeri'}
             ],
             dis_mekan: [
-                {id: 'dis_01', url: 'img/dis/dis_01.jpg', title: 'Şehir Konsepti'},
-                {id: 'dis_02', url: 'img/dis/dis_02.jpg', title: 'Manzara'}
+                {id: 'dis_01', url: 'img/dis/dis_01.jpeg', title: 'Şehir Merkezi'},
+                {id: 'dis_02', url: 'img/dis/dis_02.jpeg', title: 'Doğa Yolu'},
+                {id: 'dis_03', url: 'img/dis/dis_03.jpeg', title: 'Deniz Kenarı'}
             ],
             ozel: [
-                {id: 'ozel_01', url: 'img/ozel/ozel_01.jpg', title: 'Kendi Fonum'}
+                {id: 'ozel_01', url: 'img/ozel/ozel_01.jpeg', title: 'Kendi Fonum'}
             ]
         };
 
@@ -92,12 +149,19 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.id = item.id;
-                card.innerHTML = `<div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div><div class="card-title">${item.title}</div>`;
+                if(selectedId === item.id) card.classList.add('selected');
+                
+                card.innerHTML = `
+                    <div class="badge">✓</div>
+                    <div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div>
+                    <div class="card-title">${item.title}</div>
+                `;
                 card.onclick = () => {
                     document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
                     selectedId = item.id;
                     document.getElementById('main-btn').style.display = 'block';
+                    tg.HapticFeedback.impactOccurred('light');
                 };
                 iv.appendChild(card);
             });
@@ -111,17 +175,28 @@
             document.getElementById('main-btn').style.display = 'none';
         }
 
-        let selectedId = null;
         function saveSelection() {
             if (!selectedId) return;
             const userId = tg.initDataUnsafe?.user?.id;
+            const btn = document.getElementById('main-btn');
+            btn.innerText = "Kaydediliyor...";
+            btn.disabled = true;
+
             fetch('https://entertaining-multimedia-ladder-potato.trycloudflare.com/webhook/fon-secimi-kaydet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: String(userId), secili_fon: selectedId })
-            }).then(() => {
-                tg.showAlert("✅ Fon kaydedildi!", () => tg.close());
-            }).catch(() => tg.showAlert("Hata: n8n tüneli kapalı mı?"));
+            })
+            .then(res => {
+                if(res.ok) {
+                    tg.showAlert("✅ Fonunuz başarıyla kaydedildi!", () => tg.close());
+                } else { throw new Error(); }
+            })
+            .catch(() => {
+                btn.innerText = "Tasarımı Onayla ve Kaydet";
+                btn.disabled = false;
+                tg.showAlert("⚠️ Kaydedilemedi. n8n tünelinin açık olduğundan emin olun.");
+            });
         }
     </script>
 </body>
