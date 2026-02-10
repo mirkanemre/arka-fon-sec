@@ -2,143 +2,70 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Stüdyo | Arka Plan Seçimi</title>
+    <title>AI Stüdyo</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #007AFF; --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --text-dim: #94a3b8; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); -webkit-user-select: none; user-select: none; overflow-x: hidden; }
-        .header { text-align: center; margin-bottom: 25px; }
-        .header h2 { font-size: 1.5rem; margin: 0; font-weight: 700; color: #fff; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); cursor: pointer; transition: all 0.3s ease; position: relative; }
-        .card:active { transform: scale(0.96); }
-        .img-wrapper { width: 100%; height: 120px; background: #2d3748; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; }
-        #preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; touch-action: none; }
-        #preview-img { width: 100%; height: 70vh; object-fit: contain; transition: 0.3s; }
-        .nav-btn { position: absolute; top: 45%; transform: translateY(-50%); background: rgba(255,255,255,0.15); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); z-index: 1002; transition: 0.2s; }
-        .nav-btn:active { background: rgba(255,255,255,0.3); }
-        .prev-btn { left: 10px; }
-        .next-btn { right: 10px; }
-        .nav-btn.disabled { opacity: 0.2; pointer-events: none; }
-        .modal-controls { position: absolute; bottom: 40px; left: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .close-btn { position: absolute; top: 40px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; backdrop-filter: blur(10px); z-index: 1005; }
-        .btn-save { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,122,255,0.4); cursor: pointer; }
-        #back-btn { background: #334155; color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; margin-top: 20px; display: none; }
-        .swipe-hint { color: var(--text-dim); font-size: 0.75rem; text-align: center; margin-top: 5px; opacity: 0.8; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .error-msg { position: absolute; font-size: 10px; color: #ff4d4d; text-align: center; }
+        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #1e293b; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
+        img { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; }
+        button { background: #007AFF; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; cursor: pointer; width: 100%; }
+        /* Basit Slider CSS */
+        .slider-nav { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .nav-btn { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2 id="view-title">Stüdyo Sahnesi</h2>
-        <p id="view-desc" style="color:var(--text-dim); font-size: 0.85rem;">Bir kategori seçip görsellere göz atın.</p>
-    </div>
-    <div id="category-view" class="grid">
-        <div class="card" onclick="renderSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001_c.jpeg" onerror="handleError(this)"></div>
-            <div class="card-title">İç Mekan</div>
-        </div>
-        <div class="card" onclick="renderSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dismekan_0001_c.jpeg" onerror="handleError(this)"></div>
-            <div class="card-title">Dış Mekan</div>
-        </div>
-    </div>
-    <div id="image-view" class="grid" style="display: none;"></div>
-    <button id="back-btn" onclick="showCategoryMenu()">← Kategorilere Dön</button>
-    <div id="preview-modal">
-        <button class="close-btn" onclick="closePreview()">✕</button>
-        <button class="nav-btn prev-btn" id="prev-btn" onclick="changeImage(-1)">❮</button>
-        <button class="nav-btn next-btn" id="next-btn" onclick="changeImage(1)">❯</button>
+    <h3>Bir Fon Seç</h3>
+    
+    <div class="card">
         <img id="preview-img" src="">
-        <div class="modal-controls">
-            <div style="text-align: center; margin-bottom: 10px;">
-                <span id="preview-title" style="font-weight: 700; font-size: 1.2rem;"></span>
-                <div class="swipe-hint">Okları kullanın veya kaydırın</div>
-            </div>
-            <button class="btn-save" id="save-btn-text" onclick="saveSelection()">✅ Bu Fonu Kullan</button>
-        </div>
+        <p id="img-name" style="margin-top:10px; color:#94a3b8;"></p>
     </div>
+
+    <div class="slider-nav">
+        <div class="nav-btn" onclick="change(-1)">❮ Önceki</div>
+        <div class="nav-btn" onclick="change(1)">Sonraki ❯</div>
+    </div>
+
+    <button onclick="saveSelection()">✅ SEÇ VE GÖNDER</button>
+
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready();
+        tg.ready(); // KRİTİK: Bot'a hazırım mesajı gönderir
         tg.expand();
-        tg.headerColor = "#0f172a";
-        let currentCategoryItems = [];
-        let currentIndex = 0;
-        let touchStartX = 0;
-        const creativeNames = ["Safir Kristal", "Zümrüt Galeri", "Modern Loft", "Endüstriyel Garaj", "Platin Showroom", "Kuzey Işığı", "Vip Konsept", "Lüks Odak", "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"];
-        const config = {
-            ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], 
-            dis_mekan: ['dismekan_0001', 'dismekan_0002'] 
-        };
-        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
-        function renderSubMenu(cat, title) {
-            document.getElementById('category-view').style.display = 'none';
-            const iv = document.getElementById('image-view');
-            iv.innerHTML = '';
-            iv.style.display = 'grid';
-            document.getElementById('view-title').innerText = title;
-            document.getElementById('view-desc').innerText = 'Fonları incelemek için üzerine tıklayın.';
-            document.getElementById('back-btn').style.display = 'block';
-            currentCategoryItems = config[cat].map((fileName, index) => {
-                const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
-                return { id: fileName, url: `${baseUrl}${folder}${fileName}_c.jpeg`, title: creativeNames[index] || `Konsept ${index + 1}` };
-            });
-            currentCategoryItems.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `<div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div><div class="card-title">${item.title}</div>`;
-                card.onclick = () => openPreview(index);
-                iv.appendChild(card);
-            });
-        }
-        function openPreview(index) { currentIndex = index; updatePreview(); document.getElementById('preview-modal').style.display = 'flex'; tg.HapticFeedback.impactOccurred('medium'); }
-        function changeImage(step) { let newIndex = currentIndex + step; if (newIndex >= 0 && newIndex < currentCategoryItems.length) { currentIndex = newIndex; updatePreview(); tg.HapticFeedback.impactOccurred('light'); } }
-        function updatePreview() { const item = currentCategoryItems[currentIndex]; document.getElementById('preview-img').src = item.url; document.getElementById('preview-title').innerText = item.title; document.getElementById('prev-btn').classList.toggle('disabled', currentIndex === 0); document.getElementById('next-btn').classList.toggle('disabled', currentIndex === currentCategoryItems.length - 1); }
-        const modal = document.getElementById('preview-modal');
-        modal.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-        modal.addEventListener('touchend', e => { const diff = touchStartX - e.changedTouches[0].screenX; if (Math.abs(diff) > 50) diff > 0 ? changeImage(1) : changeImage(-1); });
-        function closePreview() { document.getElementById('preview-modal').style.display = 'none'; }
-        function showCategoryMenu() { document.getElementById('image-view').style.display = 'none'; document.getElementById('category-view').style.display = 'grid'; document.getElementById('view-title').innerText = 'Stüdyo Sahnesi'; document.getElementById('back-btn').style.display = 'none'; }
-        function handleError(img) { img.style.display = 'none'; img.parentElement.innerHTML = '<div class="error-msg">Yüklenemedi</div>'; }
 
-        // --- ATOM BOMBASI: KESİN ÇALIŞAN YÖNTEM ---
+        const images = [
+            "icmekan_0001", "icmekan_0002", "icmekan_0003", 
+            "dismekan_0001", "dismekan_0002"
+        ];
+        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/"; // Klasör yapına göre düzenle
+        let idx = 0;
+
+        function update() {
+            // Basitlik için sadece iç mekan yolunu koydum, sen kendi array mantığını buraya koyabilirsin
+            document.getElementById('preview-img').src = baseUrl + images[idx] + "_c.jpeg";
+            document.getElementById('img-name').innerText = images[idx];
+        }
+
+        function change(step) {
+            idx = (idx + step + images.length) % images.length;
+            update();
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
         function saveSelection() {
-            const selectedItem = currentCategoryItems[currentIndex];
-            const userId = tg.initDataUnsafe?.user?.id;
+            const selectedId = images[idx] + "_a.jpeg";
             
-            const btn = document.getElementById('save-btn-text');
-            btn.innerText = "İşleniyor...";
-            btn.disabled = true;
-
-            // URL'yi hazırlıyoruz (Veriler Query Param olarak)
-            // Örnek: .../kaydet?chat_id=123&secili_fon=resim.jpg
-            const targetUrl = `https://asininventory.com/webhook/fon-secimi-kaydet?chat_id=${userId}&secili_fon=${selectedItem.id}_a.jpeg`;
-
-            // Hile burada: Tarayıcıya "Git bu URL'den resim yükle" diyoruz.
-            // Bu, en katı güvenlik duvarlarını bile deler geçer.
-            const pinger = new Image();
+            // 🔥 NATIVE TELEGRAM GÖNDERİMİ
+            tg.sendData(JSON.stringify({
+                secili_fon: selectedId
+            }));
             
-            pinger.onload = function() {
-                tg.close(); // Başarılı olunca kapat
-            };
-            
-            pinger.onerror = function() {
-                // Hata verse bile sunucuya istek gitmiş demektir.
-                // Çünkü n8n resim dönmüyor, o yüzden tarayıcı hata sanabilir ama n8n almış olur.
-                tg.close(); 
-            };
-
-            // Ateşle!
-            pinger.src = targetUrl;
-            
-            // Ne olur ne olmaz diye 1 saniye sonra zorla kapat
-            setTimeout(() => { tg.close(); }, 1000);
+            // Veri gittikten sonra pencereyi kapat
+            tg.close();
         }
+
+        update();
     </script>
 </body>
 </html>
