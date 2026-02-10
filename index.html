@@ -6,37 +6,91 @@
     <title>AI Stüdyo | Arka Plan Seçimi</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #007AFF; --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --text-dim: #94a3b8; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); -webkit-user-select: none; user-select: none; overflow-x: hidden; }
+        :root {
+            --primary: #007AFF;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg); 
+            margin: 0; padding: 20px; color: var(--text);
+            -webkit-user-select: none; user-select: none;
+            overflow-x: hidden;
+        }
         .header { text-align: center; margin-bottom: 25px; }
         .header h2 { font-size: 1.5rem; margin: 0; font-weight: 700; color: #fff; }
+        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); cursor: pointer; transition: all 0.3s ease; position: relative; }
+        
+        .card { 
+            background: var(--card-bg); border-radius: 16px; overflow: hidden; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); cursor: pointer; 
+            transition: all 0.3s ease; position: relative;
+        }
         .card:active { transform: scale(0.96); }
         .img-wrapper { width: 100%; height: 120px; background: #2d3748; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .card img { width: 100%; height: 100%; object-fit: cover; }
         .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; }
-        #preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; touch-action: none; }
+
+        #preview-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 1000; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s ease;
+            touch-action: none;
+        }
         #preview-img { width: 100%; height: 70vh; object-fit: contain; transition: 0.3s; }
-        .nav-btn { position: absolute; top: 45%; transform: translateY(-50%); background: rgba(255,255,255,0.15); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); z-index: 1002; transition: 0.2s; }
+        
+        .nav-btn {
+            position: absolute; top: 45%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.15); color: white; border: none;
+            width: 45px; height: 45px; border-radius: 50%; font-size: 20px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px); z-index: 1002; transition: 0.2s;
+        }
         .nav-btn:active { background: rgba(255,255,255,0.3); }
         .prev-btn { left: 10px; }
         .next-btn { right: 10px; }
         .nav-btn.disabled { opacity: 0.2; pointer-events: none; }
-        .modal-controls { position: absolute; bottom: 40px; left: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .close-btn { position: absolute; top: 40px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; backdrop-filter: blur(10px); z-index: 1005; }
-        .btn-save { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,122,255,0.4); cursor: pointer; }
-        #back-btn { background: #334155; color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; margin-top: 20px; display: none; }
+
+        .modal-controls {
+            position: absolute; bottom: 40px; left: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .close-btn {
+            position: absolute; top: 40px; right: 20px;
+            background: rgba(255,255,255,0.2); color: white;
+            border: none; border-radius: 50%; width: 40px; height: 40px;
+            font-size: 20px; cursor: pointer; backdrop-filter: blur(10px); z-index: 1005;
+        }
+
+        .btn-save {
+            background: var(--primary); color: white; border: none;
+            padding: 18px; border-radius: 16px; font-weight: 700; font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,122,255,0.4); cursor: pointer;
+        }
+
+        #back-btn { 
+            background: #334155; color: white; border: none; padding: 12px;
+            border-radius: 12px; width: 100%; margin-top: 20px; display: none;
+        }
+
         .swipe-hint { color: var(--text-dim); font-size: 0.75rem; text-align: center; margin-top: 5px; opacity: 0.8; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .error-msg { position: absolute; font-size: 10px; color: #ff4d4d; text-align: center; }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h2 id="view-title">Stüdyo Sahnesi</h2>
         <p id="view-desc" style="color:var(--text-dim); font-size: 0.85rem;">Bir kategori seçip görsellere göz atın.</p>
     </div>
+
     <div id="category-view" class="grid">
         <div class="card" onclick="renderSubMenu('ic_mekan', 'İç Mekan Fonları')">
             <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001_c.jpeg" onerror="handleError(this)"></div>
@@ -47,14 +101,19 @@
             <div class="card-title">Dış Mekan</div>
         </div>
     </div>
+
     <div id="image-view" class="grid" style="display: none;"></div>
+    
     <button id="back-btn" onclick="showCategoryMenu()">← Kategorilere Dön</button>
 
     <div id="preview-modal">
         <button class="close-btn" onclick="closePreview()">✕</button>
+        
         <button class="nav-btn prev-btn" id="prev-btn" onclick="changeImage(-1)">❮</button>
         <button class="nav-btn next-btn" id="next-btn" onclick="changeImage(1)">❯</button>
+
         <img id="preview-img" src="">
+        
         <div class="modal-controls">
             <div style="text-align: center; margin-bottom: 10px;">
                 <span id="preview-title" style="font-weight: 700; font-size: 1.2rem;"></span>
@@ -72,11 +131,24 @@
         let currentCategoryItems = [];
         let currentIndex = 0;
         let touchStartX = 0;
-        const creativeNames = ["Safir Kristal", "Zümrüt Galeri", "Modern Loft", "Endüstriyel Garaj", "Platin Showroom", "Kuzey Işığı", "Vip Konsept", "Lüks Odak", "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"];
+
+        const creativeNames = [
+            "Safir Kristal", "Zümrüt Galeri", "Modern Loft", "Endüstriyel Garaj", 
+            "Platin Showroom", "Kuzey Işığı", "Vip Konsept", "Lüks Odak", 
+            "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"
+        ];
+
         const config = {
-            ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], 
-            dis_mekan: ['dismekan_0001', 'dismekan_0002'] 
+            ic_mekan: [
+                'icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 
+                'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 
+                'icmekan_0009', 'icmekan_0010', 'icmekan_0011'
+            ], 
+            dis_mekan: [
+                'dismekan_0001', 'dismekan_0002'
+            ] 
         };
+
         const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
 
         function renderSubMenu(cat, title) {
@@ -87,41 +159,99 @@
             document.getElementById('view-title').innerText = title;
             document.getElementById('view-desc').innerText = 'Fonları incelemek için üzerine tıklayın.';
             document.getElementById('back-btn').style.display = 'block';
+
             currentCategoryItems = config[cat].map((fileName, index) => {
                 const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
-                return { id: fileName, url: `${baseUrl}${folder}${fileName}_c.jpeg`, title: creativeNames[index] || `Konsept ${index + 1}` };
+                const finalUrl = `${baseUrl}${folder}${fileName}_c.jpeg`;
+                
+                return {
+                    id: fileName,
+                    url: finalUrl,
+                    title: creativeNames[index] || `Konsept ${index + 1}`
+                };
             });
+
             currentCategoryItems.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.innerHTML = `<div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div><div class="card-title">${item.title}</div>`;
+                card.innerHTML = `
+                    <div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div>
+                    <div class="card-title">${item.title}</div>
+                `;
                 card.onclick = () => openPreview(index);
                 iv.appendChild(card);
             });
         }
-        function openPreview(index) { currentIndex = index; updatePreview(); document.getElementById('preview-modal').style.display = 'flex'; tg.HapticFeedback.impactOccurred('medium'); }
-        function changeImage(step) { let newIndex = currentIndex + step; if (newIndex >= 0 && newIndex < currentCategoryItems.length) { currentIndex = newIndex; updatePreview(); tg.HapticFeedback.impactOccurred('light'); } }
-        function updatePreview() { const item = currentCategoryItems[currentIndex]; document.getElementById('preview-img').src = item.url; document.getElementById('preview-title').innerText = item.title; document.getElementById('prev-btn').classList.toggle('disabled', currentIndex === 0); document.getElementById('next-btn').classList.toggle('disabled', currentIndex === currentCategoryItems.length - 1); }
+
+        function openPreview(index) {
+            currentIndex = index;
+            updatePreview();
+            document.getElementById('preview-modal').style.display = 'flex';
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        function changeImage(step) {
+            let newIndex = currentIndex + step;
+            if (newIndex >= 0 && newIndex < currentCategoryItems.length) {
+                currentIndex = newIndex;
+                updatePreview();
+                tg.HapticFeedback.impactOccurred('light');
+            }
+        }
+
+        function updatePreview() {
+            const item = currentCategoryItems[currentIndex];
+            document.getElementById('preview-img').src = item.url;
+            document.getElementById('preview-title').innerText = item.title;
+            document.getElementById('prev-btn').classList.toggle('disabled', currentIndex === 0);
+            document.getElementById('next-btn').classList.toggle('disabled', currentIndex === currentCategoryItems.length - 1);
+        }
+
         const modal = document.getElementById('preview-modal');
         modal.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-        modal.addEventListener('touchend', e => { const diff = touchStartX - e.changedTouches[0].screenX; if (Math.abs(diff) > 50) diff > 0 ? changeImage(1) : changeImage(-1); });
-        function closePreview() { document.getElementById('preview-modal').style.display = 'none'; }
-        function showCategoryMenu() { document.getElementById('image-view').style.display = 'none'; document.getElementById('category-view').style.display = 'grid'; document.getElementById('view-title').innerText = 'Stüdyo Sahnesi'; document.getElementById('back-btn').style.display = 'none'; }
-        function handleError(img) { img.style.display = 'none'; img.parentElement.innerHTML = '<div class="error-msg">Yüklenemedi</div>'; }
+        modal.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) changeImage(1);
+                else changeImage(-1);
+            }
+        });
 
-        // --- İŞTE SİHİRLİ ÇÖZÜM ---
+        function closePreview() {
+            document.getElementById('preview-modal').style.display = 'none';
+        }
+
+        function showCategoryMenu() {
+            document.getElementById('image-view').style.display = 'none';
+            document.getElementById('category-view').style.display = 'grid';
+            document.getElementById('view-title').innerText = 'Stüdyo Sahnesi';
+            document.getElementById('back-btn').style.display = 'none';
+        }
+
+        function handleError(img) {
+            const wrapper = img.parentElement;
+            img.style.display = 'none';
+            const err = document.createElement('div');
+            err.className = 'error-msg';
+            err.innerText = "Yüklenemedi";
+            wrapper.appendChild(err);
+        }
+
+        // --- EN ÖNEMLİ KISIM: Native Telegram Gönderimi ---
         function saveSelection() {
             const selectedItem = currentCategoryItems[currentIndex];
             const userId = tg.initDataUnsafe?.user?.id;
 
-            // Veriyi Telegram'a teslim et ve pencereyi kapat
+            // Veriyi hazırlıyoruz
             const dataToSend = JSON.stringify({
                 islem: "fon_secildi",
                 secili_fon: selectedItem.id + "_a.jpeg",
                 chat_id: userId
             });
 
-            // Bu komut veriyi direkt bota atar, internete (fetch) çıkmaz!
+            // tg.sendData: Bu komut, internete (fetch) çıkmaz. 
+            // Doğrudan Telegram uygulaması üzerinden bota veri atar ve pencereyi kapatır.
             tg.sendData(dataToSend);
         }
     </script>
