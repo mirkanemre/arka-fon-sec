@@ -238,47 +238,31 @@
             wrapper.appendChild(err);
         }
 
-        // --- EN ÖNEMLİ KISIM: Native Telegram Gönderimi ---
-       function saveSelection() {
+        // --- İŞTE O SİHİRLİ FONKSİYON (FETCH YOK, HATA YOK) ---
+        function saveSelection() {
             const selectedItem = currentCategoryItems[currentIndex];
             const userId = tg.initDataUnsafe?.user?.id;
-
-            // Kullanıcıya tepki verelim (Dondu sanmasın)
+            
+            // Kullanıcıya tepki verelim
             const btn = document.getElementById('save-btn-text');
-            btn.innerText = "İşleniyor...";
+            btn.innerText = "Seçim Gönderiliyor...";
             btn.disabled = true;
 
-            const webhookUrl = 'https://asininventory.com/webhook/fon-secimi-kaydet';
-            
-            // Gönderilecek Veri
-            const payload = JSON.stringify({ 
-                chat_id: String(userId), 
-                secili_fon: selectedItem.id + "_a.jpeg" 
+            // Veriyi hazırlıyoruz
+            const dataToSend = JSON.stringify({
+                islem: "fon_secildi",
+                secili_fon: selectedItem.id + "_a.jpeg",
+                chat_id: userId
             });
 
-            // 1. YÖNTEM: "Fırlat ve Kaç" (NO-CORS)
-            // Bu yöntem sunucudan "başarılı" cevabını beklemez, sadece veriyi atar.
-            // CORS hatası vermez çünkü cevap beklemiyoruz.
-            fetch(webhookUrl, {
-                method: 'POST',
-                mode: 'no-cors', // <--- İŞTE SİHİRLİ ANAHTAR BU
-                headers: {
-                    'Content-Type': 'text/plain' // JSON dersen patlar, text/plain ile kandırıyoruz
-                },
-                body: payload
-            }).then(() => {
-                // Fetch fırlatıldı, başarılı kabul ediyoruz
-                tg.showAlert("✅ Fon isteği gönderildi! Bot birazdan görseli işleyip atacak.", () => {
-                    tg.close();
-                });
-            }).catch(err => {
-                // Bu bile çalışmazsa son çare
-                console.error(err);
-                tg.sendData(payload); // Şansımızı native ile deneyelim
-                tg.close();
-            });
+            // tg.sendData: Bu komut, internete çıkmaz. 
+            // Direkt Telegram uygulaması üzerinden bota veri atar ve pencereyi kapatır.
+            try {
+                tg.sendData(dataToSend);
+            } catch (e) {
+                alert("Hata: Bu özelliği kullanmak için botu 'Menu Butonu'ndan açmalısınız. Mesaj içindeki butondan çalışmaz.");
+            }
         }
     </script>
 </body>
 </html>
-
