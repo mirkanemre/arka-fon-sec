@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arka Plan Seçimi</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; margin: 0; padding: 15px; color: #333; }
+        h2 { text-align: center; font-size: 1.2rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+        .card img { width: 100%; height: 120px; object-fit: cover; display: block; }
+        .card-title { padding: 10px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        .selected { border-color: #248bfe; background: #eef6ff; }
+        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 15px; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #248bfe; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; }
+        #back-btn { background: #888; margin-bottom: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <h2 id="view-title">Bir Kategori Seçin</h2>
+
+    <div id="category-view" class="grid">
+        <div class="card" onclick="showSubMenu('ic_mekan', 'İç Mekan Fonları')">
+            <img src="https://via.placeholder.com/300x200?text=Iç+Mekan">
+            <div class="card-title">İç Mekan</div>
+        </div>
+        <div class="card" onclick="showSubMenu('dis_mekan', 'Dış Mekan Fonları')">
+            <img src="https://via.placeholder.com/300x200?text=Dış+Mekan">
+            <div class="card-title">Dış Mekan</div>
+        </div>
+        <div class="card" onclick="showSubMenu('ozel', 'Özel İşletmeniz')">
+            <img src="https://via.placeholder.com/300x200?text=Özel">
+            <div class="card-title">Özel İşletmeniz</div>
+        </div>
+    </div>
+
+    <div id="image-view" class="grid" style="display: none;">
+        </div>
+
+    <div style="height: 100px;"></div> <div class="btn-container">
+        <button id="back-btn" onclick="showCategoryMenu()">⬅ Geri Dön</button>
+        <button id="main-btn" onclick="saveSelection()" style="display: none;">Seçimi Kaydet</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Sayfayı tam ekran yap
+
+        let selectedId = null;
+
+        const data = {
+            ic_mekan: [
+                {id: 'ic_01', url: 'https://via.placeholder.com/300x200?text=Showroom+1', title: 'Showroom Modern'},
+                {id: 'ic_02', url: 'https://via.placeholder.com/300x200?text=Showroom+2', title: 'Endüstriyel'}
+            ],
+            dis_mekan: [
+                {id: 'dis_01', url: 'https://via.placeholder.com/300x200?text=Doga+1', title: 'Orman Yolu'},
+                {id: 'dis_02', url: 'https://via.placeholder.com/300x200?text=Doga+2', title: 'Şehir Merkezi'}
+            ]
+        };
+
+        function showSubMenu(cat, title) {
+            document.getElementById('category-view').style.display = 'none';
+            const iv = document.getElementById('image-view');
+            iv.innerHTML = '';
+            iv.style.display = 'grid';
+            document.getElementById('view-title').innerText = title;
+            document.getElementById('back-btn').style.display = 'block';
+
+            data[cat].forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.id = item.id;
+                card.innerHTML = `<img src="${item.url}"><div class="card-title">${item.title}</div>`;
+                card.onclick = () => selectImage(item.id);
+                iv.appendChild(card);
+            });
+        }
+
+        function showCategoryMenu() {
+            document.getElementById('image-view').style.display = 'none';
+            document.getElementById('category-view').style.display = 'grid';
+            document.getElementById('view-title').innerText = 'Bir Kategori Seçin';
+            document.getElementById('back-btn').style.display = 'none';
+            document.getElementById('main-btn').style.display = 'none';
+        }
+
+        function selectImage(id) {
+            if(selectedId) document.getElementById(selectedId)?.classList.remove('selected');
+            selectedId = id;
+            document.getElementById(id).classList.add('selected');
+            document.getElementById('main-btn').style.display = 'block';
+        }
+
+        function saveSelection() {
+            if (!selectedId) return;
+            // Telegram'a veriyi gönder
+            tg.sendData(JSON.stringify({ selected_bg: selectedId }));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
