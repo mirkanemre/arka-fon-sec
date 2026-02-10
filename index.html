@@ -138,7 +138,6 @@
             "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"
         ];
 
-        // --- GÜNCELLEME: GitHub'daki kök isimler ---
         const config = {
             ic_mekan: [
                 'icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 
@@ -163,7 +162,6 @@
 
             currentCategoryItems = config[cat].map((fileName, index) => {
                 const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
-                // DİKKAT: GitHub'daki "Full" resimlerin sonu _c.jpeg olduğu için buraya ekledik
                 const finalUrl = `${baseUrl}${folder}${fileName}_c.jpeg`;
                 
                 return {
@@ -238,10 +236,10 @@
             btn.innerText = "Kaydediliyor...";
             btn.disabled = true;
 
-            fetch('https://entertaining-multimedia-ladder-potato.trycloudflare.com/webhook/fon-secimi-kaydet', {
+            // --- GÜNCELLEME: SABİT SUNUCU IP ADRESİN ---
+            fetch('http://193.111.77.230:5678/webhook/fon-secimi-kaydet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // n8n'e giden isim: icmekan_0001_a.jpeg (Boş olan hammadde)
                 body: JSON.stringify({ 
                     chat_id: String(userId), 
                     secili_fon: selectedItem.id + "_a.jpeg" 
@@ -255,7 +253,7 @@
             .catch(() => {
                 btn.innerText = "✅ Bu Fonu Kullan";
                 btn.disabled = false;
-                tg.showAlert("⚠️ Kaydedilemedi. n8n tünelinin açık olduğundan emin olun.");
+                tg.showAlert("⚠️ Kaydedilemedi. n8n sunucunuzun erişilebilir olduğundan emin olun.");
             });
         }
 
