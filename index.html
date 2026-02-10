@@ -41,10 +41,23 @@
             background: #000; z-index: 1000; display: none;
             flex-direction: column; align-items: center; justify-content: center;
             animation: fadeIn 0.3s ease;
-            touch-action: none; /* Tarayıcı kaydırmasını engelle */
+            touch-action: none;
         }
-        #preview-img { width: 100%; height: 75vh; object-fit: contain; transition: transform 0.2s ease; }
+        #preview-img { width: 100%; height: 70vh; object-fit: contain; transition: 0.3s; }
         
+        /* OK TUŞLARI */
+        .nav-btn {
+            position: absolute; top: 45%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.15); color: white; border: none;
+            width: 45px; height: 45px; border-radius: 50%; font-size: 20px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px); z-index: 1002; transition: 0.2s;
+        }
+        .nav-btn:active { background: rgba(255,255,255,0.3); }
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+        .nav-btn.disabled { opacity: 0.2; pointer-events: none; }
+
         .modal-controls {
             position: absolute; bottom: 40px; left: 20px; right: 20px;
             display: flex; flex-direction: column; gap: 15px;
@@ -53,7 +66,7 @@
             position: absolute; top: 40px; right: 20px;
             background: rgba(255,255,255,0.2); color: white;
             border: none; border-radius: 50%; width: 40px; height: 40px;
-            font-size: 20px; cursor: pointer; backdrop-filter: blur(10px); z-index: 1001;
+            font-size: 20px; cursor: pointer; backdrop-filter: blur(10px); z-index: 1005;
         }
 
         .btn-save {
@@ -97,11 +110,16 @@
 
     <div id="preview-modal">
         <button class="close-btn" onclick="closePreview()">✕</button>
+        
+        <button class="nav-btn prev-btn" id="prev-btn" onclick="changeImage(-1)">❮</button>
+        <button class="nav-btn next-btn" id="next-btn" onclick="changeImage(1)">❯</button>
+
         <img id="preview-img" src="">
+        
         <div class="modal-controls">
             <div style="text-align: center; margin-bottom: 10px;">
                 <span id="preview-title" style="font-weight: 700; font-size: 1.2rem;"></span>
-                <div class="swipe-hint">↔ Sağa veya sola kaydırın</div>
+                <div class="swipe-hint">Okları kullanın veya kaydırın</div>
             </div>
             <button class="btn-save" id="save-btn-text" onclick="saveSelection()">✅ Bu Fonu Kullan</button>
         </div>
@@ -122,9 +140,9 @@
             "Asfalt Ruhu", "Şehir Işıltısı", "Doğa Esintisi", "Gün Batımı"
         ];
 
-        // --- SADECE BURAYI GÜNCELLEMEN YETERLİ ---
+        // --- GÜNCELLEME: İsimler tırnak içinde ve virgülle ayrılmış olmalı ---
         const config = {
-            ic_mekan: ['ic_01,ic_02'], 
+            ic_mekan: ['ic_01', 'ic_02'], 
             dis_mekan: ['dis_01'] 
         };
 
@@ -136,7 +154,7 @@
             iv.innerHTML = '';
             iv.style.display = 'grid';
             document.getElementById('view-title').innerText = title;
-            document.getElementById('view-desc').innerText = 'Fonları tam ekran incelemek için üzerine tıklayın.';
+            document.getElementById('view-desc').innerText = 'Fonları incelemek için üzerine tıklayın.';
             document.getElementById('back-btn').style.display = 'block';
 
             currentCategoryItems = config[cat].map((fileName, index) => {
@@ -167,27 +185,34 @@
             tg.HapticFeedback.impactOccurred('medium');
         }
 
+        function changeImage(step) {
+            let newIndex = currentIndex + step;
+            if (newIndex >= 0 && newIndex < currentCategoryItems.length) {
+                currentIndex = newIndex;
+                updatePreview();
+                tg.HapticFeedback.impactOccurred('light');
+            }
+        }
+
         function updatePreview() {
             const item = currentCategoryItems[currentIndex];
             document.getElementById('preview-img').src = item.url;
             document.getElementById('preview-title').innerText = item.title;
+            
+            // Okların durumunu kontrol et (Garantici yaklaşım)
+            document.getElementById('prev-btn').classList.toggle('disabled', currentIndex === 0);
+            document.getElementById('next-btn').classList.toggle('disabled', currentIndex === currentCategoryItems.length - 1);
         }
 
-        // --- SWIPE (KAYDIRMA) MANTIĞI ---
+        // SWIPE MANTIĞI (Okların yanında destek olarak kalsın)
         const modal = document.getElementById('preview-modal');
         modal.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
         modal.addEventListener('touchend', e => {
             const touchEndX = e.changedTouches[0].screenX;
             const diff = touchStartX - touchEndX;
-
-            if (Math.abs(diff) > 50) { // 50px kaydırma sınırı
-                if (diff > 0 && currentIndex < currentCategoryItems.length - 1) {
-                    currentIndex++; // Sola kaydır -> Sonraki
-                } else if (diff < 0 && currentIndex > 0) {
-                    currentIndex--; // Sağa kaydır -> Önceki
-                }
-                updatePreview();
-                tg.HapticFeedback.impactOccurred('light');
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) changeImage(1);
+                else changeImage(-1);
             }
         });
 
@@ -199,7 +224,6 @@
             document.getElementById('image-view').style.display = 'none';
             document.getElementById('category-view').style.display = 'grid';
             document.getElementById('view-title').innerText = 'Stüdyo Sahnesi';
-            document.getElementById('view-desc').innerText = 'Bir kategori seçip görsellere göz atın.';
             document.getElementById('back-btn').style.display = 'none';
         }
 
@@ -207,7 +231,6 @@
             const selectedItem = currentCategoryItems[currentIndex];
             const userId = tg.initDataUnsafe?.user?.id;
             const btn = document.getElementById('save-btn-text');
-            
             btn.innerText = "Kaydediliyor...";
             btn.disabled = true;
 
@@ -239,4 +262,3 @@
     </script>
 </body>
 </html>
-
