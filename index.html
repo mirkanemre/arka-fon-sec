@@ -6,119 +6,42 @@
     <title>AI Stüdyo | Arka Plan Seçimi</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --primary: #007AFF;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --text-dim: #94a3b8;
-        }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 20px; 
-            color: var(--text);
-            padding-bottom: 100px;
-            -webkit-user-select: none;
-            user-select: none;
-        }
+        :root { --primary: #007AFF; --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --text-dim: #94a3b8; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); padding-bottom: 100px; }
         .header { text-align: center; margin-bottom: 25px; }
-        .header h2 { font-size: 1.5rem; margin: 0; font-weight: 700; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header p { font-size: 0.9rem; color: var(--text-dim); margin-top: 8px; }
-
+        .header h2 { font-size: 1.5rem; margin: 0; color: #fff; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .card { 
-            background: var(--card-bg); 
-            border-radius: 16px; 
-            overflow: hidden; 
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); 
-            cursor: pointer; 
-            border: 2px solid transparent; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            animation: fadeIn 0.5s ease-out;
-        }
-        .card:active { transform: scale(0.96); }
-        
-        /* Resim Alanı */
-        .img-wrapper {
-            width: 100%;
-            height: 140px;
-            background: #2d3748; /* Resim yüklenene kadar görünecek renk */
-            position: relative;
-        }
-        .card img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            filter: brightness(0.8); 
-            transition: 0.3s;
-            display: block;
-        }
-        
-        .card.selected { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 0 20px rgba(0, 122, 255, 0.4); }
-        .card.selected img { filter: brightness(1.1); }
-        
-        .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; }
-        
-        .badge { 
-            position: absolute; 
-            top: 8px; 
-            right: 8px; 
-            background: var(--primary); 
-            border-radius: 50%; 
-            width: 24px; 
-            height: 24px; 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 14px; 
-            font-weight: bold;
-            z-index: 2;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .card.selected .badge { display: flex; }
-
-        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); z-index: 100; }
-        button { 
-            width: 100%; 
-            padding: 16px; 
-            border: none; 
-            border-radius: 14px; 
-            background: var(--primary); 
-            color: white; 
-            font-weight: 700; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            transition: 0.3s;
-        }
-        #back-btn { background: #334155; margin-bottom: 12px; font-size: 0.9rem; padding: 12px; display: none; }
+        .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; cursor: pointer; border: 2px solid transparent; position: relative; transition: 0.3s; }
+        .card.selected { border-color: var(--primary); transform: translateY(-4px); }
+        .img-wrapper { width: 100%; height: 120px; background: #2d3748; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+        .error-text { position: absolute; font-size: 10px; color: #ff4d4d; padding: 5px; text-align: center; }
+        .card-title { padding: 10px; text-align: center; font-weight: 600; font-size: 0.8rem; }
+        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); }
+        button { width: 100%; padding: 16px; border: none; border-radius: 14px; background: var(--primary); color: white; font-weight: 700; cursor: pointer; }
+        #back-btn { background: #334155; margin-bottom: 12px; display: none; }
         #main-btn { display: none; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h2 id="view-title">Stüdyo Sahnesi</h2>
-        <p id="view-desc">Araçlarınızın sergileneceği profesyonel fonu seçin.</p>
+        <p style="color:var(--text-dim); font-size: 0.8rem;">Görseller görünmüyorsa dosya isimlerini kontrol edin.</p>
     </div>
 
     <div id="category-view" class="grid">
         <div class="card" onclick="showSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <div class="img-wrapper"><img src="./img/ic/ic_01.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Iç+Mekan'"></div>
-            <div class="card-title">Lüks Showroom</div>
+            <div class="img-wrapper"><img src="img/ic/ic_01.jpg" onerror="handleError(this)"></div>
+            <div class="card-title">İç Mekan</div>
         </div>
         <div class="card" onclick="showSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <div class="img-wrapper"><img src="./img/dis/dis_01.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Dış+Mekan'"></div>
-            <div class="card-title">Dış Mekan / Şehir</div>
+            <div class="img-wrapper"><img src="img/dis/dis_01.jpg" onerror="handleError(this)"></div>
+            <div class="card-title">Dış Mekan</div>
         </div>
-        <div class="card" onclick="showSubMenu('ozel', 'Özel İşletme')">
-            <div class="img-wrapper"><img src="./img/ozel/ozel_01.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Özel+Konsept'"></div>
-            <div class="card-title">Özel Konsept</div>
+        <div class="card" onclick="showSubMenu('ozel', 'Özel İşletmeniz')">
+            <div class="img-wrapper"><img src="img/ozel/ozel_01.jpg" onerror="handleError(this)"></div>
+            <div class="card-title">Özel İşletme</div>
         </div>
     </div>
 
@@ -131,26 +54,29 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready();
         tg.expand();
-        tg.headerColor = "#0f172a";
 
-        let selectedId = null;
+        function handleError(img) {
+            const wrapper = img.parentElement;
+            const src = img.getAttribute('src');
+            img.style.display = 'none';
+            const err = document.createElement('div');
+            err.className = 'error-text';
+            err.innerText = "Kayıp: " + src;
+            wrapper.appendChild(err);
+        }
 
-        // VERİ YAPISI - ./img/ ile yolları garantiye aldık
         const data = {
             ic_mekan: [
-                {id: 'ic_01', url: './img/ic/ic_01.jpg', title: 'Modern Showroom'},
-                {id: 'ic_02', url: './img/ic/ic_02.jpg', title: 'Endüstriyel Garaj'},
-                {id: 'ic_03', url: './img/ic/ic_03.jpg', title: 'Lüks Galeri'}
+                {id: 'ic_01', url: 'img/ic/ic_01.jpg', title: 'Modern Stüdyo'},
+                {id: 'ic_02', url: 'img/ic/ic_02.jpg', title: 'Işıklı Galeri'}
             ],
             dis_mekan: [
-                {id: 'dis_01', url: './img/dis/dis_01.jpg', title: 'Şehir Merkezi'},
-                {id: 'dis_02', url: './img/dis/dis_02.jpg', title: 'Doğa Yolu'},
-                {id: 'dis_03', url: './img/dis/dis_03.jpg', title: 'Deniz Kenarı'}
+                {id: 'dis_01', url: 'img/dis/dis_01.jpg', title: 'Şehir Konsepti'},
+                {id: 'dis_02', url: 'img/dis/dis_02.jpg', title: 'Manzara'}
             ],
             ozel: [
-                {id: 'ozel_01', url: './img/ozel/ozel_01.jpg', title: 'Özel İşletme Fonu'}
+                {id: 'ozel_01', url: 'img/ozel/ozel_01.jpg', title: 'Kendi Fonum'}
             ]
         };
 
@@ -160,23 +86,19 @@
             iv.innerHTML = '';
             iv.style.display = 'grid';
             document.getElementById('view-title').innerText = title;
-            document.getElementById('view-desc').innerText = 'Size en uygun olanı seçin.';
             document.getElementById('back-btn').style.display = 'block';
 
             data[cat].forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.id = item.id;
-                if(selectedId === item.id) card.classList.add('selected');
-                
-                card.innerHTML = `
-                    <div class="badge">✓</div>
-                    <div class="img-wrapper">
-                        <img src="${item.url}" onerror="this.src='https://via.placeholder.com/300x200?text=Resim+Bulunamadı'">
-                    </div>
-                    <div class="card-title">${item.title}</div>
-                `;
-                card.onclick = () => selectImage(item.id);
+                card.innerHTML = `<div class="img-wrapper"><img src="${item.url}" onerror="handleError(this)"></div><div class="card-title">${item.title}</div>`;
+                card.onclick = () => {
+                    document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedId = item.id;
+                    document.getElementById('main-btn').style.display = 'block';
+                };
                 iv.appendChild(card);
             });
         }
@@ -185,50 +107,21 @@
             document.getElementById('image-view').style.display = 'none';
             document.getElementById('category-view').style.display = 'grid';
             document.getElementById('view-title').innerText = 'Stüdyo Sahnesi';
-            document.getElementById('view-desc').innerText = 'Araçlarınızın sergileneceği profesyonel fonu seçin.';
             document.getElementById('back-btn').style.display = 'none';
             document.getElementById('main-btn').style.display = 'none';
         }
 
-        function selectImage(id) {
-            if(selectedId) {
-                const prev = document.getElementById(selectedId);
-                if(prev) prev.classList.remove('selected');
-            }
-            selectedId = id;
-            document.getElementById(id).classList.add('selected');
-            document.getElementById('main-btn').style.display = 'block';
-            tg.HapticFeedback.impactOccurred('medium');
-        }
-
+        let selectedId = null;
         function saveSelection() {
             if (!selectedId) return;
             const userId = tg.initDataUnsafe?.user?.id;
-
-            const btn = document.getElementById('main-btn');
-            btn.disabled = true;
-            btn.innerText = "Kaydediliyor...";
-
             fetch('https://entertaining-multimedia-ladder-potato.trycloudflare.com/webhook/fon-secimi-kaydet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: String(userId),
-                    secili_fon: selectedId
-                })
-            })
-            .then(res => {
-                if(res.ok) {
-                    tg.showAlert("✅ Fonunuz başarıyla güncellendi!", () => tg.close());
-                } else {
-                    throw new Error();
-                }
-            })
-            .catch(() => {
-                btn.disabled = false;
-                btn.innerText = "Tasarımı Onayla ve Kaydet";
-                tg.showAlert("⚠️ Bağlantı hatası! Lütfen n8n ve tünelin açık olduğundan emin olun.");
-            });
+                body: JSON.stringify({ chat_id: String(userId), secili_fon: selectedId })
+            }).then(() => {
+                tg.showAlert("✅ Fon kaydedildi!", () => tg.close());
+            }).catch(() => tg.showAlert("Hata: n8n tüneli kapalı mı?"));
         }
     </script>
 </body>
