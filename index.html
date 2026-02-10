@@ -83,15 +83,15 @@
 
     <div id="category-view" class="grid">
         <div class="card" onclick="showSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <div class="img-wrapper"><img src="img/ic/ic_01.jpeg" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_01.jpeg" onerror="handleError(this)"></div>
             <div class="card-title">İç Mekan</div>
         </div>
         <div class="card" onclick="showSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <div class="img-wrapper"><img src="img/dis/dis_01.jpeg" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_01.jpeg" onerror="handleError(this)"></div>
             <div class="card-title">Dış Mekan</div>
         </div>
         <div class="card" onclick="showSubMenu('ozel', 'Özel İşletmeniz')">
-            <div class="img-wrapper"><img src="img/ozel/ozel_01.jpeg" onerror="handleError(this)"></div>
+            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ozel/ozel_01.jpeg" onerror="handleError(this)"></div>
             <div class="card-title">Özel İşletme</div>
         </div>
     </div>
@@ -110,30 +110,29 @@
 
         let selectedId = null;
 
-        // Resim bulunamazsa linki ekranda gösterir (Hata ayıklama için)
         function handleError(img) {
             const wrapper = img.parentElement;
             const src = img.getAttribute('src');
             img.style.display = 'none';
             const err = document.createElement('div');
             err.className = 'error-msg';
-            err.innerText = "Bulunamadı:\n" + src;
+            err.innerText = "Yüklenemedi:\n" + src.split('/').pop();
             wrapper.appendChild(err);
         }
 
         const data = {
             ic_mekan: [
-                {id: 'ic_01', url: 'img/ic/ic_01.jpeg', title: 'Modern Showroom'},
-                {id: 'ic_02', url: 'img/ic/ic_02.jpeg', title: 'Endüstriyel Garaj'},
-                {id: 'ic_03', url: 'img/ic/ic_03.jpeg', title: 'Lüks Galeri'}
+                {id: 'ic_01', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_01.jpeg', title: 'Modern Showroom'},
+                {id: 'ic_02', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_02.jpeg', title: 'Endüstriyel Garaj'},
+                {id: 'ic_03', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/ic_03.jpeg', title: 'Lüks Galeri'}
             ],
             dis_mekan: [
-                {id: 'dis_01', url: 'img/dis/dis_01.jpeg', title: 'Şehir Merkezi'},
-                {id: 'dis_02', url: 'img/dis/dis_02.jpeg', title: 'Doğa Yolu'},
-                {id: 'dis_03', url: 'img/dis/dis_03.jpeg', title: 'Deniz Kenarı'}
+                {id: 'dis_01', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_01.jpeg', title: 'Şehir Merkezi'},
+                {id: 'dis_02', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_02.jpeg', title: 'Doğa Yolu'},
+                {id: 'dis_03', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dis_03.jpeg', title: 'Deniz Kenarı'}
             ],
             ozel: [
-                {id: 'ozel_01', url: 'img/ozel/ozel_01.jpeg', title: 'Kendi Fonum'}
+                {id: 'ozel_01', url: 'https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ozel/ozel_01.jpeg', title: 'Kendi Fonum'}
             ]
         };
 
