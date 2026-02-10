@@ -231,7 +231,14 @@
 
         function saveSelection() {
             const selectedItem = currentCategoryItems[currentIndex];
-            const userId = tg.initDataUnsafe?.user?.id;
+            let userId = tg.initDataUnsafe?.user?.id;
+            
+            // Eğer Telegram ID alınamazsa kullanıcıya bildir
+            if (!userId) {
+                tg.showAlert("⚠️ Telegram kullanıcı bilgisi alınamadı. Lütfen botu tekrar başlatın.");
+                return;
+            }
+
             const btn = document.getElementById('save-btn-text');
             btn.innerText = "Kaydediliyor...";
             btn.disabled = true;
@@ -240,7 +247,6 @@
 
             fetch(webhookUrl, {
                 method: 'POST',
-                mode: 'cors',
                 headers: { 
                     'Content-Type': 'application/json'
                 },
@@ -253,14 +259,14 @@
                 if(res.ok) {
                     tg.showAlert("✅ Harika seçim! Fonunuz başarıyla kaydedildi.", () => tg.close());
                 } else { 
-                    throw new Error("Sunucu hatası: " + res.status); 
+                    throw new Error("HTTP Hata: " + res.status); 
                 }
             })
             .catch((err) => {
-                console.error("Hata:", err);
+                console.error("Detaylı Hata:", err);
                 btn.innerText = "✅ Bu Fonu Kullan";
                 btn.disabled = false;
-                tg.showAlert("⚠️ Kaydedilemedi. Lütfen n8n workflow'unuzun ACTIVE olduğundan emin olun.");
+                tg.showAlert("⚠️ Bağlantı Sorunu: n8n workflow'unuzun ACTIVE olduğundan emin olun. (Hata: " + err.message + ")");
             });
         }
 
@@ -275,5 +281,3 @@
     </script>
 </body>
 </html>
-
-
