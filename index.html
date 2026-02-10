@@ -233,9 +233,8 @@
             const selectedItem = currentCategoryItems[currentIndex];
             let userId = tg.initDataUnsafe?.user?.id;
             
-            // Eğer Telegram ID alınamazsa kullanıcıya bildir
             if (!userId) {
-                tg.showAlert("⚠️ Telegram kullanıcı bilgisi alınamadı. Lütfen botu tekrar başlatın.");
+                tg.showAlert("⚠️ Kullanıcı bilgisi alınamadı.");
                 return;
             }
 
@@ -245,11 +244,10 @@
 
             const webhookUrl = 'https://asininventory.com/webhook/fon-secimi-kaydet';
 
+            // failed to fetch hatası için en güvenli yöntem: Sadeleştirilmiş fetch
             fetch(webhookUrl, {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json'
-                },
+                // Headers'ı boş bırakarak tarayıcının kafa karışıklığını önlüyoruz
                 body: JSON.stringify({ 
                     chat_id: String(userId), 
                     secili_fon: selectedItem.id + "_a.jpeg" 
@@ -259,14 +257,13 @@
                 if(res.ok) {
                     tg.showAlert("✅ Harika seçim! Fonunuz başarıyla kaydedildi.", () => tg.close());
                 } else { 
-                    throw new Error("HTTP Hata: " + res.status); 
+                    throw new Error("HTTP " + res.status);
                 }
             })
             .catch((err) => {
-                console.error("Detaylı Hata:", err);
                 btn.innerText = "✅ Bu Fonu Kullan";
                 btn.disabled = false;
-                tg.showAlert("⚠️ Bağlantı Sorunu: n8n workflow'unuzun ACTIVE olduğundan emin olun. (Hata: " + err.message + ")");
+                tg.showAlert("⚠️ Hata: n8n workflow'u ACTIVE olmalı ve asininventory.com'a tarayıcıdan girilebilmeli.");
             });
         }
 
@@ -281,5 +278,3 @@
     </script>
 </body>
 </html>
-
-
