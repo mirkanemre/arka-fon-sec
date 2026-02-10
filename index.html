@@ -3,62 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arka Plan Seçimi</title>
+    <title>AI Stüdyo | Arka Plan Seçimi</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; margin: 0; padding: 15px; color: #333; }
-        h2 { text-align: center; font-size: 1.2rem; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
-        .card img { width: 100%; height: 120px; object-fit: cover; display: block; }
-        .card-title { padding: 10px; text-align: center; font-weight: bold; font-size: 0.9rem; }
-        .selected { border-color: #248bfe; background: #eef6ff; }
-        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 15px; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #248bfe; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; }
-        #back-btn { background: #888; margin-bottom: 10px; display: none; }
+        :root {
+            --primary: #007AFF;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 20px; 
+            color: var(--text);
+            padding-bottom: 100px;
+        }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h2 { font-size: 1.5rem; margin: 0; font-weight: 700; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header p { font-size: 0.9rem; color: var(--text-dim); margin-top: 8px; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); 
+            cursor: pointer; 
+            border: 2px solid transparent; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .card:active { transform: scale(0.96); }
+        .card img { width: 100%; height: 140px; object-fit: cover; filter: brightness(0.8); transition: 0.3s; }
+        .card.selected { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 0 20px rgba(0, 122, 255, 0.4); }
+        .card.selected img { filter: brightness(1.1); }
+        
+        .card-title { padding: 12px; text-align: center; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; }
+        
+        .badge { position: absolute; top: 8px; right: 8px; background: var(--primary); border-radius: 50%; width: 20px; height: 20px; display: none; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .card.selected .badge { display: flex; }
+
+        .btn-container { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); z-index: 100; }
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            border: none; 
+            border-radius: 14px; 
+            background: var(--primary); 
+            color: white; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+        #back-btn { background: #334155; margin-bottom: 12px; font-size: 0.9rem; padding: 12px; }
+        
+        /* Animasyonlar */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .grid { animation: fadeIn 0.4s ease-out; }
     </style>
 </head>
 <body>
 
-    <h2 id="view-title">Bir Kategori Seçin</h2>
+    <div class="header">
+        <h2 id="view-title">Stüdyo Sahnesi</h2>
+        <p id="view-desc">Araçlarınızın sergileneceği profesyonel fonu seçin.</p>
+    </div>
 
     <div id="category-view" class="grid">
         <div class="card" onclick="showSubMenu('ic_mekan', 'İç Mekan Fonları')">
-            <img src="https://via.placeholder.com/300x200?text=Iç+Mekan">
-            <div class="card-title">İç Mekan</div>
+            <img src="img/ic/ic_01.jpg"> <div class="card-title">Lüks Showroom</div>
         </div>
         <div class="card" onclick="showSubMenu('dis_mekan', 'Dış Mekan Fonları')">
-            <img src="https://via.placeholder.com/300x200?text=Dış+Mekan">
-            <div class="card-title">Dış Mekan</div>
+            <img src="img/dis/dis_01.jpg"> <div class="card-title">Dış Mekan / Şehir</div>
         </div>
-        <div class="card" onclick="showSubMenu('ozel', 'Özel İşletmeniz')">
-            <img src="https://via.placeholder.com/300x200?text=Özel">
-            <div class="card-title">Özel İşletmeniz</div>
+        <div class="card" onclick="showSubMenu('ozel', 'Özel İşletme')">
+            <img src="img/ozel/ozel_01.jpg"> <div class="card-title">Özel Konsept</div>
         </div>
     </div>
 
-    <div id="image-view" class="grid" style="display: none;">
-        </div>
+    <div id="image-view" class="grid" style="display: none;"></div>
 
-    <div style="height: 100px;"></div> <div class="btn-container">
-        <button id="back-btn" onclick="showCategoryMenu()">⬅ Geri Dön</button>
-        <button id="main-btn" onclick="saveSelection()" style="display: none;">Seçimi Kaydet</button>
+    <div class="btn-container">
+        <button id="back-btn" onclick="showCategoryMenu()" style="display: none;">← Kategorilere Dön</button>
+        <button id="main-btn" onclick="saveSelection()" style="display: none;">Tasarımı Onayla ve Kaydet</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Sayfayı tam ekran yap
+        tg.ready();
+        tg.expand();
+        tg.headerColor = "#0f172a"; // Telegram başlık rengini body ile eşle
 
         let selectedId = null;
 
         const data = {
             ic_mekan: [
-                {id: 'ic_01', url: 'https://via.placeholder.com/300x200?text=Showroom+1', title: 'Showroom Modern'},
-                {id: 'ic_02', url: 'https://via.placeholder.com/300x200?text=Showroom+2', title: 'Endüstriyel'}
+                {id: 'ic_01', url: 'img/ic/ic_01.jpg', title: 'Modern Showroom'},
+                {id: 'ic_02', url: 'img/ic/ic_02.jpg', title: 'Endüstriyel Garaj'},
+                {id: 'ic_03', url: 'img/ic/ic_03.jpg', title: 'Lüks Galeri'}
             ],
             dis_mekan: [
-                {id: 'dis_01', url: 'https://via.placeholder.com/300x200?text=Doga+1', title: 'Orman Yolu'},
-                {id: 'dis_02', url: 'https://via.placeholder.com/300x200?text=Doga+2', title: 'Şehir Merkezi'}
+                {id: 'dis_01', url: 'img/dis/dis_01.jpg', title: 'Şehir Merkezi'},
+                {id: 'dis_02', url: 'img/dis/dis_02.jpg', title: 'Doğa Yolu'},
+                {id: 'dis_03', url: 'img/dis/dis_03.jpg', title: 'Deniz Kenarı'}
+            ],
+            ozel: [
+                {id: 'ozel_01', url: 'img/ozel/ozel_01.jpg', title: 'Özel İşletme Fonu'}
             ]
         };
 
@@ -68,13 +124,20 @@
             iv.innerHTML = '';
             iv.style.display = 'grid';
             document.getElementById('view-title').innerText = title;
+            document.getElementById('view-desc').innerText = 'Size en uygun olanı seçin.';
             document.getElementById('back-btn').style.display = 'block';
 
             data[cat].forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.id = item.id;
-                card.innerHTML = `<img src="${item.url}"><div class="card-title">${item.title}</div>`;
+                if(selectedId === item.id) card.className += ' selected';
+                
+                card.innerHTML = `
+                    <div class="badge">✓</div>
+                    <img src="${item.url}">
+                    <div class="card-title">${item.title}</div>
+                `;
                 card.onclick = () => selectImage(item.id);
                 iv.appendChild(card);
             });
@@ -83,23 +146,44 @@
         function showCategoryMenu() {
             document.getElementById('image-view').style.display = 'none';
             document.getElementById('category-view').style.display = 'grid';
-            document.getElementById('view-title').innerText = 'Bir Kategori Seçin';
+            document.getElementById('view-title').innerText = 'Stüdyo Sahnesi';
+            document.getElementById('view-desc').innerText = 'Araçlarınızın sergileneceği profesyonel fonu seçin.';
             document.getElementById('back-btn').style.display = 'none';
             document.getElementById('main-btn').style.display = 'none';
         }
 
         function selectImage(id) {
-            if(selectedId) document.getElementById(selectedId)?.classList.remove('selected');
+            if(selectedId) {
+                const prev = document.getElementById(selectedId);
+                if(prev) prev.classList.remove('selected');
+            }
             selectedId = id;
             document.getElementById(id).classList.add('selected');
             document.getElementById('main-btn').style.display = 'block';
+            tg.HapticFeedback.impactOccurred('medium'); // Seçince telefona hafif bir titreşim verir
         }
 
         function saveSelection() {
             if (!selectedId) return;
-            // Telegram'a veriyi gönder
-            tg.sendData(JSON.stringify({ selected_bg: selectedId }));
-            tg.close();
+            const userId = tg.initDataUnsafe?.user?.id;
+
+            // n8n'e veriyi gönder ve Supabase'i güncelle
+            fetch('https://entertaining-multimedia-ladder-potato.trycloudflare.com/webhook/fon-secimi-kaydet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: String(userId),
+                    secili_fon: selectedId
+                })
+            })
+            .then(res => {
+                if(res.ok) {
+                    tg.showAlert("✅ Fonunuz başarıyla güncellendi. Artık çekimlere hazırsınız!", () => tg.close());
+                } else {
+                    tg.showAlert("Hata oluştu, lütfen tekrar deneyin.");
+                }
+            })
+            .catch(() => tg.showAlert("Bağlantı hatası. n8n'in açık olduğundan emin olun."));
         }
     </script>
 </body>
