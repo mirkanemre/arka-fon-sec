@@ -236,8 +236,8 @@
             btn.innerText = "Kaydediliyor...";
             btn.disabled = true;
 
-            // --- GÜNCELLEME: SABİT SUNUCU IP ADRESİN ---
-            fetch('http://193.111.77.230:5678/webhook/fon-secimi-kaydet', {
+            // --- YENİ KALICI VE GÜVENLİ LİNKİN ---
+            fetch('https://asininventory.com/webhook/fon-secimi-kaydet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -253,7 +253,7 @@
             .catch(() => {
                 btn.innerText = "✅ Bu Fonu Kullan";
                 btn.disabled = false;
-                tg.showAlert("⚠️ Kaydedilemedi. n8n sunucunuzun erişilebilir olduğundan emin olun.");
+                tg.showAlert("⚠️ Kaydedilemedi. n8n sunucunuzun (https://asininventory.com) erişilebilir olduğundan emin olun.");
             });
         }
 
