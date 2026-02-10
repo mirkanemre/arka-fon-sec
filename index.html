@@ -236,10 +236,14 @@
             btn.innerText = "Kaydediliyor...";
             btn.disabled = true;
 
-            // --- YENİ KALICI VE GÜVENLİ LİNKİN ---
-            fetch('https://asininventory.com/webhook/fon-secimi-kaydet', {
+            const webhookUrl = 'https://asininventory.com/webhook/fon-secimi-kaydet';
+
+            fetch(webhookUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ 
                     chat_id: String(userId), 
                     secili_fon: selectedItem.id + "_a.jpeg" 
@@ -248,12 +252,15 @@
             .then(res => {
                 if(res.ok) {
                     tg.showAlert("✅ Harika seçim! Fonunuz başarıyla kaydedildi.", () => tg.close());
-                } else { throw new Error(); }
+                } else { 
+                    throw new Error("Sunucu hatası: " + res.status); 
+                }
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error("Hata:", err);
                 btn.innerText = "✅ Bu Fonu Kullan";
                 btn.disabled = false;
-                tg.showAlert("⚠️ Kaydedilemedi. n8n sunucunuzun (https://asininventory.com) erişilebilir olduğundan emin olun.");
+                tg.showAlert("⚠️ Kaydedilemedi. Lütfen n8n workflow'unuzun ACTIVE olduğundan emin olun.");
             });
         }
 
