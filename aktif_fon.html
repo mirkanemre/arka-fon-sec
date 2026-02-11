@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OtoFonFX | Aktif Sahne</title>
+    <title>OtoFonFX | Pro Simulator</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
@@ -11,6 +11,7 @@
         :root {
             --bg: #000000;
             --primary: #f59e0b; 
+            --accent: #3b82f6;
             --card-bg: #0a0a0a;
             --border: #1c1c1e;
         }
@@ -19,7 +20,7 @@
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             margin: 0;
-            padding: 24px;
+            padding: 20px;
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -27,129 +28,129 @@
             align-items: center;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(245, 158, 11, 0.05) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        /* Üst Navigasyon ve Logo Bilgisi */
         .nav-header {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .btn-top-back {
             text-decoration: none;
-            color: #007AFF; /* Telegram Blue */
-            font-size: 0.85rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            text-transform: uppercase;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 800;
             letter-spacing: 1px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            letter-spacing: 3px;
-            margin: 0;
-            color: #fff;
-            text-transform: uppercase;
-        }
-
-        .header p {
-            font-size: 0.65rem;
-            color: var(--primary);
-            letter-spacing: 2px;
-            margin-top: 8px;
-            text-transform: uppercase;
-            font-weight: 900;
-        }
-
-        .img-frame {
+        /* --- SİMÜLATÖR VİTRİNİ --- */
+        .simulator-box {
             position: relative;
             width: 100%;
-            max-width: 400px;
-            padding: 10px;
-            background: linear-gradient(145deg, #1c1c1e, #0a0a0a);
-            border-radius: 28px;
+            max-width: 500px;
+            aspect-ratio: 16/10;
+            background: #050505;
+            border-radius: 24px;
             border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            margin-bottom: 30px;
-            box-sizing: border-box;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
 
-        #active-img {
+        #active-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.5) contrast(1.1);
+            transition: 0.5s;
+        }
+
+        /* DİNAMİK LOGO KATMANI */
+        .logo-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45%; /* Logo boyutu */
+            z-index: 5;
+            pointer-events: none;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        #user-logo {
             width: 100%;
             height: auto;
-            border-radius: 20px;
-            display: block;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
         }
 
-        .info-card {
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 15px var(--accent);
+            animation: scan 4s infinite linear;
+            z-index: 10;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .info-panel {
             width: 100%;
+            margin-top: 25px;
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 20px;
-            text-align: center;
             box-sizing: border-box;
         }
 
-        .info-card h2 {
+        .info-panel h2 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             margin: 0;
-            color: #fff;
             letter-spacing: 2px;
+            color: #fff;
         }
 
-        .info-card p {
-            font-size: 0.75rem;
-            color: #8e8e93;
-            margin-top: 10px;
-            line-height: 1.5;
+        .info-panel p {
+            font-size: 0.7rem;
+            color: #636366;
+            margin-top: 8px;
+            line-height: 1.6;
         }
 
-        #no-selection {
-            display: none;
-            text-align: center;
-            margin-top: 50px;
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(45deg, var(--accent), #1e40af);
+            color: #fff;
+            border: none;
+            padding: 20px;
+            border-radius: 18px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-top: 25px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            text-transform: uppercase;
         }
 
         .footer {
             margin-top: auto;
-            padding-top: 40px;
+            padding: 30px 0;
             font-size: 0.6rem;
             color: #48484a;
             text-align: center;
-            letter-spacing: 1px;
-            line-height: 1.5;
-        }
-
-        .btn-bottom-back {
-            text-decoration: none;
-            color: #636366;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -157,32 +158,32 @@
 
     <div class="nav-header">
         <a href="index.html" class="btn-top-back">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">OTOFONFX v1.0.4</div>
+        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">PRO SIMULATOR v1.0.4</div>
     </div>
 
-    <div class="header">
-        <h1>AKTİF SAHNE</h1>
-        <p>Stüdyo Yapılandırması</p>
+    <div class="header" style="text-align: center; margin-bottom: 25px;">
+        <h1 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 3px;">LIVE SIMULATION</h1>
+        <p style="font-size: 0.6rem; color: var(--primary); font-weight: 900; letter-spacing: 2px; margin-top: 5px;">MARKALI ÖNİZLEME</p>
     </div>
 
-    <div id="selection-area" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-        <div class="img-frame">
-            <img id="active-img" src="" alt="Aktif Fon">
-        </div>
-
-        <div class="info-card">
-            <h2 id="active-name">KONSEP İSMİ</h2>
-            <p>Bu fon şu an çekimleriniz için aktif olarak ayarlanmıştır. Yeni bir fotoğraf gönderdiğinizde bu sahne kullanılacaktır.</p>
+    <div class="simulator-box">
+        <div class="scan-line"></div>
+        <img id="active-bg" src="" alt="Background">
+        <div class="logo-overlay">
+            <img id="user-logo" src="" onerror="this.src='https://via.placeholder.com/200x100/000000/FFFFFF?text=LOGO+YOK'">
         </div>
     </div>
 
-    <div id="no-selection">
-        <p style="color: #636366; margin-bottom: 15px;">Henüz bir fon seçilmedi.</p>
-        <a href="arka_fon.html" style="color: #007AFF; text-decoration: none; font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">FON SEÇMEK İÇİN TIKLAYIN</a>
+    <div class="info-panel">
+        <h2 id="active-name">KONSEPT YÜKLENİYOR</h2>
+        <p>Sistem, chat_id üzerinden kayıtlı logonuzu analiz etti ve seçili sahneye başarıyla yerleştirdi. Bu sahneyi onaylıyorsanız çekimi başlatın.</p>
     </div>
+
+    <button class="btn-generate" onclick="startProduction()">
+        KENDİ SAHNENİZİ OLUŞTURUN
+    </button>
 
     <div class="footer">
-        <a href="index.html" class="btn-bottom-back">ANA MENÜYE DÖN</a>
         © 2026 OTOFONFX TECHNOLOGIES<br>
         Tüm hakları OtoFonFX stüdyosuna aittir.
     </div>
@@ -193,28 +194,37 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Telegram Native Geri Butonu
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => {
-            window.location.href = 'index.html';
-        });
-
-        function loadActiveFon() {
+        function loadEngine() {
+            // 1. Fon Bilgilerini Yükle
             const savedName = localStorage.getItem('selectedFonName');
             const savedImg = localStorage.getItem('selectedFonImg');
-
+            
             if (savedName && savedImg) {
                 document.getElementById('active-name').innerText = savedName.toUpperCase();
-                document.getElementById('active-img').src = savedImg;
-                document.getElementById('selection-area').style.display = 'flex';
-                document.getElementById('no-selection').style.display = 'none';
+                document.getElementById('active-bg').src = savedImg;
             } else {
-                document.getElementById('selection-area').style.display = 'none';
-                document.getElementById('no-selection').style.display = 'block';
+                window.location.href = 'arka_fon.html';
+                return;
             }
+
+            // 2. Dinamik Logo Yolunu Oluştur
+            const userId = tg.initDataUnsafe?.user?.id || "1017604800"; // Test için senin ID'yi default koydum
+            const logoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${userId}_logo.png`;
+            
+            document.getElementById('user-logo').src = logoUrl;
         }
 
-        window.onload = loadActiveFon;
+        function startProduction() {
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.showConfirm("Bu sahne ve logonuz ile profesyonel render başlatılsın mı?", (isConfirmed) => {
+                if (isConfirmed) {
+                    // n8n tetikleme buraya gelecek
+                    tg.close();
+                }
+            });
+        }
+
+        window.onload = loadEngine;
     </script>
 </body>
 </html>
