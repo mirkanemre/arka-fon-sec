@@ -52,7 +52,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- YENİ KART TASARIMI --- */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 
         .card { 
@@ -67,7 +66,6 @@
             position: relative;
         }
 
-        /* Kart seçildiğinde neon parlama */
         .card:active { 
             transform: scale(0.95); 
             border-color: var(--primary);
@@ -88,7 +86,6 @@
 
         .card:hover img { filter: brightness(1); transform: scale(1.1); }
 
-        /* Kartın üzerindeki yazı alanı */
         .card-title { 
             padding: 15px; 
             text-align: center; 
@@ -101,15 +98,35 @@
             box-sizing: border-box;
         }
 
-        /* Preview Modal */
+        /* --- PREVIEW MODAL & FRAME --- */
         #preview-modal { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 1000; display: none; 
+            background: #000; z-index: 1000; display: none; 
             flex-direction: column; align-items: center; justify-content: center; 
             backdrop-filter: blur(15px);
         }
 
-        #preview-img { width: 90%; height: 60vh; object-fit: contain; border-radius: 20px; }
+        .img-frame {
+            position: relative;
+            width: 90%;
+            max-height: 55vh;
+            padding: 10px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 24px;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #preview-img { 
+            width: 100%; 
+            height: auto; 
+            max-height: 55vh; 
+            object-fit: contain; 
+            border-radius: 16px; 
+        }
 
         .btn-save { 
             background: linear-gradient(45deg, var(--primary), #2563eb); 
@@ -169,11 +186,16 @@
     </div>
 
     <div id="preview-modal">
-        <button style="position: absolute; top: 40px; right: 20px; background: var(--glass); color: white; border: 1px solid var(--glass-border); border-radius: 50%; width: 40px; height: 40px;" onclick="closePreview()">✕</button>
-        <img id="preview-img" src="">
+        <button style="position: absolute; top: 40px; right: 20px; background: var(--glass); color: white; border: 1px solid var(--glass-border); border-radius: 50%; width: 42px; height: 42px; z-index:1005;" onclick="closePreview()">✕</button>
+        
+        <div class="img-frame">
+            <img id="preview-img" src="">
+        </div>
+
         <div style="position: absolute; bottom: 40px; left: 20px; right: 20px; display: flex; flex-direction: column; gap: 20px;">
             <div style="text-align: center;">
                 <span id="preview-title" style="font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; letter-spacing: 2px;"></span>
+                <p style="font-size: 0.65rem; color: #64748b; margin-top: 8px; letter-spacing: 1.5px; text-transform: uppercase;">Stüdyo Konsepti Seçildi</p>
             </div>
             <button class="btn-save" id="save-btn-text" onclick="saveSelection()">BU FONU KULLAN</button>
         </div>
