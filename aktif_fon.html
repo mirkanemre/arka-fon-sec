@@ -34,12 +34,12 @@
         <div style="font-size: 0.6rem; color: #48484a; font-weight: 700;">OTOFONFX v1.0.4</div>
     </div>
 
-    <div class="section-label">Seçili Arka Fon (Saf Hal)</div>
+    <div class="section-label">Seçili Arka Fon</div>
     <div class="raw-bg-box">
         <img id="raw-bg-img" src="" alt="">
     </div>
 
-    <div class="section-label">Canlı Önizleme (Simülatör)</div>
+    <div class="section-label">Simülatör Önizleme</div>
     <div class="simulator-box">
         <div class="scan-line"></div>
         <img id="sim-bg" src="" alt="">
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <p id="status-display" class="status-text">VERİLER EŞİTLENİYOR...</p>
+    <p id="status-display" class="status-text">SİSTEM EŞİTLENİYOR...</p>
     <button class="btn-generate" onclick="startProduction()">KENDİ SAHNENİZİ OLUŞTURUN</button>
 
     <script>
@@ -60,30 +60,15 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function syncDatabase() {
-            // Telegram'dan gelen ID'yi alıyoruz
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
-            // Hem sayı hem metin halini hazır tutuyoruz
-            const chatIDNum = parseInt(rawID); 
             
             try {
-                // Sorguyu yaparken .or kullanarak hem sayı hem metin ihtimalini deniyoruz
+                // Sütun ismi 'stand_gorseli_url' olarak güncellendi
                 let { data: galeri, error } = await _supabase
                     .from('galeriler')
-                    .select('secili_stand_gorseli')
-                    .eq('chat_id', chatIDNum) // Önce sayı olarak dene
+                    .select('stand_gorseli_url')
+                    .eq('chat_id', rawID)
                     .order('created_at', { ascending: false });
-
-                // Eğer sayı olarak bulamazsa bir de metin olarak deneyelim
-                if (!galeri || galeri.length === 0) {
-                    const secondTry = await _supabase
-                        .from('galeriler')
-                        .select('secili_stand_gorseli')
-                        .eq('chat_id', rawID.toString())
-                        .order('created_at', { ascending: false });
-                    
-                    galeri = secondTry.data;
-                    error = secondTry.error;
-                }
 
                 if (error) {
                     document.getElementById('status-display').innerText = "HATA: " + error.message;
@@ -91,34 +76,30 @@
                 }
 
                 if (galeri && galeri.length > 0) {
-                    const row = galeri[0];
-                    const fonID = row.secili_stand_gorseli; 
-                    
-                    const baseStorage = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/";
-                    const fullImgUrl = `${baseStorage}${fonID}_a.jpeg`;
+                    // Veritabanındaki tam URL'yi alıyoruz
+                    const fullImgUrl = galeri[0].stand_gorseli_url;
                     const fullLogoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${rawID}_logo.png`;
 
                     document.getElementById('raw-bg-img').src = fullImgUrl;
                     document.getElementById('sim-bg').src = fullImgUrl;
                     document.getElementById('user-logo').src = fullLogoUrl;
-                    document.getElementById('status-display').innerText = "KONSEPT AKTİF: " + fonID.toUpperCase();
+                    document.getElementById('status-display').innerText = "KONSEPT AKTİF";
                     
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    // Eğer hala bulamıyorsa veritabanında bu ID ile satır yok demektir
-                    document.getElementById('status-display').innerText = "KAYIT YOK (ID: " + rawID + ")";
+                    document.getElementById('status-display').innerText = "KAYIT BULUNAMADI (ID: " + rawID + ")";
                 }
 
             } catch (err) {
-                document.getElementById('status-display').innerText = "SİSTEM BAĞLANTI HATASI";
+                document.getElementById('status-display').innerText = "BAĞLANTI HATASI";
             }
         }
+
         function startProduction() {
-            tg.showConfirm("Bu yapılandırma ile render başlatılsın mı?", (ok) => { if (ok) tg.close(); });
+            tg.showConfirm("Seçili konsept ile çekimi başlatmak istiyor musunuz?", (ok) => { if (ok) tg.close(); });
         }
 
         window.onload = syncDatabase;
     </script>
 </body>
 </html>
-
