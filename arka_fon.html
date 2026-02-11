@@ -72,14 +72,35 @@
         .img-wrapper { width: 100%; height: 120px; overflow: hidden; }
         .card img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* --- PREMİUM KART BAŞLIK ALANI --- */
         .card-title { 
-            padding: 12px; 
+            padding: 14px 5px; 
             text-align: center; 
-            font-weight: 700; 
+            font-weight: 800; 
             font-size: 0.7rem; 
-            letter-spacing: 1px;
-            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            /* Buzlu cam efekti ve degrade geçiş */
+            background: linear-gradient(to bottom, rgba(28, 28, 30, 0.8), rgba(10, 10, 10, 0.95));
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            
+            /* Üstten ince bir ışık çizgisi (Vurgu) */
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            
+            color: #ffffff; /* Yazıyı tam beyaz yapalım ki parlasın */
             text-transform: uppercase;
+            position: absolute;
+            bottom: 0; 
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 5;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* Hafif mavi parlama */
+        }
+        
+        /* Kart seçildiğinde yazının rengini maviye çekelim */
+        .card:active .card-title {
+            color: var(--primary);
+            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.2), rgba(10, 10, 10, 0.95));
         }
 
         /* --- PREVIEW MODAL --- */
@@ -287,3 +308,4 @@
     </script>
 </body>
 </html>
+
