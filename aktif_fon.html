@@ -7,211 +7,70 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;700;900&display=swap');
-        
-        :root {
-            --bg: #000;
-            --accent: #3b82f6;
-            --primary: #f59e0b;
-            --border: #1c1c1e;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            margin: 0;
-            padding: 15px;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        /* Üst Menü */
-        .nav-header {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .btn-top-back {
-            text-decoration: none;
-            color: var(--accent);
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        /* Yan Yana Görünüm Bölümü */
-        .selection-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 15px;
-        }
-
-        .section-label {
-            font-size: 0.55rem;
-            color: #48484a;
-            font-weight: 900;
-            letter-spacing: 1.5px;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-        }
-
-        .grid-box {
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            background: #050505;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;700&display=swap');
+        :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .btn-top-back { text-decoration: none; color: var(--accent); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+        .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 500px; margin-bottom: 15px; }
+        .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 6px; text-transform: uppercase; text-align: left; width: 100%; }
+        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 100px; display: flex; align-items: center; justify-content: center; }
         img { width: 100%; height: 100%; object-fit: cover; }
         .logo-img { width: auto; height: 60%; object-fit: contain; }
-
-        /* Simülatör Alanı */
-        .simulator-box {
-            width: 100%;
-            max-width: 500px;
-            aspect-ratio: 16/9;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--accent);
-            background: #000;
-            position: relative;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
-        }
-
+        .simulator-box { width: 100%; max-width: 500px; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; }
         #sim-bg { filter: brightness(0.4) blur(1px); }
-        
-        .scan-line {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--accent);
-            box-shadow: 0 0 15px var(--accent);
-            animation: scan 3s infinite linear;
-            z-index: 10;
-        }
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scan 3s infinite linear; z-index: 10; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        /* Bilgi Metni Paneli */
-        .info-panel {
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-            margin: 20px 0;
-            padding: 0 10px;
-        }
-
-        .info-title {
-            font-family: 'Orbitron';
-            font-size: 0.65rem;
-            color: var(--primary);
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-
-        .info-desc {
-            font-size: 0.75rem;
-            color: #8e8e93;
-            line-height: 1.5;
-            font-weight: 400;
-        }
-
-        /* İşlem Butonu */
-        .btn-generate {
-            width: 100%;
-            max-width: 500px;
-            background: linear-gradient(45deg, var(--accent), #1e40af);
-            color: #fff;
-            border: none;
-            padding: 20px;
-            border-radius: 18px;
-            font-family: 'Orbitron';
-            font-weight: 900;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-subtext {
-            font-size: 0.6rem;
-            opacity: 0.8;
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
-
-        .status-badge {
-            font-size: 0.6rem;
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--primary);
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-top: 10px;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-        }
+        .info-panel { width: 100%; max-width: 500px; text-align: center; margin: 15px 0; padding: 0 10px; }
+        .info-title { font-family: 'Orbitron'; font-size: 0.65rem; color: var(--primary); letter-spacing: 2px; margin-bottom: 8px; }
+        .info-desc { font-size: 0.75rem; color: #8e8e93; line-height: 1.5; }
+        .btn-generate { width: 100%; max-width: 500px; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .btn-subtext { font-size: 0.6rem; opacity: 0.8; font-weight: 400; }
+        .status-badge { font-size: 0.6rem; color: var(--primary); margin-top: 10px; opacity: 0.7; }
     </style>
 </head>
 <body>
 
     <div class="nav-header">
-        <a href="index.html" class="btn-top-back">❮ GERİ DÖN</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 800; letter-spacing: 1px;">CORE ENGINE v1.0.8</div>
+        <a href="index.html" class="btn-top-back">❮ GERİ</a>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.0.9</div>
     </div>
 
     <div class="selection-grid">
         <div>
-            <div class="section-label">AKTİF KONSEPT</div>
-            <div class="grid-box">
-                <img id="raw-bg-img" src="" alt="Yükleniyor...">
-            </div>
+            <div class="section-label">SEÇİLEN FON</div>
+            <div class="grid-box"><img id="raw-bg-img" src=""></div>
         </div>
         <div>
-            <div class="section-label">KAYITLI LOGO</div>
-            <div class="grid-box">
-                <img id="user-preview-logo" class="logo-img" src="" alt="Logo...">
-            </div>
+            <div class="section-label">SİZİN LOGONUZ</div>
+            <div class="grid-box"><img id="user-preview-logo" class="logo-img" src=""></div>
         </div>
     </div>
 
-    <div class="section-label" style="width: 100%; max-width: 500px;">SİSTEM SİMÜLASYONU</div>
+    <div class="section-label" style="max-width: 500px;">GÖRÜNÜM TESTİ</div>
     <div class="simulator-box">
         <div class="scan-line"></div>
-        <img id="sim-bg" src="" alt="">
+        <img id="sim-bg" src="">
     </div>
 
     <div class="info-panel">
-        <div class="info-title">AI RENDERING ENGINE</div>
+        <div class="info-title">DİJİTAL SAHNE KURULUMU</div>
         <p class="info-desc">
-            Seçtiğiniz kurumsal logo, yapay zeka tarafından analiz edilerek seçili fon üzerine <b>fotorealistik perspektif</b> ile işlenecektir. Bu işlem sonucunda dijital stüdyo kalitesinde görselleriniz oluşturulur.
+            Seçtiğiniz logo, arka plana profesyonelce yerleştirilecek. 
+            <b>Bundan sonra çekeceğiniz tüm araç fotoğrafları</b> otomatik olarak bu logo ve bu dekor ile hazırlanır.
         </p>
     </div>
 
     <button class="btn-generate" onclick="startProduction()">
-        RENDER İŞLEMİNİ BAŞLAT
-        <span class="btn-subtext">(1 KREDİ KULLANILACAKTIR)</span>
+        SİSTEMİ AKTİF ET
+        <span class="btn-subtext">(1 KREDİ - LOGO VE FON SABİTLENİR)</span>
     </button>
 
-    <div id="status-display" class="status-badge">SENKRONİZASYON BEKLENİYOR...</div>
+    <div id="status-display" class="status-badge">...</div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        tg.expand();
 
         const SUPABASE_URL = "https://bhyeemsvcforqnddhoot.supabase.co";
         const SUPABASE_KEY = "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q"; 
@@ -219,40 +78,24 @@
 
         async function syncDatabase() {
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
-            
             try {
-                let { data: galeri, error } = await _supabase
-                    .from('galeriler')
-                    .select('stand_gorseli_url, logo_gorsel_url')
-                    .eq('chat_id', rawID)
-                    .order('created_at', { ascending: false });
-
+                let { data: galeri } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).order('created_at', { ascending: false });
                 if (galeri && galeri.length > 0) {
                     const row = galeri[0];
                     document.getElementById('raw-bg-img').src = row.stand_gorseli_url;
                     document.getElementById('sim-bg').src = row.stand_gorseli_url;
                     document.getElementById('user-preview-logo').src = row.logo_gorsel_url;
-                    document.getElementById('status-display').innerText = "SİSTEM HAZIR";
-                    tg.HapticFeedback.impactOccurred('light');
+                    document.getElementById('status-display').innerText = "SİSTEM BAĞLANTISI AKTİF";
                 }
-            } catch (err) {
-                document.getElementById('status-display').innerText = "BAĞLANTI HATASI";
-            }
+            } catch (err) { document.getElementById('status-display').innerText = "BAĞLANTI HATASI"; }
         }
 
         function startProduction() {
-            tg.HapticFeedback.notificationOccurred('warning');
             tg.showConfirm(
-                "Logonuzun seçili arka plana yerleştirilme işlemi başlatılacaktır. Bu işlem bakiyenizden 1 KREDİ düşülmesine neden olur. Devam etmek istiyor musunuz?", 
-                (ok) => { 
-                    if (ok) {
-                        tg.HapticFeedback.notificationOccurred('success');
-                        tg.close(); 
-                    } 
-                }
+                "Logonuz seçili fona yerleştirilecek ve dükkanınızın yeni dekoru olarak kaydedilecektir. Bu işlem 1 kredi tutarındadır. Onaylıyor musunuz?", 
+                (ok) => { if (ok) tg.close(); }
             );
         }
-
         window.onload = syncDatabase;
     </script>
 </body>
