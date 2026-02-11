@@ -23,20 +23,32 @@
             padding: 24px;
             color: #fff;
             min-height: 100vh;
+            /* Mavilik tamamen kaldırıldı, tam siyah */
         }
 
-        /* Arka plan süslemesi */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -10%; left: -10%; width: 40%; height: 40%;
-            background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, transparent 70%);
-            z-index: -1;
+        /* Navigasyon Alanı */
+        .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
         }
 
         .header h1 {
@@ -57,7 +69,6 @@
             text-transform: uppercase;
         }
 
-        /* Bilgi Kutusu */
         .info-bar {
             background: rgba(28, 28, 30, 0.6);
             border: 1px solid var(--border);
@@ -105,10 +116,9 @@
             border-color: var(--primary);
         }
 
-        /* Popüler Paket Parlaması */
         .popular {
             border: 1px solid var(--primary);
-            box-shadow: 0 0 20px rgba(0, 122, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 122, 255, 0.1);
         }
 
         .popular-badge {
@@ -168,12 +178,12 @@
             line-height: 1.5;
         }
 
-        /* Modern Loader */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             display: none; align-items: center; justify-content: center;
             z-index: 1000; flex-direction: column;
+            backdrop-filter: blur(10px);
         }
         
         .loader-bar {
@@ -196,6 +206,11 @@
     </style>
 </head>
 <body>
+
+    <div class="nav-header">
+        <a href="index.html" class="back-link">❮ GERİ</a>
+        <div style="font-size: 0.6rem; color: #48484a;">OTOFONFX v1.0.4</div>
+    </div>
 
     <div class="header">
         <h1>OTOFONFX</h1>
@@ -261,6 +276,12 @@
         tg.expand();
         tg.headerColor = "#000000";
 
+        // Telegram Native Geri Butonu
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => {
+            window.location.href = 'index.html';
+        });
+
         function pay(miktar, fiyat) {
             tg.HapticFeedback.notificationOccurred('success');
             document.getElementById('loader').style.display = 'flex';
@@ -269,11 +290,18 @@
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
 
             const img = new Image();
-            img.onload = () => tg.close();
-            img.onerror = () => tg.close();
+            img.onload = () => finish();
+            img.onerror = () => finish();
             img.src = n8nUrl;
 
-            setTimeout(() => tg.close(), 3000);
+            setTimeout(finish, 3000);
+        }
+
+        function finish() {
+            // Ödeme tetiklendiğinde Mini App'i kapatma, 
+            // kullanıcı bot mesajını görmeli. 
+            // İstersen kapatabilirsin: tg.close();
+            document.getElementById('loader').style.display = 'none';
         }
     </script>
 </body>
