@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OtoFonFX | Aktif Sahne</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --bg: #000000;
+            --primary: #f59e0b; /* Dashboard'daki Gold/Turuncu vurgu */
+            --card-bg: #0a0a0a;
+            --border: #1c1c1e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 24px;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(245, 158, 11, 0.05) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 10px;
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            font-size: 0.65rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        /* Sergi Çerçevesi */
+        .img-frame {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            background: linear-gradient(145deg, #1c1c1e, #0a0a0a);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        #active-img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            display: block;
+            filter: contrast(1.1);
+        }
+
+        .info-card {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .info-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin: 0;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .info-card p {
+            font-size: 0.75rem;
+            color: #8e8e93;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .btn-back {
+            margin-top: auto;
+            text-decoration: none;
+            color: #48484a;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 20px;
+        }
+
+        /* Seçim yoksa gösterilecek alan */
+        #no-selection {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>AKTİF SAHNE</h1>
+        <p>Stüdyo Yapılandırması</p>
+    </div>
+
+    <div id="selection-area" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="img-frame">
+            <img id="active-img" src="" alt="Aktif Fon">
+        </div>
+
+        <div class="info-card">
+            <h2 id="active-name">KONSEP İSMİ</h2>
+            <p>Bu fon şu an çekimleriniz için aktif olarak ayarlanmıştır. Yeni bir fotoğraf gönderdiğinizde bu sahne kullanılacaktır.</p>
+        </div>
+    </div>
+
+    <div id="no-selection">
+        <p style="color: #636366;">Henüz bir fon seçilmedi.</p>
+        <a href="arka_fon.html" style="color: var(--primary); text-decoration: none; font-weight: 800; font-size: 0.8rem;">FON SEÇMEK İÇİN TIKLAYIN</a>
+    </div>
+
+    <a href="index.html" class="btn-back">❮ ANA MENÜYE DÖN</a>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        tg.headerColor = "#000000";
+
+        // Geri Butonunu aktif et
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => {
+            window.location.href = 'index.html';
+        });
+
+        function loadActiveFon() {
+            const savedName = localStorage.getItem('selectedFonName');
+            const savedImg = localStorage.getItem('selectedFonImg');
+
+            if (savedName && savedImg) {
+                document.getElementById('active-name').innerText = savedName.toUpperCase();
+                document.getElementById('active-img').src = savedImg;
+                document.getElementById('selection-area').style.display = 'flex';
+                document.getElementById('no-selection').style.display = 'none';
+            } else {
+                document.getElementById('selection-area').style.display = 'none';
+                document.getElementById('no-selection').style.display = 'block';
+            }
+        }
+
+        window.onload = loadActiveFon;
+    </script>
+</body>
+</html>
