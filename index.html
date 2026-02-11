@@ -38,8 +38,8 @@
 
         .logo-area {
             text-align: center;
-            margin-top: 20px;
-            margin-bottom: 50px;
+            margin-top: 10px;
+            margin-bottom: 30px;
         }
 
         .logo-area h1 {
@@ -52,27 +52,61 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .logo-area p {
-            font-size: 0.7rem;
+        /* --- SEÇİLİ FON KARTI --- */
+        .status-card {
+            width: 100%;
+            background: rgba(28, 28, 30, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .status-img {
+            width: 65px;
+            height: 65px;
+            border-radius: 14px;
+            background: #1c1c1e;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .status-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-info small {
             color: var(--primary);
-            letter-spacing: 3px;
-            text-transform: uppercase;
             font-weight: 900;
-            margin-top: 5px;
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-info span {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-top: 4px;
+            color: #fff;
         }
 
         .menu-grid {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
         .main-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 28px;
-            padding: 30px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -89,16 +123,16 @@
         }
 
         .main-card h2 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 900;
             margin: 0;
             z-index: 2;
         }
 
         .main-card p {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #8e8e93;
-            margin: 8px 0 0 0;
+            margin: 6px 0 0 0;
             z-index: 2;
         }
 
@@ -106,8 +140,8 @@
             position: absolute;
             right: -10px;
             bottom: -10px;
-            font-size: 5rem;
-            opacity: 0.1;
+            font-size: 4rem;
+            opacity: 0.05;
             transform: rotate(-15deg);
             z-index: 1;
         }
@@ -117,8 +151,8 @@
 
         .footer {
             margin-top: auto;
-            padding-top: 40px;
-            font-size: 0.65rem;
+            padding-top: 30px;
+            font-size: 0.6rem;
             color: #48484a;
             text-align: center;
             letter-spacing: 1px;
@@ -129,7 +163,15 @@
 
     <div class="logo-area">
         <h1>OTOFONFX</h1>
-        <p>Pro Studio Engine</p>
+        <p style="font-size: 0.6rem; color: var(--primary); letter-spacing: 3px; text-transform: uppercase; font-weight: 900; margin-top: 5px;">Pro Studio Engine</p>
+    </div>
+
+    <div class="status-card" id="status-card">
+        <img id="active-img" src="https://via.placeholder.com/150/1c1c1e/636366?text=?" class="status-img">
+        <div class="status-info">
+            <small>AKTİF SEÇİMİNİZ</small>
+            <span id="active-name">SEÇİM YAPILMADI</span>
+        </div>
     </div>
 
     <div class="menu-grid">
@@ -157,11 +199,26 @@
         tg.expand();
         tg.headerColor = "#000000";
 
+        // SEÇİLİ FONU YÜKLE
+        function loadSelectedFon() {
+            const savedName = localStorage.getItem('selectedFonName');
+            const savedImg = localStorage.getItem('selectedFonImg');
+            
+            if (savedName && savedImg) {
+                document.getElementById('active-name').innerText = savedName.toUpperCase();
+                document.getElementById('active-img').src = savedImg;
+                document.getElementById('status-card').style.borderColor = "var(--primary)";
+            }
+        }
+
         document.querySelectorAll('.main-card').forEach(card => {
             card.onclick = () => {
                 tg.HapticFeedback.impactOccurred('medium');
             };
         });
+
+        // Sayfa açıldığında hafızayı kontrol et
+        window.onload = loadSelectedFon;
     </script>
 </body>
 </html>
