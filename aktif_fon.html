@@ -10,7 +10,7 @@
 
         :root {
             --bg: #000000;
-            --primary: #f59e0b; /* Dashboard'daki Gold/Turuncu vurgu */
+            --primary: #f59e0b; 
             --card-bg: #0a0a0a;
             --border: #1c1c1e;
         }
@@ -36,10 +36,30 @@
             z-index: -1;
         }
 
+        /* Üst Navigasyon Alanı */
+        .nav-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .btn-top-back {
+            text-decoration: none;
+            color: #007AFF; /* Telegram Blue */
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 40px;
-            margin-top: 10px;
         }
 
         .header h1 {
@@ -60,7 +80,6 @@
             font-weight: 900;
         }
 
-        /* Sergi Çerçevesi */
         .img-frame {
             position: relative;
             width: 100%;
@@ -71,6 +90,7 @@
             border: 1px solid var(--border);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             margin-bottom: 30px;
+            box-sizing: border-box;
         }
 
         #active-img {
@@ -78,7 +98,6 @@
             height: auto;
             border-radius: 20px;
             display: block;
-            filter: contrast(1.1);
         }
 
         .info-card {
@@ -102,30 +121,37 @@
         .info-card p {
             font-size: 0.75rem;
             color: #8e8e93;
-            margin-top: 8px;
+            margin-top: 10px;
             line-height: 1.5;
         }
 
-        .btn-back {
+        #no-selection {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Alt Geri Butonu */
+        .footer-nav {
             margin-top: auto;
+            padding: 20px;
+        }
+
+        .btn-bottom-back {
             text-decoration: none;
             color: #48484a;
             font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            padding: 20px;
-        }
-
-        /* Seçim yoksa gösterilecek alan */
-        #no-selection {
-            display: none;
-            text-align: center;
-            margin-top: 50px;
         }
     </style>
 </head>
 <body>
+
+    <div class="nav-header">
+        <a href="index.html" class="btn-top-back">❮ GERİ</a>
+    </div>
 
     <div class="header">
         <h1>AKTİF SAHNE</h1>
@@ -144,11 +170,13 @@
     </div>
 
     <div id="no-selection">
-        <p style="color: #636366;">Henüz bir fon seçilmedi.</p>
-        <a href="arka_fon.html" style="color: var(--primary); text-decoration: none; font-weight: 800; font-size: 0.8rem;">FON SEÇMEK İÇİN TIKLAYIN</a>
+        <p style="color: #636366; margin-bottom: 15px;">Henüz bir fon seçilmedi.</p>
+        <a href="arka_fon.html" style="color: #007AFF; text-decoration: none; font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">FON SEÇMEK İÇİN TIKLAYIN</a>
     </div>
 
-    <a href="index.html" class="btn-back">❮ ANA MENÜYE DÖN</a>
+    <div class="footer-nav">
+        <a href="index.html" class="btn-bottom-back">ANA MENÜYE DÖN</a>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -156,10 +184,19 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Geri Butonunu aktif et
+        // 1. ADIM: Telegram'ın sol üstteki orijinal geri butonunu zorla göster
         tg.BackButton.show();
+
+        // 2. ADIM: Orijinal Geri Butonuna tıklandığında index.html'e gönder
         tg.BackButton.onClick(() => {
             window.location.href = 'index.html';
+        });
+
+        // Sayfa içindeki geri linklerine tıklandığında haptic feedback ver
+        document.querySelectorAll('a[href="index.html"]').forEach(btn => {
+            btn.onclick = () => {
+                tg.HapticFeedback.impactOccurred('light');
+            };
         });
 
         function loadActiveFon() {
