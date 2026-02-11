@@ -27,7 +27,6 @@
             align-items: center;
         }
 
-        /* Arka plan ışık süzmesi */
         body::before {
             content: '';
             position: fixed;
@@ -103,7 +102,6 @@
             z-index: 2;
         }
 
-        /* İkon Yerleşimi */
         .card-icon {
             position: absolute;
             right: -10px;
@@ -114,7 +112,6 @@
             z-index: 1;
         }
 
-        /* Özel Renkler */
         .studio-card { border-left: 5px solid var(--primary); }
         .store-card { border-left: 5px solid #34c759; }
 
@@ -136,7 +133,7 @@
     </div>
 
     <div class="menu-grid">
-        <a href="kredial.html" class="main-card studio-card" id="btn-studio">
+        <a href="arka_fon.html" class="main-card studio-card" id="btn-studio">
             <h2>Stüdyo Sahneleri</h2>
             <p>Arka fonunuzu seçin ve çekimi başlatın.</p>
             <div class="card-icon">🖼️</div>
@@ -160,15 +157,11 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Küçük bir Haptic Feedback dokunuşu
         document.querySelectorAll('.main-card').forEach(card => {
             card.onclick = () => {
                 tg.HapticFeedback.impactOccurred('medium');
             };
         });
-
-        // NOT: Senin fon seçim sayfanın adı neyse 
-        // href="kredial.html" kısmını onunla değiştir abi!
     </script>
 </body>
 </html>
