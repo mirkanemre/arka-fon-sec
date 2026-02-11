@@ -81,7 +81,6 @@
             transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
             text-decoration: none;
             color: white;
-            cursor: pointer;
         }
 
         .main-card:active {
@@ -134,13 +133,13 @@
     </div>
 
     <div class="menu-grid">
-        <a href="https://mirkanemre.github.io/arka-fon-sec/arka_fon.html" class="main-card studio-card" id="btn-studio">
+        <a href="https://mirkanemre.github.io/arka-fon-sec/arka_fon.html" class="main-card studio-card">
             <h2>Stüdyo Sahneleri</h2>
             <p>Arka fonunuzu seçin ve çekimi başlatın.</p>
             <div class="card-icon">🖼️</div>
         </a>
 
-        <a href="https://mirkanemre.github.io/arka-fon-sec/kredial.html" class="main-card store-card" id="btn-store">
+        <a href="https://mirkanemre.github.io/arka-fon-sec/kredial.html" class="main-card store-card">
             <h2>Kredi Mağazası</h2>
             <p>Paket yükleyin, çekime kesintisiz devam edin.</p>
             <div class="card-icon">💳</div>
@@ -159,7 +158,7 @@
         tg.headerColor = "#000000";
 
         document.querySelectorAll('.main-card').forEach(card => {
-            card.onclick = (e) => {
+            card.onclick = () => {
                 tg.HapticFeedback.impactOccurred('medium');
             };
         });
