@@ -8,27 +8,102 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
-        :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .btn-top-back { text-decoration: none; color: var(--accent); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
-        .section-label { width: 100%; font-size: 0.6rem; color: #48484a; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; text-transform: uppercase; text-align: left; }
         
-        /* Görsel Kutuları */
-        .raw-bg-box, .logo-preview-box, .simulator-box { width: 100%; max-width: 500px; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 20px; background: #050505; position: relative; }
-        .raw-bg-box { height: 120px; }
-        .logo-preview-box { height: 80px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); }
+        :root {
+            --bg: #000;
+            --accent: #3b82f6;
+            --primary: #f59e0b;
+            --border: #1c1c1e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 20px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .nav-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn-top-back {
+            text-decoration: none;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .section-label {
+            width: 100%;
+            font-size: 0.6rem;
+            color: #48484a;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        /* Kutular */
+        .raw-box, .logo-box, .simulator-box {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            background: #050505;
+            position: relative;
+        }
+
+        .raw-box { height: 110px; }
+        .logo-box { height: 80px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); }
         .simulator-box { aspect-ratio: 16/9; border-color: var(--accent); box-shadow: 0 0 25px rgba(59, 130, 246, 0.15); }
-        
+
         img { width: 100%; height: 100%; object-fit: cover; }
-        #user-preview-logo { width: auto; height: 60px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
         
-        #sim-bg { filter: brightness(0.4) blur(1px); }
-        .logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45%; z-index: 5; animation: pulse 3s infinite ease-in-out; }
-        #sim-user-logo { width: 100%; filter: drop-shadow(0 0 15px rgba(255,255,255,0.4)); object-fit: contain; }
+        /* Logo Önizleme */
+        #user-preview-logo { width: auto; height: 50px; object-fit: contain; }
+
+        /* Simülatör Alanı (Eski Sade Hali) */
+        #sim-bg { filter: brightness(0.5) blur(1px); }
         
-        @keyframes pulse { 0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
-        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 22px; border-radius: 20px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .scan-line {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+            animation: scan 3s infinite linear;
+            z-index: 10;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(45deg, var(--accent), #1e40af);
+            color: #fff;
+            border: none;
+            padding: 22px;
+            border-radius: 20px;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
         .status-text { font-family: 'Orbitron'; font-size: 0.75rem; color: var(--primary); margin-bottom: 10px; }
     </style>
 </head>
@@ -36,29 +111,27 @@
 
     <div class="nav-header">
         <a href="index.html" class="btn-top-back">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 700;">OTOFONFX v1.0.5</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 700;">OTOFONFX v1.0.7</div>
     </div>
 
-    <div class="section-label">1. Seçili Arka Fon</div>
-    <div class="raw-bg-box">
+    <div class="section-label">SEÇİLİ ARKA FON</div>
+    <div class="raw-box">
         <img id="raw-bg-img" src="" alt="Yükleniyor...">
     </div>
 
-    <div class="section-label">2. Uygulanacak Logo</div>
-    <div class="logo-preview-box">
+    <div class="section-label">UYGULANACAK LOGO</div>
+    <div class="logo-box">
         <img id="user-preview-logo" src="" alt="Logo Bekleniyor...">
     </div>
 
-    <div class="section-label">3. Canlı Önizleme</div>
+    <div class="section-label">CANLI SİMÜLATÖR</div>
     <div class="simulator-box">
+        <div class="scan-line"></div>
         <img id="sim-bg" src="" alt="">
-        <div class="logo-overlay">
-            <img id="sim-user-logo" src="">
         </div>
-    </div>
 
-    <p id="status-display" class="status-text">SİSTEM EŞİTLENİYOR...</p>
-    <button class="btn-generate" onclick="startProduction()">İŞLEMİ BAŞLAT</button>
+    <p id="status-display" class="status-text">VERİLER EŞİTLENİYOR...</p>
+    <button class="btn-generate" onclick="startProduction()">RENDER İŞLEMİNİ BAŞLAT</button>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -72,7 +145,6 @@
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
             
             try {
-                // Hem fon hem logo linkini çekiyoruz
                 let { data: galeri, error } = await _supabase
                     .from('galeriler')
                     .select('stand_gorseli_url, logo_gorsel_url')
@@ -85,21 +157,17 @@
                 }
 
                 if (galeri && galeri.length > 0) {
-                    const fonUrl = galeri[0].stand_gorseli_url;
-                    const logoUrl = galeri[0].logo_gorsel_url;
-
-                    // Arka fonları yerleştir
-                    document.getElementById('raw-bg-img').src = fonUrl;
-                    document.getElementById('sim-bg').src = fonUrl;
+                    const row = galeri[0];
                     
-                    // Logoları yerleştir
-                    document.getElementById('user-preview-logo').src = logoUrl;
-                    document.getElementById('sim-user-logo').src = logoUrl;
+                    // Görselleri dağıtıyoruz
+                    document.getElementById('raw-bg-img').src = row.stand_gorseli_url;
+                    document.getElementById('sim-bg').src = row.stand_gorseli_url;
+                    document.getElementById('user-preview-logo').src = row.logo_gorsel_url;
 
-                    document.getElementById('status-display').innerText = "YAPILANDIRMA HAZIR";
+                    document.getElementById('status-display').innerText = "HAZIR";
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    document.getElementById('status-display').innerText = "VERİ EKSİK";
+                    document.getElementById('status-display').innerText = "VERİ BULUNAMADI";
                 }
 
             } catch (err) {
@@ -108,7 +176,9 @@
         }
 
         function startProduction() {
-            tg.showConfirm("Logo ve fon onaylandı mı? Render başlatılıyor.", (ok) => { if (ok) tg.close(); });
+            tg.showConfirm("Seçili konsept ve logo ile işleme başlansın mı?", (ok) => { 
+                if (ok) tg.close(); 
+            });
         }
 
         window.onload = syncDatabase;
