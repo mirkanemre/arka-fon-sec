@@ -36,13 +36,13 @@
             z-index: -1;
         }
 
-        /* Üst Navigasyon Alanı */
+        /* Üst Navigasyon ve Logo Bilgisi */
         .nav-header {
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            margin-bottom: 25px;
         }
 
         .btn-top-back {
@@ -131,19 +131,25 @@
             margin-top: 50px;
         }
 
-        /* Alt Geri Butonu */
-        .footer-nav {
+        .footer {
             margin-top: auto;
-            padding: 20px;
+            padding-top: 40px;
+            font-size: 0.6rem;
+            color: #48484a;
+            text-align: center;
+            letter-spacing: 1px;
+            line-height: 1.5;
         }
 
         .btn-bottom-back {
             text-decoration: none;
-            color: #48484a;
+            color: #636366;
             font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
+            display: block;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -151,6 +157,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="btn-top-back">❮ GERİ</a>
+        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">OTOFONFX v1.0.4</div>
     </div>
 
     <div class="header">
@@ -174,8 +181,10 @@
         <a href="arka_fon.html" style="color: #007AFF; text-decoration: none; font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">FON SEÇMEK İÇİN TIKLAYIN</a>
     </div>
 
-    <div class="footer-nav">
+    <div class="footer">
         <a href="index.html" class="btn-bottom-back">ANA MENÜYE DÖN</a>
+        © 2026 OTOFONFX TECHNOLOGIES<br>
+        Tüm hakları OtoFonFX stüdyosuna aittir.
     </div>
 
     <script>
@@ -184,19 +193,10 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // 1. ADIM: Telegram'ın sol üstteki orijinal geri butonunu zorla göster
+        // Telegram Native Geri Butonu
         tg.BackButton.show();
-
-        // 2. ADIM: Orijinal Geri Butonuna tıklandığında index.html'e gönder
         tg.BackButton.onClick(() => {
             window.location.href = 'index.html';
-        });
-
-        // Sayfa içindeki geri linklerine tıklandığında haptic feedback ver
-        document.querySelectorAll('a[href="index.html"]').forEach(btn => {
-            btn.onclick = () => {
-                tg.HapticFeedback.impactOccurred('light');
-            };
         });
 
         function loadActiveFon() {
