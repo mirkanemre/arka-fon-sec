@@ -8,43 +8,71 @@
     <style>
         :root { --primary: #007AFF; --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --text-dim: #94a3b8; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 24px; color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
-        .header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
-        .header h1 { font-size: 1.8rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .header p { color: var(--text-dim); font-size: 0.8rem; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .header { text-align: center; margin-bottom: 35px; margin-top: 10px; }
+        .header h1 { font-size: 1.8rem; font-weight: 800; margin: 0; }
+        .header p { color: var(--text-dim); font-size: 0.9rem; margin-top: 5px; }
+
         .menu-grid { display: flex; flex-direction: column; gap: 16px; }
-        .main-card { background: var(--card-bg); border-radius: 20px; padding: 22px; text-decoration: none; color: white; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .main-card:active { transform: scale(0.97); background: #243143; }
+        
+        .main-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s ease;
+        }
+        .main-card:active { transform: scale(0.97); background: #2d3a4f; }
+        
         .card-content h2 { margin: 0; font-size: 1.2rem; font-weight: 700; }
-        .card-content p { margin: 4px 0 0 0; font-size: 0.8rem; color: var(--text-dim); }
-        .card-icon { font-size: 2rem; }
-        .info-strip { background: rgba(0, 122, 255, 0.1); border: 1px solid rgba(0, 122, 255, 0.2); border-radius: 12px; padding: 10px; margin-bottom: 20px; text-align: center; font-size: 0.75rem; color: #fff; }
+        .card-content p { margin: 4px 0 0 0; font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; }
+        
+        .card-icon { font-size: 2rem; margin-left: 15px; }
+
+        .info-box {
+            background: rgba(0, 122, 255, 0.1);
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>OtoFonFX</h1>
-        <p>AI Studio Control</p>
+        <p>AI Studio Management</p>
     </div>
-    <div class="info-strip">
-        🚀 1 Kredi = 1 Profesyonel Çekim. Sınırsız kullanım süresi.
+
+    <div class="info-box">
+        🚀 1 Kredi = 1 Profesyonel Görsel. Krediler süresizdir.
     </div>
+
     <div class="menu-grid">
         <a href="arka_fon.html" class="main-card" onclick="tg.HapticFeedback.impactOccurred('medium')">
             <div class="card-content">
                 <h2>Stüdyo Sahneleri</h2>
-                <p>Arka fonu seç ve çekimi başlat.</p>
+                <p>Arka fonunu seç ve çekimi başlat.</p>
             </div>
             <div class="card-icon">🖼️</div>
         </a>
+
         <a href="kredial.html" class="main-card" onclick="tg.HapticFeedback.impactOccurred('medium')">
             <div class="card-content">
                 <h2>Kredi Mağazası</h2>
-                <p>Paket yükle, çekime devam et.</p>
+                <p>Paket yükle, kredini anında kullan.</p>
             </div>
             <div class="card-icon">💳</div>
         </a>
     </div>
-    <div class="footer">OtoFonFX v1.0.4 | Premium Studio</div>
+
     <script>const tg = window.Telegram.WebApp; tg.ready(); tg.expand(); tg.headerColor = "#0f172a";</script>
 </body>
 </html>
