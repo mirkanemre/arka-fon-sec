@@ -44,57 +44,81 @@
             letter-spacing: 1px;
         }
 
-        /* --- SİMÜLATÖR VİTRİNİ --- */
+        /* 1. KATMAN: SEÇİLİ ARKA FON (SAF HALİ) */
+        .section-label {
+            width: 100%;
+            font-size: 0.6rem;
+            color: #48484a;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        .raw-bg-box {
+            width: 100%;
+            height: 120px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 25px;
+        }
+
+        #raw-bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+
+        /* 2. KATMAN: SİMÜLATÖR (LOGOLU HALİ) */
         .simulator-box {
             position: relative;
             width: 100%;
             max-width: 500px;
-            aspect-ratio: 16/10;
+            aspect-ratio: 16/9;
             background: #050505;
             border-radius: 24px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--accent);
             overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+            margin-bottom: 25px;
         }
 
-        #active-bg {
+        #sim-bg {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.5) contrast(1.1);
-            transition: 0.5s;
+            filter: brightness(0.4) blur(1px); /* Logo parlasın diye arka planı karartıyoruz */
         }
 
-        /* DİNAMİK LOGO KATMANI */
         .logo-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 45%; /* Logo boyutu */
+            width: 45%;
             z-index: 5;
-            pointer-events: none;
             animation: pulse 3s infinite ease-in-out;
         }
 
         #user-logo {
             width: 100%;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
             50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
         }
 
         .scan-line {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 2px;
-            background: rgba(59, 130, 246, 0.5);
+            background: var(--accent);
             box-shadow: 0 0 15px var(--accent);
-            animation: scan 4s infinite linear;
+            animation: scan 3s infinite linear;
             z-index: 10;
         }
 
@@ -103,51 +127,26 @@
             100% { top: 100%; }
         }
 
-        .info-panel {
-            width: 100%;
-            margin-top: 25px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .info-panel h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            margin: 0;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-
-        .info-panel p {
-            font-size: 0.7rem;
-            color: #636366;
-            margin-top: 8px;
-            line-height: 1.6;
-        }
-
+        /* 3. KATMAN: AKSİYON */
         .btn-generate {
             width: 100%;
             background: linear-gradient(45deg, var(--accent), #1e40af);
             color: #fff;
             border: none;
-            padding: 20px;
-            border-radius: 18px;
+            padding: 22px;
+            border-radius: 20px;
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            margin-top: 25px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
             text-transform: uppercase;
         }
 
         .footer {
             margin-top: auto;
-            padding: 30px 0;
+            padding: 25px 0;
             font-size: 0.6rem;
             color: #48484a;
             text-align: center;
@@ -158,30 +157,29 @@
 
     <div class="nav-header">
         <a href="index.html" class="btn-top-back">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">PRO SIMULATOR v1.0.4</div>
+        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">PRO ENGINE v1.0.4</div>
     </div>
 
-    <div class="header" style="text-align: center; margin-bottom: 25px;">
-        <h1 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 3px;">LIVE SIMULATION</h1>
-        <p style="font-size: 0.6rem; color: var(--primary); font-weight: 900; letter-spacing: 2px; margin-top: 5px;">MARKALI ÖNİZLEME</p>
+    <div class="section-label">Seçili Arka Fon</div>
+    <div class="raw-bg-box">
+        <img id="raw-bg-img" src="">
     </div>
 
+    <div class="section-label">Canlı Önizleme (Simülatör)</div>
     <div class="simulator-box">
         <div class="scan-line"></div>
-        <img id="active-bg" src="" alt="Background">
+        <img id="sim-bg" src="">
         <div class="logo-overlay">
             <img id="user-logo" src="" onerror="this.src='https://via.placeholder.com/200x100/000000/FFFFFF?text=LOGO+YOK'">
         </div>
     </div>
 
-    <div class="info-panel">
-        <h2 id="active-name">KONSEPT YÜKLENİYOR</h2>
-        <p>Sistem, chat_id üzerinden kayıtlı logonuzu analiz etti ve seçili sahneye başarıyla yerleştirdi. Bu sahneyi onaylıyorsanız çekimi başlatın.</p>
+    <div style="width: 100%; text-align: center;">
+        <p id="active-name" style="font-family: 'Orbitron'; font-size: 0.8rem; color: var(--primary); letter-spacing: 2px; margin-bottom: 15px;"></p>
+        <button class="btn-generate" onclick="startProduction()">
+            KENDİ SAHNENİZİ OLUŞTURUN
+        </button>
     </div>
-
-    <button class="btn-generate" onclick="startProduction()">
-        KENDİ SAHNENİZİ OLUŞTURUN
-    </button>
 
     <div class="footer">
         © 2026 OTOFONFX TECHNOLOGIES<br>
@@ -193,38 +191,39 @@
         tg.ready();
         tg.expand();
         tg.headerColor = "#000000";
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
 
-        function loadEngine() {
-            // 1. Fon Bilgilerini Yükle
+        function loadPage() {
             const savedName = localStorage.getItem('selectedFonName');
             const savedImg = localStorage.getItem('selectedFonImg');
             
             if (savedName && savedImg) {
+                // Saf Fonu Yükle
+                document.getElementById('raw-bg-img').src = savedImg;
+                // Simülatör Fonunu Yükle
+                document.getElementById('sim-bg').src = savedImg;
+                // Yazıyı Güncelle
                 document.getElementById('active-name').innerText = savedName.toUpperCase();
-                document.getElementById('active-bg').src = savedImg;
             } else {
                 window.location.href = 'arka_fon.html';
                 return;
             }
 
-            // 2. Dinamik Logo Yolunu Oluştur
-            const userId = tg.initDataUnsafe?.user?.id || "1017604800"; // Test için senin ID'yi default koydum
+            // Dinamik Logoyu ChatID ile Çek
+            const userId = tg.initDataUnsafe?.user?.id || "1017604800";
             const logoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${userId}_logo.png`;
-            
             document.getElementById('user-logo').src = logoUrl;
         }
 
         function startProduction() {
             tg.HapticFeedback.notificationOccurred('success');
-            tg.showConfirm("Bu sahne ve logonuz ile profesyonel render başlatılsın mı?", (isConfirmed) => {
-                if (isConfirmed) {
-                    // n8n tetikleme buraya gelecek
-                    tg.close();
-                }
+            tg.showConfirm("Bu konsept ve logonuz ile çekim başlatılsın mı?", (ok) => {
+                if (ok) tg.close();
             });
         }
 
-        window.onload = loadEngine;
+        window.onload = loadPage;
     </script>
 </body>
 </html>
