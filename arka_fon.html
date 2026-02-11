@@ -3,188 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OtoFonFX | Aktif Sahne</title>
+    <title>OtoFonFX | Arka Fon Seçimi</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;600;800&display=swap');
 
         :root {
-            --bg: #000000;
-            --primary: #f59e0b; 
+            --bg: #000000; /* Tam Siyah */
+            --primary: #3b82f6;
             --card-bg: #0a0a0a;
             --border: #1c1c1e;
+            --text-dim: #94a3b8;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             margin: 0;
-            padding: 24px;
+            padding: 20px;
             color: #fff;
+            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(245, 158, 11, 0.05) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        /* Üst Navigasyon ve Logo Bilgisi */
         .nav-header {
-            width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 25px;
         }
 
-        .btn-top-back {
+        .back-link {
             text-decoration: none;
-            color: #007AFF; /* Telegram Blue */
-            font-size: 0.85rem;
-            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
             gap: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
+        .header { text-align: center; margin-bottom: 35px; }
         .header h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.5rem;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             margin: 0;
             color: #fff;
             text-transform: uppercase;
         }
 
-        .header p {
-            font-size: 0.65rem;
-            color: var(--primary);
-            letter-spacing: 2px;
-            margin-top: 8px;
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .card { 
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px; 
+            overflow: hidden; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+
+        .card:active { transform: scale(0.96); border-color: var(--primary); }
+
+        .img-wrapper { width: 100%; height: 120px; overflow: hidden; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-title { 
+            padding: 12px; 
+            text-align: center; 
+            font-weight: 700; 
+            font-size: 0.7rem; 
+            letter-spacing: 1px;
+            color: var(--text-dim);
             text-transform: uppercase;
-            font-weight: 900;
+        }
+
+        /* --- PREVIEW MODAL --- */
+        #preview-modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 1000; display: none; 
+            flex-direction: column; align-items: center; justify-content: center; 
         }
 
         .img-frame {
             position: relative;
-            width: 100%;
-            max-width: 400px;
-            padding: 10px;
-            background: linear-gradient(145deg, #1c1c1e, #0a0a0a);
-            border-radius: 28px;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            margin-bottom: 30px;
-            box-sizing: border-box;
+            width: 95%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -50px;
         }
 
-        #active-img {
-            width: 100%;
-            height: auto;
-            border-radius: 20px;
-            display: block;
+        #preview-img { 
+            width: 100%; 
+            height: auto; 
+            max-height: 60vh; 
+            object-fit: contain; 
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
         }
 
-        .info-card {
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 20px;
-            text-align: center;
-            box-sizing: border-box;
+        .modal-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .info-card h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            margin: 0;
-            color: #fff;
-            letter-spacing: 2px;
+        .btn-save { 
+            background: var(--primary); 
+            color: white; border: none; 
+            padding: 18px; border-radius: 16px; font-weight: 800; 
+            font-size: 0.9rem; letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .info-card p {
-            font-size: 0.75rem;
-            color: #8e8e93;
-            margin-top: 10px;
-            line-height: 1.5;
+        #back-btn { 
+            background: var(--card-bg); color: #fff; border: 1px solid var(--border); 
+            padding: 12px; border-radius: 12px; width: 100%; margin-top: 20px; 
+            font-weight: 700; font-size: 0.7rem; text-transform: uppercase;
         }
 
-        #no-selection {
-            display: none;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .footer {
-            margin-top: auto;
+        .home-footer { 
+            margin-top: auto; 
             padding-top: 40px;
+            text-align: center; 
             font-size: 0.6rem;
             color: #48484a;
-            text-align: center;
             letter-spacing: 1px;
             line-height: 1.5;
         }
 
-        .btn-bottom-back {
-            text-decoration: none;
-            color: #636366;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        .btn-home {
+            color: #636366; text-decoration: none; font-size: 0.7rem;
+            letter-spacing: 1px; text-transform: uppercase;
             display: block;
             margin-bottom: 10px;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
 
     <div class="nav-header">
-        <a href="index.html" class="btn-top-back">❮ GERİ</a>
+        <a href="index.html" class="back-link">❮ GERİ</a>
         <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">OTOFONFX v1.0.4</div>
     </div>
 
     <div class="header">
-        <h1>AKTİF SAHNE</h1>
-        <p>Stüdyo Yapılandırması</p>
+        <h1>STÜDYO</h1>
+        <p id="view-title" style="color: var(--primary); font-weight: 800; letter-spacing: 2px; font-size: 0.65rem; margin-top: 8px; text-transform: uppercase;">Kategori Seçiniz</p>
     </div>
 
-    <div id="selection-area" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-        <div class="img-frame">
-            <img id="active-img" src="" alt="Aktif Fon">
+    <div id="category-view" class="grid">
+        <div class="card" onclick="renderSubMenu('ic_mekan', 'İÇ MEKAN')">
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001_c.jpeg">
+            </div>
+            <div class="card-title">İÇ MEKAN</div>
         </div>
-
-        <div class="info-card">
-            <h2 id="active-name">KONSEP İSMİ</h2>
-            <p>Bu fon şu an çekimleriniz için aktif olarak ayarlanmıştır. Yeni bir fotoğraf gönderdiğinizde bu sahne kullanılacaktır.</p>
+        <div class="card" onclick="renderSubMenu('dis_mekan', 'DIŞ MEKAN')">
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dismekan_0001_c.jpeg">
+            </div>
+            <div class="card-title">DIŞ MEKAN</div>
         </div>
     </div>
 
-    <div id="no-selection">
-        <p style="color: #636366; margin-bottom: 15px;">Henüz bir fon seçilmedi.</p>
-        <a href="arka_fon.html" style="color: #007AFF; text-decoration: none; font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">FON SEÇMEK İÇİN TIKLAYIN</a>
-    </div>
+    <div id="image-view" class="grid" style="display: none;"></div>
+    
+    <button id="back-btn" style="display: none;" onclick="showCategoryMenu()">← KATEGORİLERE DÖN</button>
 
-    <div class="footer">
-        <a href="index.html" class="btn-bottom-back">ANA MENÜYE DÖN</a>
+    <div class="home-footer" id="home-footer">
+        <a href="index.html" class="btn-home">ANA MENÜYE DÖN</a>
         © 2026 OTOFONFX TECHNOLOGIES<br>
         Tüm hakları OtoFonFX stüdyosuna aittir.
+    </div>
+
+    <div id="preview-modal">
+        <button style="position: absolute; top: 40px; right: 20px; background: #1c1c1e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index:1005;" onclick="closePreview()">✕</button>
+        
+        <div class="img-frame">
+            <img id="preview-img" src="">
+        </div>
+
+        <div class="modal-controls">
+            <div style="text-align: center;">
+                <span id="preview-title" style="font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; letter-spacing: 2px; display: block;"></span>
+                <span style="font-size: 0.6rem; color: #48484a; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block;">SEÇİLEN KONSEPT</span>
+            </div>
+            <button class="btn-save" id="save-btn-text" onclick="saveSelection()">BU FONU KULLAN</button>
+        </div>
     </div>
 
     <script>
@@ -192,29 +208,82 @@
         tg.ready();
         tg.expand();
         tg.headerColor = "#000000";
-
-        // Telegram Native Geri Butonu
         tg.BackButton.show();
-        tg.BackButton.onClick(() => {
-            window.location.href = 'index.html';
+        tg.BackButton.onClick(() => { 
+            if(document.getElementById('image-view').style.display === 'grid') {
+                showCategoryMenu();
+            } else {
+                window.location.href = 'index.html';
+            }
         });
 
-        function loadActiveFon() {
-            const savedName = localStorage.getItem('selectedFonName');
-            const savedImg = localStorage.getItem('selectedFonImg');
+        let currentCategoryItems = [];
+        let currentIndex = 0;
+        const config = {
+            ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], 
+            dis_mekan: ['dismekan_0001', 'dismekan_0002'] 
+        };
+        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
 
-            if (savedName && savedImg) {
-                document.getElementById('active-name').innerText = savedName.toUpperCase();
-                document.getElementById('active-img').src = savedImg;
-                document.getElementById('selection-area').style.display = 'flex';
-                document.getElementById('no-selection').style.display = 'none';
-            } else {
-                document.getElementById('selection-area').style.display = 'none';
-                document.getElementById('no-selection').style.display = 'block';
-            }
+        function renderSubMenu(cat, title) {
+            document.getElementById('category-view').style.display = 'none';
+            document.getElementById('home-footer').style.display = 'none';
+            const iv = document.getElementById('image-view');
+            iv.innerHTML = ''; iv.style.display = 'grid';
+            document.getElementById('view-title').innerText = title;
+            document.getElementById('back-btn').style.display = 'block';
+            
+            currentCategoryItems = config[cat].map((fileName, index) => {
+                const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
+                return { id: fileName, url: `${baseUrl}${folder}${fileName}_c.jpeg`, title: `KONSEPT ${index + 1}` };
+            });
+
+            currentCategoryItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<div class="img-wrapper"><img src="${item.url}"></div><div class="card-title">${item.title}</div>`;
+                card.onclick = () => openPreview(index);
+                iv.appendChild(card);
+            });
+            tg.HapticFeedback.impactOccurred('light');
         }
 
-        window.onload = loadActiveFon;
+        function showCategoryMenu() { 
+            document.getElementById('image-view').style.display = 'none'; 
+            document.getElementById('category-view').style.display = 'grid'; 
+            document.getElementById('home-footer').style.display = 'block';
+            document.getElementById('view-title').innerText = 'KATEGORİ SEÇİNİZ'; 
+            document.getElementById('back-btn').style.display = 'none'; 
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function openPreview(index) { currentIndex = index; updatePreview(); document.getElementById('preview-modal').style.display = 'flex'; tg.HapticFeedback.impactOccurred('medium'); }
+        function updatePreview() { const item = currentCategoryItems[currentIndex]; document.getElementById('preview-img').src = item.url; document.getElementById('preview-title').innerText = item.title; }
+        function closePreview() { document.getElementById('preview-modal').style.display = 'none'; }
+
+        function saveSelection() {
+            const selectedItem = currentCategoryItems[currentIndex];
+            tg.showConfirm(`${selectedItem.title} konseptini kullanmak istediğinize emin misiniz?`, (isConfirmed) => {
+                if (isConfirmed) {
+                    localStorage.setItem('selectedFonName', selectedItem.title);
+                    localStorage.setItem('selectedFonImg', selectedItem.url);
+
+                    const userId = tg.initDataUnsafe?.user?.id || "unknown";
+                    const btn = document.getElementById('save-btn-text');
+                    tg.HapticFeedback.notificationOccurred('success');
+                    btn.innerText = "İŞLENİYOR...";
+                    btn.disabled = true;
+                    const n8nUrl = `https://asininventory.com/webhook/fon-secimi-kaydet?chat_id=${userId}&secili_fon=${selectedItem.id}_a.jpeg`;
+                    const img = new Image();
+                    img.onload = () => tg.close();
+                    img.onerror = () => tg.close();
+                    img.src = n8nUrl;
+                    setTimeout(() => tg.close(), 1500);
+                } else {
+                    tg.HapticFeedback.impactOccurred('light');
+                }
+            });
+        }
     </script>
 </body>
 </html>
