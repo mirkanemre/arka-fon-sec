@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Pro Simulator</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
 
@@ -15,7 +13,6 @@
             --accent: #3b82f6;
             --primary: #f59e0b;
             --border: #1c1c1e;
-            --card-bg: #0a0a0a;
         }
 
         body {
@@ -153,7 +150,7 @@
     </div>
 
     <div style="width: 100%; text-align: center; margin-bottom: 20px;">
-        <p id="status-display" class="status-text">SİSTEME BAĞLANILIYOR...</p>
+        <p id="status-display" class="status-text">VERİLER EŞİTLENİYOR...</p>
         <button class="btn-generate" onclick="startProduction()">KENDİ SAHNENİZİ OLUŞTURUN</button>
     </div>
 
@@ -170,36 +167,25 @@
         tg.BackButton.show();
         tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
 
-        // 1. SUPABASE YAPILANDIRMASI
-        const SUPABASE_URL = "https://bhyeemsvcforqnddhoot.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJoeWVlbXN2Y2ZvcnFuZGRob290Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTgwNzcxNywiZXhwIjoyMDY1MzgzNzE3fQ.fdqhn9RJvQA8RDPhw2N2o_q-TdTSCLddnoE9EFGCSQE"; 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
         async function syncDatabase() {
             const chatID = tg.initDataUnsafe?.user?.id || "1017604800";
             
+            // BURAYA n8n'DEKİ SORGULAMA WEBHOOK LİNKİNİ YAZIYORSUN ABİ
+            const n8nSorguUrl = `https://senin-n8n-adresin.com/webhook/fon-bilgisi-cek?chat_id=${chatID}`;
+            
             try {
-                // Veriyi en güncel olandan eskiye doğru çekiyoruz
-                let { data: galeri, error } = await _supabase
-                    .from('galeri') 
-                    .select('secili_konsept_id, konsept_adi')
-                    .eq('chat_id', chatID)
-                    .order('created_at', { ascending: false })
-                    .limit(1)
-                    .single();
+                const response = await fetch(n8nSorguUrl);
+                const result = await response.json();
 
-                if (error) throw error;
+                if (result && result.secili_konsept_id) {
+                    const fonID = result.secili_konsept_id;
+                    const konseptName = result.konsept_adi;
 
-                if (galeri) {
-                    const fonID = galeri.secili_konsept_id;
-                    const konseptName = galeri.konsept_adi;
-
-                    // Supabase Storage Linklerini Oluştur (Direct Access)
+                    // Supabase Storage Linklerini oluşturuyoruz
                     const baseStorage = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/";
                     const fullImgUrl = `${baseStorage}${fonID}_a.jpeg`;
                     const fullLogoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${chatID}_logo.png`;
 
-                    // DOM Güncelleme
                     document.getElementById('raw-bg-img').src = fullImgUrl;
                     document.getElementById('sim-bg').src = fullImgUrl;
                     document.getElementById('user-logo').src = fullLogoUrl;
@@ -211,17 +197,15 @@
                 }
 
             } catch (err) {
-                console.error("Hata:", err);
+                console.error("n8n Hatası:", err);
                 document.getElementById('status-display').innerText = "BAĞLANTI HATASI";
             }
         }
 
         function startProduction() {
             tg.HapticFeedback.notificationOccurred('success');
-            tg.showConfirm("Bu yapılandırma ile profesyonel çekim işlemini başlatmak istiyor musunuz?", (ok) => {
-                if (ok) {
-                    tg.close();
-                }
+            tg.showConfirm("Bu yapılandırma ile render işlemini başlatmak istiyor musunuz?", (ok) => {
+                if (ok) tg.close();
             });
         }
 
