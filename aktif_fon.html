@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Pro Simulator</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
 
@@ -167,21 +168,32 @@
         tg.BackButton.show();
         tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
 
+        // 1. SUPABASE AYARLARI
+        const SUPABASE_URL = "https://bhyeemsvcforqnddhoot.supabase.co";
+        // Senin yeni publishable key'in
+        const SUPABASE_KEY = "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q"; 
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         async function syncDatabase() {
             const chatID = tg.initDataUnsafe?.user?.id || "1017604800";
             
-            // BURAYA n8n'DEKİ SORGULAMA WEBHOOK LİNKİNİ YAZIYORSUN ABİ
-            const n8nSorguUrl = `https://senin-n8n-adresin.com/webhook/fon-bilgisi-cek?chat_id=${chatID}`;
-            
             try {
-                const response = await fetch(n8nSorguUrl);
-                const result = await response.json();
+                // n8n yerine doğrudan Supabase'den çekiyoruz
+                let { data: galeri, error } = await _supabase
+                    .from('galeri')
+                    .select('secili_konsept_id, konsept_adi')
+                    .eq('chat_id', chatID)
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .single();
 
-                if (result && result.secili_konsept_id) {
-                    const fonID = result.secili_konsept_id;
-                    const konseptName = result.konsept_adi;
+                if (error) throw error;
 
-                    // Supabase Storage Linklerini oluşturuyoruz
+                if (galeri) {
+                    const fonID = galeri.secili_konsept_id;
+                    const konseptName = galeri.konsept_adi;
+
+                    // Supabase Storage Linkleri
                     const baseStorage = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/";
                     const fullImgUrl = `${baseStorage}${fonID}_a.jpeg`;
                     const fullLogoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${chatID}_logo.png`;
@@ -197,7 +209,7 @@
                 }
 
             } catch (err) {
-                console.error("n8n Hatası:", err);
+                console.error("Hata:", err);
                 document.getElementById('status-display').innerText = "BAĞLANTI HATASI";
             }
         }
