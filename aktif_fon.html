@@ -160,13 +160,13 @@
 
     <div class="section-label">Seçili Arka Fon</div>
     <div class="raw-bg-box">
-        <img id="raw-bg-img" src="" alt="Yükleniyor...">
+        <img id="raw-bg-img" src="" alt="Fon Yükleniyor...">
     </div>
 
     <div class="section-label">Canlı Önizleme (Simülatör)</div>
     <div class="simulator-box">
         <div class="scan-line"></div>
-        <img id="sim-bg" src="" alt="Yükleniyor...">
+        <img id="sim-bg" src="" alt="Fon Yükleniyor...">
         <div class="logo-overlay">
             <img id="user-logo" src="" onerror="this.src='https://via.placeholder.com/200x100/000000/FFFFFF?text=LOGO+YOK'">
         </div>
@@ -193,31 +193,22 @@
         tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
 
         function loadPage() {
-            // 1. LocalStorage'dan ID bilgisini alıyoruz
-            const savedID = localStorage.getItem('selectedFonID'); // icmekan_0001 gibi
+            // 1. LocalStorage'dan ID'yi çekiyoruz (Örn: dismekan_0001)
+            const savedID = localStorage.getItem('selectedFonID'); 
             const savedName = localStorage.getItem('selectedFonName');
             
-            // Supabase Bucket URL (Burayı senin bucket yapına göre kontrol et)
-            const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/arka-fonlar/";
+            // Senin belirttiğin Supabase Bucket Yolu
+            const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/";
 
             if (savedID) {
-                // ID'ye göre klasör belirleme (ic veya dis)
-                const folder = savedID.startsWith('ic') ? 'ic' : 'dis';
-                const fullImageUrl = `${supabaseBase}${folder}/${savedID}_c.jpeg`;
+                // Link yapısı: bucket_url + id + _a.jpeg
+                const fullImageUrl = `${supabaseBase}${savedID}_a.jpeg`;
 
-                // Görselleri Basıyoruz
                 document.getElementById('raw-bg-img').src = fullImageUrl;
                 document.getElementById('sim-bg').src = fullImageUrl;
                 document.getElementById('active-name').innerText = savedName.toUpperCase();
             } else {
-                // Eğer ID yoksa yedek olarak eski URL yöntemini dene (Hata payı için)
-                const fallbackImg = localStorage.getItem('selectedFonImg');
-                if(fallbackImg) {
-                    document.getElementById('raw-bg-img').src = fallbackImg;
-                    document.getElementById('sim-bg').src = fallbackImg;
-                } else {
-                    window.location.href = 'arka_fon.html';
-                }
+                window.location.href = 'arka_fon.html';
             }
 
             // 2. Dinamik Logoyu ChatID ile Çek
