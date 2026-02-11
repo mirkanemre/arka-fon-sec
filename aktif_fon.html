@@ -8,132 +8,30 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
-
-        :root {
-            --bg: #000000;
-            --accent: #3b82f6;
-            --primary: #f59e0b;
-            --border: #1c1c1e;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            margin: 0;
-            padding: 20px;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .nav-header {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .btn-top-back {
-            text-decoration: none;
-            color: var(--accent);
-            font-size: 0.8rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .section-label {
-            width: 100%;
-            font-size: 0.6rem;
-            color: #48484a;
-            font-weight: 900;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            text-align: left;
-        }
-
-        .raw-bg-box, .simulator-box {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-bottom: 25px;
-            background: #050505;
-            position: relative;
-        }
-
+        :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .btn-top-back { text-decoration: none; color: var(--accent); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+        .section-label { width: 100%; font-size: 0.6rem; color: #48484a; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; text-transform: uppercase; text-align: left; }
+        .raw-bg-box, .simulator-box { width: 100%; max-width: 500px; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 25px; background: #050505; position: relative; }
         .raw-bg-box { height: 120px; }
         .simulator-box { aspect-ratio: 16/9; border-color: var(--accent); box-shadow: 0 0 25px rgba(59, 130, 246, 0.15); }
-
         #raw-bg-img, #sim-bg { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         #sim-bg { filter: brightness(0.4) blur(1px); }
-
-        .logo-overlay {
-            position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 45%; z-index: 5; animation: pulse 3s infinite ease-in-out;
-        }
-
+        .logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45%; z-index: 5; animation: pulse 3s infinite ease-in-out; }
         #user-logo { width: 100%; filter: drop-shadow(0 0 15px rgba(255,255,255,0.4)); }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
-        }
-
-        .scan-line {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--accent);
-            box-shadow: 0 0 15px var(--accent);
-            animation: scan 3s infinite linear;
-            z-index: 10;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
-        .btn-generate {
-            width: 100%;
-            background: linear-gradient(45deg, var(--accent), #1e40af);
-            color: #fff;
-            border: none;
-            padding: 22px;
-            border-radius: 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        .status-text { font-family: 'Orbitron'; font-size: 0.75rem; color: var(--primary); margin-bottom: 15px; letter-spacing: 1px; }
-
-        .footer {
-            margin-top: auto;
-            padding: 30px 0;
-            font-size: 0.6rem;
-            color: #48484a;
-            text-align: center;
-            line-height: 1.5;
-            letter-spacing: 1px;
-        }
+        @keyframes pulse { 0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scan 3s infinite linear; z-index: 10; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 22px; border-radius: 20px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; }
+        .status-text { font-family: 'Orbitron'; font-size: 0.75rem; color: var(--primary); margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
     <div class="nav-header">
         <a href="index.html" class="btn-top-back">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">OTOFONFX v1.0.4</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 700;">OTOFONFX v1.0.4</div>
     </div>
 
     <div class="section-label">Seçili Arka Fon (Saf Hal)</div>
@@ -150,27 +48,14 @@
         </div>
     </div>
 
-    <div style="width: 100%; text-align: center; margin-bottom: 20px;">
-        <p id="status-display" class="status-text">VERİLER EŞİTLENİYOR...</p>
-        <button class="btn-generate" onclick="startProduction()">KENDİ SAHNENİZİ OLUŞTURUN</button>
-    </div>
-
-    <div class="footer">
-        © 2026 OTOFONFX TECHNOLOGIES<br>
-        Tüm hakları OtoFonFX stüdyosuna aittir.
-    </div>
+    <p id="status-display" class="status-text">VERİLER EŞİTLENİYOR...</p>
+    <button class="btn-generate" onclick="startProduction()">KENDİ SAHNENİZİ OLUŞTURUN</button>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        tg.expand();
-        tg.headerColor = "#000000";
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
 
-        // 1. SUPABASE AYARLARI
         const SUPABASE_URL = "https://bhyeemsvcforqnddhoot.supabase.co";
-        // Senin yeni publishable key'in
         const SUPABASE_KEY = "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q"; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -178,29 +63,30 @@
             const chatID = tg.initDataUnsafe?.user?.id || "1017604800";
             
             try {
-                // single() yerine direkt select yapıp ilkini alıyoruz (Daha güvenli)
+                // Sütun isimlerini 'secili_stand_gorseli' ve 'chat_id' olarak düzelttik
                 let { data: galeri, error } = await _supabase
-                    .from('galeri')
-                    .select('secili_konsept_id, konsept_adi')
-                    .eq('chat_id', chatID.toString()) // Sayı/Metin karmaşasını önler
+                    .from('galeriler')
+                    .select('secili_stand_gorseli')
+                    .eq('chat_id', chatID.toString())
                     .order('created_at', { ascending: false });
 
                 if (error) {
-                    // Hatayı ekranda net görelim
                     document.getElementById('status-display').innerText = "HATA: " + error.message;
                     return;
                 }
 
                 if (galeri && galeri.length > 0) {
-                    const row = galeri[0]; // En son kaydı al
-                    const fonID = row.secili_konsept_id;
+                    const row = galeri[0];
+                    const fonID = row.secili_stand_gorseli; // "icmekan_0001" gibi
                     
                     const baseStorage = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/";
-                    
-                    document.getElementById('raw-bg-img').src = `${baseStorage}${fonID}_a.jpeg`;
-                    document.getElementById('sim-bg').src = `${baseStorage}${fonID}_a.jpeg`;
-                    document.getElementById('user-logo').src = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${chatID}_logo.png`;
-                    document.getElementById('status-display').innerText = row.konsept_adi.toUpperCase();
+                    const fullImgUrl = `${baseStorage}${fonID}_a.jpeg`;
+                    const fullLogoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${chatID}_logo.png`;
+
+                    document.getElementById('raw-bg-img').src = fullImgUrl;
+                    document.getElementById('sim-bg').src = fullImgUrl;
+                    document.getElementById('user-logo').src = fullLogoUrl;
+                    document.getElementById('status-display').innerText = "KONSEPT AKTİF: " + fonID.toUpperCase();
                     
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
@@ -211,15 +97,12 @@
                 document.getElementById('status-display').innerText = "SİSTEM BAĞLANTI HATASI";
             }
         }
+
         function startProduction() {
-            tg.HapticFeedback.notificationOccurred('success');
-            tg.showConfirm("Bu yapılandırma ile render işlemini başlatmak istiyor musunuz?", (ok) => {
-                if (ok) tg.close();
-            });
+            tg.showConfirm("Bu yapılandırma ile render başlatılsın mı?", (ok) => { if (ok) tg.close(); });
         }
 
         window.onload = syncDatabase;
     </script>
 </body>
 </html>
-
