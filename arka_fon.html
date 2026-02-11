@@ -244,16 +244,33 @@
 
         function saveSelection() {
             const selectedItem = currentCategoryItems[currentIndex];
-            const userId = tg.initDataUnsafe?.user?.id || "unknown";
-            const btn = document.getElementById('save-btn-text');
-            btn.innerText = "İŞLENİYOR...";
-            const n8nUrl = `https://asininventory.com/webhook/fon-secimi-kaydet?chat_id=${userId}&secili_fon=${selectedItem.id}_a.jpeg`;
-            const img = new Image();
-            img.onload = () => tg.close();
-            img.onerror = () => tg.close();
-            img.src = n8nUrl;
-            setTimeout(() => tg.close(), 1500);
+            
+            // Telegram'ın kendi şık Onay Penceresini açıyoruz
+            tg.showConfirm(`${selectedItem.title} konseptini kullanmak istediğinize emin misiniz?`, (isConfirmed) => {
+                if (isConfirmed) {
+                    // Kullanıcı EVET dedi
+                    const userId = tg.initDataUnsafe?.user?.id || "unknown";
+                    const btn = document.getElementById('save-btn-text');
+                    
+                    tg.HapticFeedback.notificationOccurred('success');
+                    btn.innerText = "İŞLENİYOR...";
+                    btn.disabled = true;
+        
+                    const n8nUrl = `https://asininventory.com/webhook/fon-secimi-kaydet?chat_id=${userId}&secili_fon=${selectedItem.id}_a.jpeg`;
+                    
+                    const img = new Image();
+                    img.onload = () => tg.close();
+                    img.onerror = () => tg.close();
+                    img.src = n8nUrl;
+                    
+                    setTimeout(() => tg.close(), 1500);
+                } else {
+                    // Kullanıcı HAYIR dedi, hiçbir şey yapma, pencere kapansın
+                    tg.HapticFeedback.impactOccurred('light');
+                }
+            });
         }
     </script>
 </body>
 </html>
+
