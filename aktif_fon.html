@@ -178,42 +178,39 @@
             const chatID = tg.initDataUnsafe?.user?.id || "1017604800";
             
             try {
-                // n8n yerine doğrudan Supabase'den çekiyoruz
+                // single() yerine direkt select yapıp ilkini alıyoruz (Daha güvenli)
                 let { data: galeri, error } = await _supabase
                     .from('galeri')
                     .select('secili_konsept_id, konsept_adi')
-                    .eq('chat_id', chatID)
-                    .order('created_at', { ascending: false })
-                    .limit(1)
-                    .single();
+                    .eq('chat_id', chatID.toString()) // Sayı/Metin karmaşasını önler
+                    .order('created_at', { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    // Hatayı ekranda net görelim
+                    document.getElementById('status-display').innerText = "HATA: " + error.message;
+                    return;
+                }
 
-                if (galeri) {
-                    const fonID = galeri.secili_konsept_id;
-                    const konseptName = galeri.konsept_adi;
-
-                    // Supabase Storage Linkleri
+                if (galeri && galeri.length > 0) {
+                    const row = galeri[0]; // En son kaydı al
+                    const fonID = row.secili_konsept_id;
+                    
                     const baseStorage = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/";
-                    const fullImgUrl = `${baseStorage}${fonID}_a.jpeg`;
-                    const fullLogoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${chatID}_logo.png`;
-
-                    document.getElementById('raw-bg-img').src = fullImgUrl;
-                    document.getElementById('sim-bg').src = fullImgUrl;
-                    document.getElementById('user-logo').src = fullLogoUrl;
-                    document.getElementById('status-display').innerText = konseptName.toUpperCase();
+                    
+                    document.getElementById('raw-bg-img').src = `${baseStorage}${fonID}_a.jpeg`;
+                    document.getElementById('sim-bg').src = `${baseStorage}${fonID}_a.jpeg`;
+                    document.getElementById('user-logo').src = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${chatID}_logo.png`;
+                    document.getElementById('status-display').innerText = row.konsept_adi.toUpperCase();
                     
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    document.getElementById('status-display').innerText = "SEÇİM BULUNAMADI";
+                    document.getElementById('status-display').innerText = "SEÇİM BULUNAMADI (ID: " + chatID + ")";
                 }
 
             } catch (err) {
-                console.error("Hata:", err);
-                document.getElementById('status-display').innerText = "BAĞLANTI HATASI";
+                document.getElementById('status-display').innerText = "SİSTEM BAĞLANTI HATASI";
             }
         }
-
         function startProduction() {
             tg.HapticFeedback.notificationOccurred('success');
             tg.showConfirm("Bu yapılandırma ile render işlemini başlatmak istiyor musunuz?", (ok) => {
@@ -225,3 +222,4 @@
     </script>
 </body>
 </html>
+
