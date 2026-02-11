@@ -60,15 +60,30 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function syncDatabase() {
-            const chatID = tg.initDataUnsafe?.user?.id || "1017604800";
+            // Telegram'dan gelen ID'yi alıyoruz
+            const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
+            // Hem sayı hem metin halini hazır tutuyoruz
+            const chatIDNum = parseInt(rawID); 
             
             try {
-                // Sütun isimlerini 'secili_stand_gorseli' ve 'chat_id' olarak düzelttik
+                // Sorguyu yaparken .or kullanarak hem sayı hem metin ihtimalini deniyoruz
                 let { data: galeri, error } = await _supabase
                     .from('galeriler')
                     .select('secili_stand_gorseli')
-                    .eq('chat_id', chatID.toString())
+                    .eq('chat_id', chatIDNum) // Önce sayı olarak dene
                     .order('created_at', { ascending: false });
+
+                // Eğer sayı olarak bulamazsa bir de metin olarak deneyelim
+                if (!galeri || galeri.length === 0) {
+                    const secondTry = await _supabase
+                        .from('galeriler')
+                        .select('secili_stand_gorseli')
+                        .eq('chat_id', rawID.toString())
+                        .order('created_at', { ascending: false });
+                    
+                    galeri = secondTry.data;
+                    error = secondTry.error;
+                }
 
                 if (error) {
                     document.getElementById('status-display').innerText = "HATA: " + error.message;
@@ -77,11 +92,11 @@
 
                 if (galeri && galeri.length > 0) {
                     const row = galeri[0];
-                    const fonID = row.secili_stand_gorseli; // "icmekan_0001" gibi
+                    const fonID = row.secili_stand_gorseli; 
                     
                     const baseStorage = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/";
                     const fullImgUrl = `${baseStorage}${fonID}_a.jpeg`;
-                    const fullLogoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${chatID}_logo.png`;
+                    const fullLogoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${rawID}_logo.png`;
 
                     document.getElementById('raw-bg-img').src = fullImgUrl;
                     document.getElementById('sim-bg').src = fullImgUrl;
@@ -90,14 +105,14 @@
                     
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    document.getElementById('status-display').innerText = "SEÇİM BULUNAMADI (ID: " + chatID + ")";
+                    // Eğer hala bulamıyorsa veritabanında bu ID ile satır yok demektir
+                    document.getElementById('status-display').innerText = "KAYIT YOK (ID: " + rawID + ")";
                 }
 
             } catch (err) {
                 document.getElementById('status-display').innerText = "SİSTEM BAĞLANTI HATASI";
             }
         }
-
         function startProduction() {
             tg.showConfirm("Bu yapılandırma ile render başlatılsın mı?", (ok) => { if (ok) tg.close(); });
         }
@@ -106,3 +121,4 @@
     </script>
 </body>
 </html>
+
