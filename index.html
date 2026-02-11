@@ -39,7 +39,7 @@
         .logo-area {
             text-align: center;
             margin-top: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .logo-area h1 {
@@ -52,49 +52,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- SEÇİLİ FON KARTI --- */
-        .status-card {
-            width: 100%;
-            background: rgba(28, 28, 30, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 15px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-sizing: border-box;
-        }
-
-        .status-img {
-            width: 65px;
-            height: 65px;
-            border-radius: 14px;
-            background: #1c1c1e;
-            object-fit: cover;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .status-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .status-info small {
-            color: var(--primary);
-            font-weight: 900;
-            font-size: 0.6rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .status-info span {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            margin-top: 4px;
-            color: #fff;
-        }
-
         .menu-grid {
             width: 100%;
             display: flex;
@@ -102,6 +59,7 @@
             gap: 15px;
         }
 
+        /* Tüm kartlar aynı tasarım dilinde */
         .main-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -146,8 +104,10 @@
             z-index: 1;
         }
 
+        /* Neon Kenar Vurguları */
         .studio-card { border-left: 5px solid var(--primary); }
         .store-card { border-left: 5px solid #34c759; }
+        .active-card { border-left: 5px solid #f59e0b; } /* Turuncu/Gold vurgu */
 
         .footer {
             margin-top: auto;
@@ -166,14 +126,6 @@
         <p style="font-size: 0.6rem; color: var(--primary); letter-spacing: 3px; text-transform: uppercase; font-weight: 900; margin-top: 5px;">Pro Studio Engine</p>
     </div>
 
-    <div class="status-card" id="status-card">
-        <img id="active-img" src="https://via.placeholder.com/150/1c1c1e/636366?text=?" class="status-img">
-        <div class="status-info">
-            <small>AKTİF SEÇİMİNİZ</small>
-            <span id="active-name">SEÇİM YAPILMADI</span>
-        </div>
-    </div>
-
     <div class="menu-grid">
         <a href="https://mirkanemre.github.io/arka-fon-sec/arka_fon.html" class="main-card studio-card">
             <h2>Stüdyo Sahneleri</h2>
@@ -185,6 +137,12 @@
             <h2>Kredi Mağazası</h2>
             <p>Paket yükleyin, çekime kesintisiz devam edin.</p>
             <div class="card-icon">💳</div>
+        </a>
+
+        <a href="https://mirkanemre.github.io/arka-fon-sec/aktif_fon.html" class="main-card active-card">
+            <h2>Seçili Arka Fon</h2>
+            <p id="active-status-text">Mevcut konseptinizi görüntüleyin.</p>
+            <div class="card-icon">✨</div>
         </a>
     </div>
 
@@ -199,15 +157,11 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // SEÇİLİ FONU YÜKLE
-        function loadSelectedFon() {
+        // Dashboard açıldığında eğer bir fon seçiliyse ismini küçükçe yazalım
+        function checkActiveFon() {
             const savedName = localStorage.getItem('selectedFonName');
-            const savedImg = localStorage.getItem('selectedFonImg');
-            
-            if (savedName && savedImg) {
-                document.getElementById('active-name').innerText = savedName.toUpperCase();
-                document.getElementById('active-img').src = savedImg;
-                document.getElementById('status-card').style.borderColor = "var(--primary)";
+            if (savedName) {
+                document.getElementById('active-status-text').innerText = "Aktif: " + savedName.toUpperCase();
             }
         }
 
@@ -217,8 +171,7 @@
             };
         });
 
-        // Sayfa açıldığında hafızayı kontrol et
-        window.onload = loadSelectedFon;
+        window.onload = checkActiveFon;
     </script>
 </body>
 </html>
