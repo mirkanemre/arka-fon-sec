@@ -59,7 +59,6 @@
             gap: 15px;
         }
 
-        /* Tüm kartlar aynı tasarım dilinde */
         .main-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -104,18 +103,18 @@
             z-index: 1;
         }
 
-        /* Neon Kenar Vurguları */
         .studio-card { border-left: 5px solid var(--primary); }
         .store-card { border-left: 5px solid #34c759; }
-        .active-card { border-left: 5px solid #f59e0b; } /* Turuncu/Gold vurgu */
+        .active-card { border-left: 5px solid #f59e0b; }
 
         .footer {
             margin-top: auto;
-            padding-top: 30px;
+            padding-top: 40px;
             font-size: 0.6rem;
             color: #48484a;
             text-align: center;
             letter-spacing: 1px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -148,7 +147,8 @@
 
     <div class="footer">
         © 2026 OTOFONFX TECHNOLOGIES<br>
-        v1.0.4 PREMIUM ACCESS
+        Tüm hakları OtoFonFX stüdyosuna aittir.<br>
+        <span style="opacity: 0.5;">v1.0.4 PREMIUM ACCESS</span>
     </div>
 
     <script>
@@ -157,7 +157,6 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Dashboard açıldığında eğer bir fon seçiliyse ismini küçükçe yazalım
         function checkActiveFon() {
             const savedName = localStorage.getItem('selectedFonName');
             if (savedName) {
@@ -175,4 +174,3 @@
     </script>
 </body>
 </html>
-
