@@ -7,7 +7,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;700;900&display=swap');
         
         :root {
             --bg: #000;
@@ -20,7 +20,7 @@
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -28,56 +28,70 @@
             min-height: 100vh;
         }
 
+        /* Üst Menü */
         .nav-header {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .btn-top-back {
             text-decoration: none;
             color: var(--accent);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
         }
 
-        .section-label {
-            width: 100%;
-            font-size: 0.6rem;
-            color: #48484a;
-            font-weight: 900;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            text-align: left;
-        }
-
-        /* Kutular */
-        .raw-box, .logo-box, .simulator-box {
+        /* Yan Yana Görünüm Bölümü */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             width: 100%;
             max-width: 500px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
-            background: #050505;
-            position: relative;
+            margin-bottom: 15px;
         }
 
-        .raw-box { height: 110px; }
-        .logo-box { height: 80px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); }
-        .simulator-box { aspect-ratio: 16/9; border-color: var(--accent); box-shadow: 0 0 25px rgba(59, 130, 246, 0.15); }
+        .section-label {
+            font-size: 0.55rem;
+            color: #48484a;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .grid-box {
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #050505;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Logo Önizleme */
-        #user-preview-logo { width: auto; height: 50px; object-fit: contain; }
+        .logo-img { width: auto; height: 60%; object-fit: contain; }
 
-        /* Simülatör Alanı (Eski Sade Hali) */
-        #sim-bg { filter: brightness(0.5) blur(1px); }
+        /* Simülatör Alanı */
+        .simulator-box {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 16/9;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--accent);
+            background: #000;
+            position: relative;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+        }
+
+        #sim-bg { filter: brightness(0.4) blur(1px); }
         
         .scan-line {
             position: absolute;
@@ -89,53 +103,115 @@
         }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
+        /* Bilgi Metni Paneli */
+        .info-panel {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+
+        .info-title {
+            font-family: 'Orbitron';
+            font-size: 0.65rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .info-desc {
+            font-size: 0.75rem;
+            color: #8e8e93;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* İşlem Butonu */
         .btn-generate {
             width: 100%;
+            max-width: 500px;
             background: linear-gradient(45deg, var(--accent), #1e40af);
             color: #fff;
             border: none;
-            padding: 22px;
-            border-radius: 20px;
+            padding: 20px;
+            border-radius: 18px;
             font-family: 'Orbitron';
             font-weight: 900;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             cursor: pointer;
             text-transform: uppercase;
-            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
 
-        .status-text { font-family: 'Orbitron'; font-size: 0.75rem; color: var(--primary); margin-bottom: 10px; }
+        .btn-subtext {
+            font-size: 0.6rem;
+            opacity: 0.8;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .status-badge {
+            font-size: 0.6rem;
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 10px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
     </style>
 </head>
 <body>
 
     <div class="nav-header">
-        <a href="index.html" class="btn-top-back">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 700;">OTOFONFX v1.0.7</div>
+        <a href="index.html" class="btn-top-back">❮ GERİ DÖN</a>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 800; letter-spacing: 1px;">CORE ENGINE v1.0.8</div>
     </div>
 
-    <div class="section-label">SEÇİLİ ARKA FON</div>
-    <div class="raw-box">
-        <img id="raw-bg-img" src="" alt="Yükleniyor...">
+    <div class="selection-grid">
+        <div>
+            <div class="section-label">AKTİF KONSEPT</div>
+            <div class="grid-box">
+                <img id="raw-bg-img" src="" alt="Yükleniyor...">
+            </div>
+        </div>
+        <div>
+            <div class="section-label">KAYITLI LOGO</div>
+            <div class="grid-box">
+                <img id="user-preview-logo" class="logo-img" src="" alt="Logo...">
+            </div>
+        </div>
     </div>
 
-    <div class="section-label">UYGULANACAK LOGO</div>
-    <div class="logo-box">
-        <img id="user-preview-logo" src="" alt="Logo Bekleniyor...">
-    </div>
-
-    <div class="section-label">CANLI SİMÜLATÖR</div>
+    <div class="section-label" style="width: 100%; max-width: 500px;">SİSTEM SİMÜLASYONU</div>
     <div class="simulator-box">
         <div class="scan-line"></div>
         <img id="sim-bg" src="" alt="">
-        </div>
+    </div>
 
-    <p id="status-display" class="status-text">VERİLER EŞİTLENİYOR...</p>
-    <button class="btn-generate" onclick="startProduction()">RENDER İŞLEMİNİ BAŞLAT</button>
+    <div class="info-panel">
+        <div class="info-title">AI RENDERING ENGINE</div>
+        <p class="info-desc">
+            Seçtiğiniz kurumsal logo, yapay zeka tarafından analiz edilerek seçili fon üzerine <b>fotorealistik perspektif</b> ile işlenecektir. Bu işlem sonucunda dijital stüdyo kalitesinde görselleriniz oluşturulur.
+        </p>
+    </div>
+
+    <button class="btn-generate" onclick="startProduction()">
+        RENDER İŞLEMİNİ BAŞLAT
+        <span class="btn-subtext">(1 KREDİ KULLANILACAKTIR)</span>
+    </button>
+
+    <div id="status-display" class="status-badge">SENKRONİZASYON BEKLENİYOR...</div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
+        tg.expand();
 
         const SUPABASE_URL = "https://bhyeemsvcforqnddhoot.supabase.co";
         const SUPABASE_KEY = "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q"; 
@@ -151,34 +227,30 @@
                     .eq('chat_id', rawID)
                     .order('created_at', { ascending: false });
 
-                if (error) {
-                    document.getElementById('status-display').innerText = "HATA: " + error.message;
-                    return;
-                }
-
                 if (galeri && galeri.length > 0) {
                     const row = galeri[0];
-                    
-                    // Görselleri dağıtıyoruz
                     document.getElementById('raw-bg-img').src = row.stand_gorseli_url;
                     document.getElementById('sim-bg').src = row.stand_gorseli_url;
                     document.getElementById('user-preview-logo').src = row.logo_gorsel_url;
-
-                    document.getElementById('status-display').innerText = "HAZIR";
+                    document.getElementById('status-display').innerText = "SİSTEM HAZIR";
                     tg.HapticFeedback.impactOccurred('light');
-                } else {
-                    document.getElementById('status-display').innerText = "VERİ BULUNAMADI";
                 }
-
             } catch (err) {
                 document.getElementById('status-display').innerText = "BAĞLANTI HATASI";
             }
         }
 
         function startProduction() {
-            tg.showConfirm("Seçili konsept ve logo ile işleme başlansın mı?", (ok) => { 
-                if (ok) tg.close(); 
-            });
+            tg.HapticFeedback.notificationOccurred('warning');
+            tg.showConfirm(
+                "Logonuzun seçili arka plana yerleştirilme işlemi başlatılacaktır. Bu işlem bakiyenizden 1 KREDİ düşülmesine neden olur. Devam etmek istiyor musunuz?", 
+                (ok) => { 
+                    if (ok) {
+                        tg.HapticFeedback.notificationOccurred('success');
+                        tg.close(); 
+                    } 
+                }
+            );
         }
 
         window.onload = syncDatabase;
