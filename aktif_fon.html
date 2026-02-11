@@ -44,7 +44,6 @@
             letter-spacing: 1px;
         }
 
-        /* 1. KATMAN: SEÇİLİ ARKA FON (SAF HALİ) */
         .section-label {
             width: 100%;
             font-size: 0.6rem;
@@ -63,6 +62,7 @@
             overflow: hidden;
             border: 1px solid var(--border);
             margin-bottom: 25px;
+            background: #050505;
         }
 
         #raw-bg-img {
@@ -72,7 +72,6 @@
             opacity: 0.8;
         }
 
-        /* 2. KATMAN: SİMÜLATÖR (LOGOLU HALİ) */
         .simulator-box {
             position: relative;
             width: 100%;
@@ -90,7 +89,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.4) blur(1px); /* Logo parlasın diye arka planı karartıyoruz */
+            filter: brightness(0.4) blur(1px);
         }
 
         .logo-overlay {
@@ -127,7 +126,6 @@
             100% { top: 100%; }
         }
 
-        /* 3. KATMAN: AKSİYON */
         .btn-generate {
             width: 100%;
             background: linear-gradient(45deg, var(--accent), #1e40af);
@@ -162,13 +160,13 @@
 
     <div class="section-label">Seçili Arka Fon</div>
     <div class="raw-bg-box">
-        <img id="raw-bg-img" src="">
+        <img id="raw-bg-img" src="" alt="Yükleniyor...">
     </div>
 
     <div class="section-label">Canlı Önizleme (Simülatör)</div>
     <div class="simulator-box">
         <div class="scan-line"></div>
-        <img id="sim-bg" src="">
+        <img id="sim-bg" src="" alt="Yükleniyor...">
         <div class="logo-overlay">
             <img id="user-logo" src="" onerror="this.src='https://via.placeholder.com/200x100/000000/FFFFFF?text=LOGO+YOK'">
         </div>
@@ -195,22 +193,34 @@
         tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
 
         function loadPage() {
+            // 1. LocalStorage'dan ID bilgisini alıyoruz
+            const savedID = localStorage.getItem('selectedFonID'); // icmekan_0001 gibi
             const savedName = localStorage.getItem('selectedFonName');
-            const savedImg = localStorage.getItem('selectedFonImg');
             
-            if (savedName && savedImg) {
-                // Saf Fonu Yükle
-                document.getElementById('raw-bg-img').src = savedImg;
-                // Simülatör Fonunu Yükle
-                document.getElementById('sim-bg').src = savedImg;
-                // Yazıyı Güncelle
+            // Supabase Bucket URL (Burayı senin bucket yapına göre kontrol et)
+            const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/arka-fonlar/";
+
+            if (savedID) {
+                // ID'ye göre klasör belirleme (ic veya dis)
+                const folder = savedID.startsWith('ic') ? 'ic' : 'dis';
+                const fullImageUrl = `${supabaseBase}${folder}/${savedID}_c.jpeg`;
+
+                // Görselleri Basıyoruz
+                document.getElementById('raw-bg-img').src = fullImageUrl;
+                document.getElementById('sim-bg').src = fullImageUrl;
                 document.getElementById('active-name').innerText = savedName.toUpperCase();
             } else {
-                window.location.href = 'arka_fon.html';
-                return;
+                // Eğer ID yoksa yedek olarak eski URL yöntemini dene (Hata payı için)
+                const fallbackImg = localStorage.getItem('selectedFonImg');
+                if(fallbackImg) {
+                    document.getElementById('raw-bg-img').src = fallbackImg;
+                    document.getElementById('sim-bg').src = fallbackImg;
+                } else {
+                    window.location.href = 'arka_fon.html';
+                }
             }
 
-            // Dinamik Logoyu ChatID ile Çek
+            // 2. Dinamik Logoyu ChatID ile Çek
             const userId = tg.initDataUnsafe?.user?.id || "1017604800";
             const logoUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${userId}_logo.png`;
             document.getElementById('user-logo').src = logoUrl;
