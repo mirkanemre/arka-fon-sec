@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Stüdyo | Kredi Yükle</title>
+    <title>AI Stüdyo | Kredi Mağazası</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { 
@@ -23,6 +23,7 @@
             color: var(--text); 
             -webkit-user-select: none; 
             user-select: none; 
+            overflow: hidden;
         }
         .header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
         .header h2 { font-size: 1.6rem; margin: 0; font-weight: 800; color: #fff; }
@@ -58,7 +59,6 @@
             box-shadow: 0 4px 10px rgba(0,122,255,0.3);
         }
 
-        /* Popüler Paket Rozeti */
         .badge {
             position: absolute;
             top: 0;
@@ -82,9 +82,10 @@
             color: var(--text-dim);
         }
         
-        .loading-overlay {
+        /* Yükleme Ekranı */
+        #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             display: none; align-items: center; justify-content: center;
             z-index: 1000; flex-direction: column;
         }
@@ -100,14 +101,14 @@
 
     <div class="header">
         <h2>Kredi Mağazası</h2>
-        <p>Görsel oluşturmak için paket seçin</p>
+        <p>Devam etmek için bir paket seçin</p>
     </div>
 
     <div class="package-container">
         <div class="package-card" onclick="buyPackage(10, 500)">
             <div class="package-info">
                 <span class="package-name">10 Kredi</span>
-                <span class="package-desc">Standart Paket</span>
+                <span class="package-desc">Temel Paket (Görsel başı 50₺)</span>
             </div>
             <div class="price-tag">500 TL</div>
         </div>
@@ -116,7 +117,7 @@
             <div class="badge">EN POPÜLER</div>
             <div class="package-info">
                 <span class="package-name" style="color: var(--gold);">25 Kredi</span>
-                <span class="package-desc">Avantajlı Paket (100 TL İndirim)</span>
+                <span class="package-desc">Avantajlı (Görsel başı 44₺)</span>
             </div>
             <div class="price-tag" style="background: var(--gold); color: #000;">1100 TL</div>
         </div>
@@ -124,20 +125,20 @@
         <div class="package-card" onclick="buyPackage(50, 2000)">
             <div class="package-info">
                 <span class="package-name">50 Kredi</span>
-                <span class="package-desc">Profesyonel (500 TL İndirim)</span>
+                <span class="package-desc">Pro Paket (Görsel başı 40₺)</span>
             </div>
             <div class="price-tag">2000 TL</div>
         </div>
     </div>
 
     <div class="info-footer">
-        ⚡ Ödemeler Shopier güvencesiyle yapılır.<br>
-        Onaydan sonra krediniz anında tanımlanır.
+        🔒 Ödemeler Shopier altyapısıyla güvendedir.<br>
+        Krediler ödeme sonrası otomatik tanımlanır.
     </div>
 
-    <div id="loading" class="loading-overlay">
+    <div id="loading-overlay">
         <div class="spinner"></div>
-        <p id="loading-text">Link Hazırlanıyor...</p>
+        <p id="loading-text" style="font-weight: 600;">Link Hazırlanıyor...</p>
     </div>
 
     <script>
@@ -149,28 +150,33 @@
         function buyPackage(miktar, fiyat) {
             const userId = tg.initDataUnsafe?.user?.id || "unknown";
             
-            // Görsel geri bildirim
+            // Kullanıcıya dokunma hissi ver
             tg.HapticFeedback.impactOccurred('heavy');
-            document.getElementById('loading').style.display = 'flex';
+            
+            // Yükleme ekranını göster
+            document.getElementById('loading-overlay').style.display = 'flex';
 
-            // n8n Webhook URL (Burayı kendi n8n URL'inle değiştireceksin abi)
+            // n8n Webhook URL
+            // NOT: Buradaki URL'i n8n'deki Production URL ile değiştirmeyi unutma abi!
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
 
-            // GET isteği atıyoruz (Görünmez resim taktiği)
+            // Görünmez resim isteği (Hacker yöntemi)
             const img = new Image();
-            img.onload = () => handleSuccess();
-            img.onerror = () => handleSuccess(); // n8n boş dönse de başarılı sayıyoruz
+            img.onload = () => finish();
+            img.onerror = () => finish();
             img.src = n8nUrl;
 
-            // Güvenlik amaçlı 2 saniye sonra kapat
-            setTimeout(handleSuccess, 2000);
+            // 2 saniye sonra her halükarda kapat
+            setTimeout(finish, 2000);
         }
 
-        function handleSuccess() {
-            document.getElementById('loading-text').innerText = "Link Gönderildi!";
+        function finish() {
+            document.getElementById('loading-text').innerText = "Ödeme Linki Gönderildi!";
+            document.getElementById('loading-text').style.color = "#22c55e";
+            
             setTimeout(() => {
                 tg.close();
-            }, 800);
+            }, 1000);
         }
     </script>
 </body>
