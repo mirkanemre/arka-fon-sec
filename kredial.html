@@ -3,180 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Stüdyo | Kredi Mağazası</title>
+    <title>AI Stüdyo | Premium Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { 
-            --primary: #007AFF; 
-            --bg: #0f172a; 
-            --card-bg: #1e293b; 
-            --text: #f8fafc; 
-            --text-dim: #94a3b8; 
-            --accent: #22c55e;
-            --gold: #f59e0b;
+        :root {
+            --bg: #030712;
+            --primary: #6366f1;
+            --accent: #a855f7;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
         }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 20px; 
-            color: var(--text); 
-            -webkit-user-select: none; 
-            user-select: none; 
-            overflow: hidden;
-        }
-        .header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
-        .header h2 { font-size: 1.6rem; margin: 0; font-weight: 800; color: #fff; }
-        .header p { color: var(--text-dim); font-size: 0.9rem; margin-top: 5px; }
 
-        .package-container { display: flex; flex-direction: column; gap: 15px; }
-        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+            margin: 0;
+            padding: 24px;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-top: 8px;
+        }
+
+        .package-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .package-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
         }
-        .package-card:active { transform: scale(0.97); background: #2d3a4f; }
-        
-        .package-info { display: flex; flex-direction: column; }
-        .package-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
-        .package-desc { font-size: 0.8rem; color: var(--text-dim); }
-        
-        .price-tag {
-            background: var(--primary);
-            padding: 10px 16px;
-            border-radius: 14px;
-            font-weight: 800;
-            font-size: 1rem;
-            box-shadow: 0 4px 10px rgba(0,122,255,0.3);
+
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
         }
 
-        .badge {
+        .package-card:active {
+            transform: scale(0.96) translateY(2px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .package-card:active::before {
+            transform: translateX(100%);
+        }
+
+        .popular {
+            border: 1.5px solid rgba(99, 102, 241, 0.5);
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .popular-badge {
             position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--gold);
-            color: #000;
-            font-size: 0.65rem;
+            top: 0; right: 24px;
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
             font-weight: 900;
             padding: 4px 12px;
-            border-bottom-left-radius: 12px;
+            border-radius: 0 0 10px 10px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .info-footer {
-            margin-top: 30px;
-            text-align: center;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
+        .kredi-count {
+            display: flex;
+            flex-direction: column;
         }
-        
-        /* Yükleme Ekranı */
-        #loading-overlay {
+
+        .count {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .count span {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            padding-left: 20px;
+        }
+
+        .footer-info {
+            text-align: center;
+            margin-top: 40px;
+            color: #475569;
+            font-size: 0.75rem;
+            line-height: 1.6;
+        }
+
+        /* Loading Animation */
+        #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(3, 7, 18, 0.9);
             display: none; align-items: center; justify-content: center;
             z-index: 1000; flex-direction: column;
+            backdrop-filter: blur(10px);
         }
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1);
-            border-left-color: var(--primary); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 15px;
+
+        .circle {
+            width: 50px; height: 50px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
         }
+
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>Kredi Mağazası</h2>
-        <p>Devam etmek için bir paket seçin</p>
+        <h1>AI Studio Pro</h1>
+        <p>Premium Görsel Kredisi Satın Al</p>
     </div>
 
-    <div class="package-container">
-        <div class="package-card" onclick="buyPackage(10, 500)">
-            <div class="package-info">
-                <span class="package-name">10 Kredi</span>
-                <span class="package-desc">Temel Paket (Görsel başı 50₺)</span>
+    <div class="package-list">
+        <div class="package-card" onclick="process(10, 500)">
+            <div class="kredi-count">
+                <div class="count">10 <span>KREDİ</span></div>
+                <div class="desc">Başlangıç Paketi</div>
             </div>
-            <div class="price-tag">500 TL</div>
+            <div class="price">500 ₺</div>
         </div>
 
-        <div class="package-card" style="border: 1px solid var(--gold);" onclick="buyPackage(25, 1100)">
-            <div class="badge">EN POPÜLER</div>
-            <div class="package-info">
-                <span class="package-name" style="color: var(--gold);">25 Kredi</span>
-                <span class="package-desc">Avantajlı (Görsel başı 44₺)</span>
+        <div class="package-card popular" onclick="process(25, 1100)">
+            <div class="popular-badge">ÖNERİLEN</div>
+            <div class="kredi-count">
+                <div class="count">25 <span>KREDİ</span></div>
+                <div class="desc">En Popüler Seçim</div>
             </div>
-            <div class="price-tag" style="background: var(--gold); color: #000;">1100 TL</div>
+            <div class="price">1.100 ₺</div>
         </div>
 
-        <div class="package-card" onclick="buyPackage(50, 2000)">
-            <div class="package-info">
-                <span class="package-name">50 Kredi</span>
-                <span class="package-desc">Pro Paket (Görsel başı 40₺)</span>
+        <div class="package-card" onclick="process(50, 2000)">
+            <div class="kredi-count">
+                <div class="count">50 <span>KREDİ</span></div>
+                <div class="desc">Profesyonel Avantaj</div>
             </div>
-            <div class="price-tag">2000 TL</div>
+            <div class="price">2.000 ₺</div>
         </div>
     </div>
 
-    <div class="info-footer">
-        🔒 Ödemeler Shopier altyapısıyla güvendedir.<br>
-        Krediler ödeme sonrası otomatik tanımlanır.
+    <div class="footer-info">
+        Güvenli ödeme altyapısı ile 256-bit SSL koruması.<br>
+        Satın alınan krediler anında hesabınıza tanımlanır.
     </div>
 
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p id="loading-text" style="font-weight: 600;">Link Hazırlanıyor...</p>
+    <div id="loader">
+        <div class="circle"></div>
+        <p style="margin-top: 20px; font-weight: 500; letter-spacing: 1px;">SİSTEME BAĞLANILIYOR</p>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
-        tg.headerColor = "#0f172a";
+        tg.headerColor = "#030712";
 
-        function buyPackage(miktar, fiyat) {
+        function process(miktar, fiyat) {
+            tg.HapticFeedback.notificationOccurred('success');
+            document.getElementById('loader').style.display = 'flex';
+            
             const userId = tg.initDataUnsafe?.user?.id || "unknown";
-            
-            // Kullanıcıya dokunma hissi ver
-            tg.HapticFeedback.impactOccurred('heavy');
-            
-            // Yükleme ekranını göster
-            document.getElementById('loading-overlay').style.display = 'flex';
-
-            // n8n Webhook URL
-            // NOT: Buradaki URL'i n8n'deki Production URL ile değiştirmeyi unutma abi!
+            // Kendi n8n URL'in ile güncelle abi
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
 
-            // Görünmez resim isteği (Hacker yöntemi)
             const img = new Image();
-            img.onload = () => finish();
-            img.onerror = () => finish();
+            img.onload = done;
+            img.onerror = done;
             img.src = n8nUrl;
 
-            // 2 saniye sonra her halükarda kapat
-            setTimeout(finish, 2000);
+            setTimeout(done, 2000);
         }
 
-        function finish() {
-            document.getElementById('loading-text').innerText = "Ödeme Linki Gönderildi!";
-            document.getElementById('loading-text').style.color = "#22c55e";
-            
+        function done() {
             setTimeout(() => {
                 tg.close();
-            }, 1000);
+            }, 800);
         }
     </script>
 </body>
