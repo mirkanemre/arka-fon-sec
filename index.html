@@ -6,98 +6,169 @@
     <title>OtoFonFX | Dashboard</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { 
-            --primary: #007AFF; 
-            --bg: #0f172a; 
-            --card-bg: #1e293b; 
-            --text: #f8fafc; 
-            --text-dim: #94a3b8; 
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --bg: #000000;
+            --primary: #007AFF;
+            --card-bg: #0a0a0a;
+            --border: #1c1c1e;
         }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 24px; 
-            color: var(--text); 
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 24px;
+            color: #fff;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            align-items: center;
         }
-        .header { text-align: center; margin-bottom: 40px; margin-top: 20px; }
-        .header h1 { font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .header p { color: var(--text-dim); font-size: 0.9rem; margin-top: 8px; }
 
-        .menu-grid { display: flex; flex-direction: column; gap: 20px; }
-        
+        /* Arka plan ışık süzmesi */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 50px;
+        }
+
+        .logo-area h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: 4px;
+            margin: 0;
+            background: linear-gradient(180deg, #fff 0%, #636366 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-area p {
+            font-size: 0.7rem;
+            color: var(--primary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 900;
+            margin-top: 5px;
+        }
+
+        .menu-grid {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .main-card {
             background: var(--card-bg);
-            border-radius: 24px;
-            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
             text-decoration: none;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.05);
         }
-        .main-card:active { transform: scale(0.96); background: #2d3748; }
-        
-        .card-content h2 { margin: 0; font-size: 1.3rem; font-weight: 700; }
-        .card-content p { margin: 5px 0 0 0; font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; }
-        
-        .card-icon { font-size: 2.5rem; opacity: 0.8; margin-left: 15px; }
+
+        .main-card:active {
+            transform: scale(0.96);
+            background: #1c1c1e;
+        }
+
+        .main-card h2 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin: 0;
+            z-index: 2;
+        }
+
+        .main-card p {
+            font-size: 0.85rem;
+            color: #8e8e93;
+            margin: 8px 0 0 0;
+            z-index: 2;
+        }
+
+        /* İkon Yerleşimi */
+        .card-icon {
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            font-size: 5rem;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+            z-index: 1;
+        }
+
+        /* Özel Renkler */
+        .studio-card { border-left: 5px solid var(--primary); }
+        .store-card { border-left: 5px solid #34c759; }
 
         .footer {
             margin-top: auto;
+            padding-top: 40px;
+            font-size: 0.65rem;
+            color: #48484a;
             text-align: center;
-            padding: 20px;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            opacity: 0.6;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>OtoFonFX</h1>
-        <p>Yapay Zeka Stüdyo Yönetimi</p>
+    <div class="logo-area">
+        <h1>OTOFONFX</h1>
+        <p>Pro Studio Engine</p>
     </div>
 
     <div class="menu-grid">
-        <a href="arka_fon.html" class="main-card" onclick="playHaptic()">
-            <div class="card-content">
-                <h2>Stüdyo Sahneleri</h2>
-                <p>Aracınız için en uygun arka planı seçin ve çekimi başlatın.</p>
-            </div>
+        <a href="kredial.html" class="main-card studio-card" id="btn-studio">
+            <h2>Stüdyo Sahneleri</h2>
+            <p>Arka fonunuzu seçin ve çekimi başlatın.</p>
             <div class="card-icon">🖼️</div>
         </a>
 
-        <a href="kredial.html" class="main-card" onclick="playHaptic()">
-            <div class="card-content">
-                <h2>Kredi Mağazası</h2>
-                <p>1 Kredi = 1 Görsel. Paket yükleyerek hemen çekim yapın.</p>
-            </div>
+        <a href="kredial.html" class="main-card store-card" id="btn-store">
+            <h2>Kredi Mağazası</h2>
+            <p>Paket yükleyin, çekime kesintisiz devam edin.</p>
             <div class="card-icon">💳</div>
         </a>
     </div>
 
     <div class="footer">
-        OtoFonFX v1.0.4<br>
-        Premium Studio Access
+        © 2026 OTOFONFX TECHNOLOGIES<br>
+        v1.0.4 PREMIUM ACCESS
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
-        tg.headerColor = "#0f172a";
+        tg.headerColor = "#000000";
 
-        function playHaptic() {
-            tg.HapticFeedback.impactOccurred('medium');
-        }
+        // Küçük bir Haptic Feedback dokunuşu
+        document.querySelectorAll('.main-card').forEach(card => {
+            card.onclick = () => {
+                tg.HapticFeedback.impactOccurred('medium');
+            };
+        });
+
+        // NOT: Senin fon seçim sayfanın adı neyse 
+        // href="kredial.html" kısmını onunla değiştir abi!
     </script>
 </body>
 </html>
