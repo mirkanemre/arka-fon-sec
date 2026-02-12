@@ -39,10 +39,10 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Telegram Native Geri Butonu (Akıllı Dönüş)
+        // Telegram Native Geri Butonu
         tg.BackButton.show();
         tg.BackButton.onClick(() => { 
-            window.history.back(); // Nereden geldiyse oraya döner
+            window.history.back(); 
         });
 
         async function loadCollection() {
@@ -50,7 +50,7 @@
             const container = document.getElementById('scenes-container');
             
             try {
-                // Mevcut aktif fonu bul
+                // 1. Mevcut aktif fonu bul
                 let { data: galleryInfo } = await _supabase
                     .from('galeriler')
                     .select('kayitli_arkaplan_url')
@@ -59,7 +59,7 @@
 
                 const currentActiveUrl = galleryInfo?.kayitli_arkaplan_url;
 
-                // Kullanıcının sahnelerini çek
+                // 2. Kullanıcının sahnelerini çek (Tarihe göre yeniler üstte)
                 let { data: scenes, error } = await _supabase
                     .from('galeri_kayitli_arkaplan')
                     .select('*')
@@ -69,11 +69,22 @@
                 if (error) throw error;
 
                 if (scenes && scenes.length > 0) {
+                    
+                    // --- KRİTİK DÜZENLEME: AKTİF OLANI EN BAŞA AL ---
+                    scenes.sort((a, b) => {
+                        // Eğer a aktifse, a'yı öne al (-1)
+                        if (a.sahne_url === currentActiveUrl) return -1;
+                        // Eğer b aktifse, b'yi öne al (1)
+                        if (b.sahne_url === currentActiveUrl) return 1;
+                        // Değilse sıralamayı bozma (0)
+                        return 0;
+                    });
+                    // -----------------------------------------------
+
                     container.innerHTML = "";
                     scenes.forEach(scene => {
                         const isActive = (scene.sahne_url === currentActiveUrl);
                         
-                        // Kart HTML Yapısı - CSS v3.0.0 ile tam uyumlu
                         container.innerHTML += `
                             <div class="scene-card ${isActive ? 'active-scene' : ''}">
                                 ${isActive ? '<div class="active-badge">AKTİF FON</div>' : ''}
@@ -94,7 +105,7 @@
                             </div>`;
                     });
                 } else {
-                    // Boş Durum (Empty State)
+                    // Boş Durum
                     container.innerHTML = `
                         <div style="text-align: center; margin-top: 60px; padding: 20px;">
                             <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;">📂</div>
@@ -123,7 +134,8 @@
                         if (error) throw error;
 
                         tg.showAlert("Sahne başarıyla aktif edildi!");
-                        loadCollection(); // Listeyi yenile
+                        // Sayfayı yeniden yükle ki sıralama güncellensin
+                        loadCollection(); 
                     } catch (e) {
                         tg.showAlert("Hata: " + e.message);
                     }
