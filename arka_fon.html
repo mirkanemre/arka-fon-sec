@@ -48,7 +48,9 @@
 
     <div id="preview-modal">
         <button style="position: absolute; top: 40px; right: 24px; background: #1c1c1e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index:1005;" onclick="closePreview()">✕</button>
-        <div class="img-frame"><img id="preview-img" src=""></div>
+        <div class="img-frame">
+            <img id="preview-img" src="">
+        </div>
         <div class="modal-controls">
             <div style="text-align: center;">
                 <span id="preview-title" style="font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; letter-spacing: 2px; display: block;"></span>
@@ -75,7 +77,8 @@
         function renderSubMenu(cat, title) {
             document.getElementById('category-view').style.display = 'none';
             const iv = document.getElementById('image-view');
-            iv.innerHTML = ''; iv.style.display = 'grid';
+            iv.innerHTML = ''; 
+            iv.style.display = 'grid';
             document.getElementById('view-title').innerText = title;
             document.getElementById('back-btn').style.display = 'block';
             
@@ -99,11 +102,21 @@
             document.getElementById('category-view').style.display = 'grid'; 
             document.getElementById('view-title').innerText = 'KATEGORİ SEÇİNİZ'; 
             document.getElementById('back-btn').style.display = 'none'; 
+            tg.HapticFeedback.impactOccurred('light');
         }
 
-        function openPreview(index) { currentIndex = index; updatePreview(); document.getElementById('preview-modal').style.display = 'flex'; }
-        function updatePreview() { const item = currentCategoryItems[currentIndex]; document.getElementById('preview-img').src = item.url; document.getElementById('preview-title').innerText = item.title; }
-        function closePreview() { document.getElementById('preview-modal').style.display = 'none'; }
+        function openPreview(index) { 
+            currentIndex = index; 
+            const item = currentCategoryItems[currentIndex]; 
+            document.getElementById('preview-img').src = item.url; 
+            document.getElementById('preview-title').innerText = item.title; 
+            document.getElementById('preview-modal').style.display = 'flex'; 
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        function closePreview() { 
+            document.getElementById('preview-modal').style.display = 'none'; 
+        }
 
         async function saveSelection() {
             const selectedItem = currentCategoryItems[currentIndex];
@@ -115,6 +128,7 @@
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
+                    // Sabit Storage URL mantığı
                     const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
                     const { error } = await _supabase
