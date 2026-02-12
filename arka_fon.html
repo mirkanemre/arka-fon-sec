@@ -267,7 +267,6 @@
         function updatePreview() { const item = currentCategoryItems[currentIndex]; document.getElementById('preview-img').src = item.url; document.getElementById('preview-title').innerText = item.title; }
         function closePreview() { document.getElementById('preview-modal').style.display = 'none'; }
 
-        // --- ASIL KRİTİK NOKTA: KAYIT KONTROLÜ VE KAYIT ---
         async function saveSelection() {
             const selectedItem = currentCategoryItems[currentIndex];
             const userId = tg.initDataUnsafe?.user?.id || 1017604800;
@@ -275,33 +274,34 @@
 
             tg.HapticFeedback.impactOccurred('medium');
 
-            // 1. Kayıt Kontrolü
+            // 1. Kayıt Kontrolü (Supabase)
             let { data: record, error } = await _supabase
                 .from('galeriler')
                 .select('chat_id')
                 .eq('chat_id', userId)
                 .maybeSingle();
 
+            // Kayıt yoksa Kayit.html'e yönlendir
             if (!record) {
                 tg.showPopup({
-                    title: 'Kayıt Gerekli',
-                    message: 'Konsept seçebilmek için önce stüdyo kaydınızı tamamlamanız gerekmektedir.',
-                    buttons: [{id: 'reg', type: 'default', text: 'KAYIT EKRANINA GİT'}]
+                    title: '🎁 Hediye Kredinizi Alın',
+                    message: 'Konsept seçebilmek için önce kaydınızı tamamlamalı ve 10 ücretsiz kredinizi almalısınız.',
+                    buttons: [{id: 'reg', type: 'default', text: 'KAYIT OL VE KREDİ KAZAN'}]
                 }, (buttonId) => {
                     if (buttonId === 'reg') {
-                        window.location.href = 'kredial.html'; 
+                        // BURASI DÜZELTİLDİ: Artık kredial.html yerine kayit.html'e gidiyor
+                        window.location.href = 'kayit.html'; 
                     }
                 });
                 return; 
             }
 
-            // 2. Onay ve Kaydetme (EKRAN KAPANMA SORUNU BURADA ÇÖZÜLDÜ)
-            tg.showConfirm(`${selectedItem.title} konseptini kullanmak istediğinize emin misiniz?`, async (isConfirmed) => {
+            // 2. Kayıt varsa Onay ve Kaydetme
+            tg.showConfirm(`${selectedItem.title} konseptini dükkanınıza kurmak istiyor musunuz?`, async (isConfirmed) => {
                 if (isConfirmed) {
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    // Veritabanını güncelle
                     const { error: upsertError } = await _supabase
                         .from('galeriler')
                         .update({ 
@@ -309,17 +309,14 @@
                             secili_stand_gorseli: selectedItem.id,
                             updated_at: new Date()
                         })
-                        .eq('chat_id', userId); // Sadece bu kullanıcının satırını güncelle
+                        .eq('chat_id', userId);
 
                     if (!upsertError) {
                         tg.HapticFeedback.notificationOccurred('success');
-                        
-                        // KRİTİK NOKTA: tg.close() YAPMIYORUZ! 
-                        // Doğrudan simülatöre yönlendiriyoruz.
+                        // EKRAN KAPANMAZ: Direkt Simülatöre gider
                         window.location.href = `aktif_fon.html?mode=new`;
                     } else {
-                        console.error(upsertError);
-                        tg.showAlert("Veritabanı güncellenemedi.");
+                        tg.showAlert("Hata oluştu, lütfen tekrar deneyin.");
                         btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
                     }
@@ -327,7 +324,5 @@
             });
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
-
