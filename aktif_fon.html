@@ -26,6 +26,24 @@
             transition: 0.5s;
         }
 
+        /* GERİ BUTONU TASARIMI */
+        .btn-back-float {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 900;
+            font-family: 'Orbitron';
+            letter-spacing: 1px;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
         .choice-card {
             width: 100%;
             max-width: 350px;
@@ -45,8 +63,8 @@
         .choice-icon { font-size: 2rem; margin-bottom: 10px; }
 
         /* --- SAYFA İÇERİK YAPISI --- */
-        #main-content { display: none; width: 100%; max-width: 500px; } /* Başta gizli */
-        #scenes-list { display: none; width: 100%; max-width: 500px; } /* Başta gizli */
+        #main-content { display: none; width: 100%; max-width: 500px; } 
+        #scenes-list { display: none; width: 100%; max-width: 500px; } 
 
         .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
         .btn-top-back { text-decoration: none; color: var(--accent); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
@@ -72,13 +90,16 @@
         .btn-subtext { font-size: 0.6rem; opacity: 0.8; font-weight: 400; }
         .status-badge { font-size: 0.6rem; color: var(--primary); margin-top: 10px; opacity: 0.7; }
 
-        /* SAHNELERİM KART STİLİ */
         .my-scene-card { background: #0a0a0a; border: 1px solid var(--border); border-radius: 20px; padding: 10px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
     <div id="choice-overlay">
+        <div class="btn-back-float" onclick="location.href='index.html'">
+            <span>❮</span> GERİ
+        </div>
+
         <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="font-family:'Orbitron'; font-size: 1.1rem; letter-spacing: 3px; color: var(--accent);">STUDIO CONTROL</h1>
         </div>
@@ -94,8 +115,6 @@
             <h2>YENİ KONSEPT KUR</h2>
             <p>Yeni bir fon seçin, logonuzu test edin ve sisteme dahil edin (1 Kredi).</p>
         </div>
-
-        <div class="btn-top-back" style="margin-top: 20px;" onclick="location.href='index.html'">❮ ANA MENÜYE DÖN</div>
     </div>
 
     <div id="main-content">
@@ -115,7 +134,7 @@
             </div>
         </div>
 
-        <div class="section-label">UYGULAMA ÖRNEĞİ</div>
+        <div class="section-label" style="max-width: 500px;">UYGULAMA ÖRNEĞİ</div>
         <div class="simulator-box">
             <div class="scan-line"></div>
             <img id="sim-bg" src="">
@@ -141,8 +160,7 @@
             <div class="btn-top-back" onclick="location.reload()">❮ SEÇİME DÖN</div>
             <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">ONAYLI KONSEPTLER</div>
         </div>
-        <div id="my-scenes-container">
-            </div>
+        <div id="my-scenes-container"></div>
     </div>
 
     <script>
@@ -151,15 +169,14 @@
         const SUPABASE_KEY = "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q"; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // MODLARI AÇAN FONKSİYON
         function openMode(mode) {
             document.getElementById('choice-overlay').style.display = 'none';
             if(mode === 'simulator') {
                 document.getElementById('main-content').style.display = 'block';
-                syncDatabase(); // Senin orijinal verini çeker
+                syncDatabase();
             } else {
                 document.getElementById('scenes-list').style.display = 'block';
-                loadMyScenes(); // Eski sahneleri çeker
+                loadMyScenes();
             }
         }
 
@@ -181,22 +198,21 @@
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
             const container = document.getElementById('my-scenes-container');
             try {
-                // is_approved=true olanları listele (Daha önce kredi verilmişler)
                 let { data: myScenes } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).eq('is_approved', true);
                 if (myScenes && myScenes.length > 0) {
                     container.innerHTML = "";
                     myScenes.forEach(scene => {
                         container.innerHTML += `
                             <div class="my-scene-card">
-                                <img src="${scene.galeri_yazili_ornek_arkaplan_url}" style="height:140px; border-radius:12px; margin-bottom:10px;">
+                                <img src="${scene.galeri_yazili_ornek_arkaplan_url}" style="height:140px; border-radius:12px; margin-bottom:10px; width:100%;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span style="font-family:'Orbitron'; font-size:0.6rem;">${scene.secili_stand_gorseli.toUpperCase()}</span>
-                                    <button onclick="activateScene('${scene.id}')" style="background:var(--accent); border:none; color:white; padding:6px 15px; border-radius:8px; font-size:0.6rem; font-weight:800;">KULLAN</button>
+                                    <span style="font-family:'Orbitron'; font-size:0.6rem; letter-spacing:1px;">${scene.secili_stand_gorseli.toUpperCase()}</span>
+                                    <button onclick="activateScene('${scene.id}')" style="background:linear-gradient(45deg, #3b82f6, #1e40af); border:none; color:white; padding:8px 18px; border-radius:10px; font-size:0.6rem; font-weight:900; font-family:'Orbitron';">KULLAN</button>
                                 </div>
                             </div>`;
                     });
                 } else {
-                    container.innerHTML = `<p style="text-align:center; color:#444; margin-top:50px;">Henüz kayıtlı bir sahneniz yok.</p>`;
+                    container.innerHTML = `<p style="text-align:center; color:#444; margin-top:50px; font-size:0.8rem;">Henüz kayıtlı bir sahneniz yok.</p>`;
                 }
             } catch (err) { console.error(err); }
         }
