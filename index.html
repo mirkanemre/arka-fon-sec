@@ -55,7 +55,7 @@
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
             Tüm hakları OtoFonFX stüdyosuna aittir.<br>
-            <span style="opacity: 0.5;">v1.5.0 PREMIUM ACCESS</span>
+            <span style="opacity: 0.5;">v2.0.0 PREMIUM ACCESS</span>
         </div>
     </div>
 
@@ -70,6 +70,7 @@
         async function initDashboard() {
             const userId = tg.initDataUnsafe?.user?.id || 1017604800;
             
+            // Kullanıcı Kaydı ve Kredi Sorgusu
             let { data: record } = await _supabase
                 .from('galeriler')
                 .select('chat_id, kalan_kredi, kayitli_arkaplan_url')
@@ -77,9 +78,11 @@
                 .maybeSingle();
 
             if (!record) {
+                // Kayıt yoksa hediye bannerını göster
                 document.getElementById('registration-banner').style.display = 'block';
                 document.getElementById('user-credit-count').innerText = "0";
             } else {
+                // Kayıt varsa krediyi yaz
                 document.getElementById('user-credit-count').innerText = record.kalan_kredi || "0";
                 if (record.kayitli_arkaplan_url) {
                     document.getElementById('active-status-text').innerText = "Aktif fonunuz kullanıma hazır.";
@@ -87,6 +90,7 @@
             }
         }
 
+        // Kartlara tıklandığında hafif titreşim (Haptic) ekle
         document.querySelectorAll('.main-card').forEach(card => {
             card.onclick = () => { tg.HapticFeedback.impactOccurred('medium'); };
         });
