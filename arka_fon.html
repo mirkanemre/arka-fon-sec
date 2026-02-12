@@ -7,11 +7,11 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;600;700;800&display=swap');
 
         :root {
             --bg: #000000;
-            --primary: #3b82f6;
+            --primary: #007AFF; /* Diğer sayfalarla uyumlu Apple Blue */
             --card-bg: #0a0a0a;
             --border: #1c1c1e;
             --text-dim: #94a3b8;
@@ -22,7 +22,7 @@
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             margin: 0;
-            padding: 20px;
+            padding: 24px; /* Dashboard ile aynı padding */
             color: #fff;
             overflow-x: hidden;
             min-height: 100vh;
@@ -30,27 +30,30 @@
             flex-direction: column;
         }
 
+        /* Navigasyon - Diğer sayfalarla tam uyumlu hale getirildi */
         .nav-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .back-link {
             text-decoration: none;
             color: var(--primary);
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 1px;
+            font-size: 0.8rem; /* Boyut Dashboard ile eşitlendi */
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .header { text-align: center; margin-bottom: 35px; }
         .header h1 {
             font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
             font-size: 1.5rem;
             letter-spacing: 4px;
             margin: 0;
@@ -68,13 +71,11 @@
             cursor: pointer; 
             transition: all 0.3s ease;
             position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
 
         .card:active { 
             transform: scale(0.96); 
             border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
         }
 
         .img-wrapper { 
@@ -89,7 +90,6 @@
             height: 100%; 
             object-fit: cover; 
             filter: brightness(0.9);
-            transition: 0.3s;
         }
 
         .card-title { 
@@ -98,13 +98,12 @@
             font-weight: 800; 
             font-size: 0.65rem; 
             letter-spacing: 1.5px;
-            background: linear-gradient(180deg, #111111 0%, #050505 100%);
+            background: #000;
             color: var(--text-dim);
             text-transform: uppercase;
-            box-sizing: border-box;
-            border-top: 1px solid rgba(255,255,255,0.03);
         }
 
+        /* Modal Tasarımı */
         #preview-modal { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #000; z-index: 1000; display: none; 
@@ -113,30 +112,25 @@
 
         .img-frame {
             position: relative;
-            width: 95%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -50px;
+            width: 90%;
+            background: #0a0a0a;
+            border-radius: 24px;
+            border: 1px solid var(--border);
             padding: 5px;
-            background: linear-gradient(145deg, #1c1c1e, #0a0a0a);
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: -60px;
         }
 
         #preview-img { 
             width: 100%; 
-            height: auto; 
-            max-height: 55vh; 
-            object-fit: contain; 
-            border-radius: 12px;
+            border-radius: 20px;
+            display: block;
         }
 
         .modal-controls {
             position: absolute;
-            bottom: 40px;
-            left: 20px;
-            right: 20px;
+            bottom: 50px;
+            left: 24px;
+            right: 24px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -145,15 +139,14 @@
         .btn-save { 
             background: var(--primary); 
             color: white; border: none; 
-            padding: 18px; border-radius: 16px; font-weight: 800; 
+            padding: 18px; border-radius: 18px; font-weight: 800; 
             font-size: 0.9rem; letter-spacing: 1px;
             text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
         }
 
         #back-btn { 
             background: var(--card-bg); color: #fff; border: 1px solid var(--border); 
-            padding: 12px; border-radius: 12px; width: 100%; margin-top: 20px; 
+            padding: 12px; border-radius: 15px; width: 100%; margin-top: 20px; 
             font-weight: 700; font-size: 0.7rem; text-transform: uppercase;
         }
 
@@ -161,10 +154,9 @@
             margin-top: auto; 
             padding-top: 40px;
             text-align: center; 
-            font-size: 0.6rem;
+            font-size: 0.58rem;
             color: #48484a;
-            letter-spacing: 1px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -172,7 +164,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">OTOFONFX v1.1.8</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v1.1.8</div>
     </div>
 
     <div class="header">
@@ -185,13 +177,13 @@
             <div class="img-wrapper">
                 <img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001_c.jpeg">
             </div>
-            <div class="card-title">İÇ MEKAN KONSEPTİ</div>
+            <div class="card-title">İÇ MEKAN</div>
         </div>
         <div class="card" onclick="renderSubMenu('dis_mekan', 'DIŞ MEKAN')">
             <div class="img-wrapper">
                 <img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dismekan_0001_c.jpeg">
             </div>
-            <div class="card-title">DIŞ MEKAN KONSEPTİ</div>
+            <div class="card-title">DIŞ MEKAN</div>
         </div>
     </div>
 
@@ -199,13 +191,13 @@
     
     <button id="back-btn" style="display: none;" onclick="showCategoryMenu()">← KATEGORİLERE DÖN</button>
 
-    <div class="home-footer" id="home-footer">
+    <div class="home-footer">
         © 2026 OTOFONFX TECHNOLOGIES<br>
         Tüm hakları OtoFonFX stüdyosuna aittir.
     </div>
 
     <div id="preview-modal">
-        <button style="position: absolute; top: 40px; right: 20px; background: #1c1c1e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index:1005;" onclick="closePreview()">✕</button>
+        <button style="position: absolute; top: 40px; right: 24px; background: #1c1c1e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index:1005;" onclick="closePreview()">✕</button>
         <div class="img-frame"><img id="preview-img" src=""></div>
         <div class="modal-controls">
             <div style="text-align: center;">
@@ -220,8 +212,7 @@
         const tg = window.Telegram.WebApp;
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
-        tg.ready();
-        tg.expand();
+        tg.ready(); tg.expand();
 
         let currentCategoryItems = [];
         let currentIndex = 0;
@@ -233,7 +224,6 @@
 
         function renderSubMenu(cat, title) {
             document.getElementById('category-view').style.display = 'none';
-            document.getElementById('home-footer').style.display = 'none';
             const iv = document.getElementById('image-view');
             iv.innerHTML = ''; iv.style.display = 'grid';
             document.getElementById('view-title').innerText = title;
@@ -257,63 +247,40 @@
         function showCategoryMenu() { 
             document.getElementById('image-view').style.display = 'none'; 
             document.getElementById('category-view').style.display = 'grid'; 
-            document.getElementById('home-footer').style.display = 'block';
             document.getElementById('view-title').innerText = 'KATEGORİ SEÇİNİZ'; 
             document.getElementById('back-btn').style.display = 'none'; 
-            tg.HapticFeedback.impactOccurred('light');
         }
 
-        function openPreview(index) { currentIndex = index; updatePreview(); document.getElementById('preview-modal').style.display = 'flex'; tg.HapticFeedback.impactOccurred('medium'); }
+        function openPreview(index) { currentIndex = index; updatePreview(); document.getElementById('preview-modal').style.display = 'flex'; }
         function updatePreview() { const item = currentCategoryItems[currentIndex]; document.getElementById('preview-img').src = item.url; document.getElementById('preview-title').innerText = item.title; }
         function closePreview() { document.getElementById('preview-modal').style.display = 'none'; }
 
         async function saveSelection() {
-            const selectedItem = currentCategoryItems[currentIndex]; // Örn: id "icmekan_0009"
+            const selectedItem = currentCategoryItems[currentIndex];
             const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
             const btn = document.getElementById('save-btn-text');
 
-            tg.HapticFeedback.impactOccurred('medium');
-
-            // 1. Kayıt Kontrolü
-            let { data: record } = await _supabase
-                .from('galeriler')
-                .select('chat_id')
-                .eq('chat_id', userId)
-                .maybeSingle();
-
-            if (!record) {
-                tg.showPopup({
-                    title: '🎁 Hediye Kredinizi Alın',
-                    message: 'Önce kaydınızı tamamlamalı ve 10 ücretsiz kredinizi almalısınız.',
-                    buttons: [{id: 'reg', type: 'default', text: 'KAYIT OL'}]
-                }, (id) => { if (id === 'reg') window.location.href = 'kayit.html'; });
-                return; 
-            }
-
-            // 2. Onay ve Kaydetme
             tg.showConfirm(`${selectedItem.title} dükkanınıza kurulsun mu?`, async (ok) => {
                 if (ok) {
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    // MANTIĞI BURADA KURDUK: 
-                    // Kullanıcı GitHub vitrininde ne seçerse seçsin,
-                    // Kayıt URL'sini senin verdiğin sabit Supabase klasörüne yönlendiriyoruz.
+                    // Senin istediğin Storage klasör adresi
                     const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
-                    const { error: updateError } = await _supabase
+                    const { error } = await _supabase
                         .from('galeriler')
                         .update({ 
-                            stand_gorseli_url: finalStorageUrl, // Burası senin istediğin adres
-                            secili_stand_gorseli: selectedItem.id
+                            kayitli_arkaplan_url: finalStorageUrl, // Sütun adı güncellendi
+                            secili_stand_gorseli: selectedItem.id 
                         })
                         .eq('chat_id', userId);
 
-                    if (!updateError) {
+                    if (!error) {
                         tg.HapticFeedback.notificationOccurred('success');
-                        window.location.href = `aktif_fon.html?mode=new`;
+                        window.location.href = `index.html`; // İşlem bitince ana sayfaya dön
                     } else {
-                        tg.showAlert("Hata: " + updateError.message);
+                        tg.showAlert("Hata: " + error.message);
                         btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
                     }
