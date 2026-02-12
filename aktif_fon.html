@@ -20,11 +20,11 @@
         #main-content { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 15px; }
-        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
+        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 135px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
         .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; margin-bottom: 15px; }
         img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-img { width: auto !important; height: 50px !important; object-fit: contain; margin-bottom: 8px; }
-        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 20px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .logo-img { width: auto !important; height: 55px !important; object-fit: contain; margin-bottom: 8px; }
+        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; text-align: left; }
         
         .btn-upload-logo { background: transparent; border: 1px dashed var(--accent); color: var(--accent); padding: 6px 10px; border-radius: 8px; font-size: 0.55rem; font-weight: 800; cursor: pointer; text-transform: uppercase; }
@@ -38,24 +38,20 @@
     <div id="choice-overlay">
         <div class="btn-back-float" onclick="location.href='index.html'">❮ GERİ</div>
         <h1 style="font-family:'Orbitron'; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 30px;">STUDIO CONTROL</h1>
-        
         <div class="choice-card" onclick="location.href='sahnelerim.html'">
             <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
-            <p style="font-size: 0.65rem; color: #636366; padding: 0 10px;">Daha önce kurduğunuz konseptlere hızlıca geçin.</p>
         </div>
-
         <div class="choice-card" onclick="openSimulator()">
             <div style="font-size: 2rem; margin-bottom: 10px;">✨</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
-            <p style="font-size: 0.65rem; color: #636366; padding: 0 10px;">Katalogdan yeni bir fon sabitleyin (1 Kredi).</p>
         </div>
     </div>
 
     <div id="main-content">
         <div class="nav-header">
             <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.href='aktif_fon.html'">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.9</div>
+            <div style="font-size: 0.6rem; color: #48484a;">OTOFONFX v1.2.6</div>
         </div>
 
         <div id="simulator-ui" style="display: none;">
@@ -68,8 +64,8 @@
                     <div class="section-label">SİZİN LOGONUZ</div>
                     <div class="grid-box">
                         <img id="user-preview-logo" class="logo-img" src="" onerror="this.src='https://via.placeholder.com/200x100?text=LOGO+YOK'">
-                        <button class="btn-upload-logo" onclick="document.getElementById('logo-file').click()">LOGO YÜKLE</button>
-                        <input type="file" id="logo-file" style="display:none" accept="image/*" onchange="handleLogoProcess(this)">
+                        <button id="upload-btn" class="btn-upload-logo" onclick="document.getElementById('logo-file').click()">LOGO YÜKLE</button>
+                        <input type="file" id="logo-file" style="display:none" accept="image/*" onchange="handleLogoUpload(this)">
                     </div>
                 </div>
             </div>
@@ -80,15 +76,12 @@
                 <img id="sim-bg" src="">
             </div>
 
-            <button class="btn-generate" onclick="startProduction()">
-                SİSTEMİ AKTİF ET
-                <span style="font-size: 0.6rem; opacity: 0.8; font-weight: 400;">(1 KREDİ)</span>
-            </button>
+            <button class="btn-generate" onclick="startProduction()">SİSTEMİ AKTİF ET</button>
         </div>
 
         <div id="empty-simulator" style="display: none;">
             <div style="font-size: 3rem; margin-bottom: 20px;">🖼️</div>
-            <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; margin-bottom: 15px;">KONSEPT SEÇİLMEDİ</h2>
+            <h2 style="font-family: 'Orbitron'; font-size: 0.9rem;">KONSEPT SEÇİLMEDİ</h2>
             <button class="btn-generate" onclick="location.href='arka_fon.html'">FON KATALOĞUNA GİT</button>
         </div>
     </div>
@@ -115,50 +108,68 @@
                     const imgID = record.secili_stand_gorseli;
                     const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
                     
-                    // Yazısız Fon
                     document.getElementById('raw-bg-img').src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
-                    // Yazılı Örnek
                     document.getElementById('sim-bg').src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
-                    // Logo
-                    if(record.logo_gorsel_url) {
-                        document.getElementById('user-preview-logo').src = record.logo_gorsel_url;
+                    
+                    // Logo çekme mantığı (logo_yazisi öncelikli, Cache kırmalı)
+                    const currentLogo = record.logo_yazisi || record.logo_gorsel_url;
+                    if(currentLogo) {
+                        document.getElementById('user-preview-logo').src = currentLogo + "?t=" + new Date().getTime();
                     }
-
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    document.getElementById('simulator-ui').style.display = 'none';
                     document.getElementById('empty-simulator').style.display = 'flex';
                 }
             } catch (err) { console.error(err); }
         }
 
-        function handleLogoProcess(input) {
+        // --- SUPABASE STORAGE YÜKLEME VE ÇİFT SÜTUN GÜNCELLEME ---
+        async function handleLogoUpload(input) {
             const file = input.files[0];
             if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result.split(',')[1];
-                
-                // N8N İçin Kimlikli Paket (Asla diğer resimlerle karışmaz)
-                const dataPacket = JSON.stringify({
-                    action: "save_user_logo",
-                    chat_id: String(tg.initDataUnsafe?.user?.id || "1017604800"),
-                    content: base64
-                });
+            const btn = document.getElementById('upload-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "YÜKLENİYOR...";
+            btn.disabled = true;
 
-                tg.showConfirm("Logo güncellensin mi? (Uygulama mesaj göndermek için kapanacaktır)", (ok) => {
-                    if (ok) {
-                        // Telegram sendData: Garantili ve Engellenemez Veri Transferi
-                        tg.sendData(dataPacket);
-                    }
-                });
-            };
-            reader.readAsDataURL(file);
+            const chatId = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            const fileName = `${chatId}_logo.png`;
+
+            try {
+                // 1. Storage'a yükle (Bucket: galeri_logo)
+                const { error: uploadError } = await _supabase
+                    .storage
+                    .from('galeri_logo')
+                    .upload(fileName, file, { upsert: true });
+
+                if (uploadError) throw uploadError;
+
+                const publicUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${fileName}`;
+
+                // 2. Tabloda hem logo_yazisi hem logo_gorsel_url sütunlarını güncelle
+                const { error: updateError } = await _supabase
+                    .from('galeriler')
+                    .update({ 
+                        logo_yazisi: publicUrl,
+                        logo_gorsel_url: publicUrl 
+                    })
+                    .eq('chat_id', chatId);
+
+                if (updateError) throw updateError;
+
+                tg.showAlert("Logo başarıyla güncellendi!");
+                syncDatabase(); // Arayüzü tazele
+            } catch (err) {
+                tg.showAlert("Hata: " + err.message);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         }
 
         function startProduction() { 
-            tg.showConfirm("Konsept aktif edilsin mi?", (ok) => { if (ok) tg.close(); }); 
+            tg.showConfirm("Fon aktif edilsin mi?", (ok) => { if (ok) tg.close(); }); 
         }
 
         window.onload = () => { 
