@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Ultra Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@300;400;700;900&display=swap');
 
         :root {
             --bg: #000000;
-            --primary: #007AFF; /* Apple Blue */
+            --primary: #007AFF; 
             --accent: #ffffff;
             --card-bg: #0a0a0a;
             --border: #1c1c1e;
@@ -23,10 +24,8 @@
             padding: 24px;
             color: #fff;
             min-height: 100vh;
-            /* Mavilik tamamen kaldırıldı, tam siyah */
         }
 
-        /* Navigasyon Alanı */
         .nav-header {
             display: flex;
             align-items: center;
@@ -72,24 +71,10 @@
         .info-bar {
             background: rgba(28, 28, 30, 0.6);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 20px;
+            padding: 15px;
             margin-bottom: 25px;
             text-align: center;
-        }
-
-        .info-bar span {
-            display: block;
-            font-size: 0.85rem;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .info-bar small {
-            color: #8e8e93;
-            font-size: 0.7rem;
-            margin-top: 4px;
-            display: block;
         }
 
         .package-list {
@@ -218,8 +203,18 @@
     </div>
 
     <div class="info-bar">
-        <span>⚡ 1 Kredi = 1 Profesyonel Görsel</span>
-        <small>Kredilerinizin kullanım süresi yoktur, dilediğiniz zaman kullanın.</small>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 8px;">
+            <div style="text-align: center;">
+                <small style="color: #8e8e93; font-size: 0.6rem; display: block; margin-bottom: 2px;">MEVCUT BAKİYE</small>
+                <strong id="current-credit-val" style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.1rem;">--</strong>
+            </div>
+            <div style="width: 1px; height: 25px; background: var(--border);"></div>
+            <div style="text-align: center;">
+                <small style="color: #8e8e93; font-size: 0.6rem; display: block; margin-bottom: 2px;">BİRİM MALİYET</small>
+                <strong style="font-family: 'Orbitron'; font-size: 1.1rem;">1 <span style="font-size: 0.6rem;">KREDİ</span></strong>
+            </div>
+        </div>
+        <small style="color: #48484a; font-size: 0.65rem;">Kredilerinizin kullanım süresi yoktur.</small>
     </div>
 
     <div class="package-list">
@@ -259,10 +254,7 @@
     </div>
 
     <div class="footer">
-        <p>
-            Güvenli ödeme altyapısı (SSL).<br>
-            Tüm hakları OtoFonFX stüdyosuna aittir.
-        </p>
+        <p>Güvenli ödeme altyapısı (SSL).<br>Tüm hakları OtoFonFX stüdyosuna aittir.</p>
     </div>
 
     <div id="loader">
@@ -272,37 +264,38 @@
 
     <script>
         const tg = window.Telegram.WebApp;
+        const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
+
         tg.ready();
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Telegram Native Geri Butonu
         tg.BackButton.show();
-        tg.BackButton.onClick(() => {
-            window.location.href = 'index.html';
-        });
+        tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
+
+        async function loadUserCredit() {
+            const userId = tg.initDataUnsafe?.user?.id || 1017604800;
+            let { data } = await _supabase.from('galeriler').select('kalan_kredi').eq('chat_id', userId).single();
+            if (data) {
+                document.getElementById('current-credit-val').innerText = data.kalan_kredi;
+            }
+        }
 
         function pay(miktar, fiyat) {
             tg.HapticFeedback.notificationOccurred('success');
             document.getElementById('loader').style.display = 'flex';
-            
             const userId = tg.initDataUnsafe?.user?.id || "unknown";
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
-
             const img = new Image();
             img.onload = () => finish();
             img.onerror = () => finish();
             img.src = n8nUrl;
-
             setTimeout(finish, 3000);
         }
 
-        function finish() {
-            // Ödeme tetiklendiğinde Mini App'i kapatma, 
-            // kullanıcı bot mesajını görmeli. 
-            // İstersen kapatabilirsin: tg.close();
-            document.getElementById('loader').style.display = 'none';
-        }
+        function finish() { document.getElementById('loader').style.display = 'none'; }
+        
+        window.onload = loadUserCredit;
     </script>
 </body>
 </html>
