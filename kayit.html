@@ -8,71 +8,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;800&display=swap');
-        
         * { box-sizing: border-box; }
         :root { --bg: #000; --accent: #3b82f6; --gold: #f59e0b; --border: #1c1c1e; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #fff; 
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-        }
-
-        /* GERİ BUTONU */
-        .nav-header {
-            width: 100%;
-            max-width: 450px;
-            display: flex;
-            align-items: center;
-            padding: 10px 5px;
-            margin-bottom: 10px;
-        }
-
-        .btn-back {
-            text-decoration: none;
-            color: var(--accent);
-            font-size: 0.75rem;
-            font-weight: 800;
-            font-family: 'Orbitron';
-            letter-spacing: 1px;
-            cursor: pointer;
-        }
-
-        /* KÜÇÜLTÜLMÜŞ HEDİYE BANNERI */
-        .promo-banner {
-            width: 100%; max-width: 450px; background: linear-gradient(45deg, #1e3a8a, #3b82f6);
-            border-radius: 18px; padding: 12px; text-align: center; margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); border: 1px solid rgba(255,255,255,0.1);
-        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .nav-header { width: 100%; max-width: 450px; display: flex; align-items: center; padding: 10px 5px; margin-bottom: 10px; }
+        .btn-back { text-decoration: none; color: var(--accent); font-size: 0.75rem; font-weight: 800; font-family: 'Orbitron'; letter-spacing: 1px; cursor: pointer; }
+        .promo-banner { width: 100%; max-width: 450px; background: linear-gradient(45deg, #1e3a8a, #3b82f6); border-radius: 18px; padding: 12px; text-align: center; margin-bottom: 20px; box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); border: 1px solid rgba(255,255,255,0.1); }
         .promo-banner h2 { font-family: 'Orbitron'; font-size: 0.75rem; margin: 0; letter-spacing: 1px; }
         .promo-banner p { font-size: 0.6rem; margin: 4px 0 0; opacity: 0.8; font-weight: 600; }
-
-        .form-card {
-            width: 100%; max-width: 450px; background: #050505; border: 1px solid var(--border);
-            border-radius: 28px; padding: 25px; display: flex; flex-direction: column; gap: 15px;
-        }
-
+        .form-card { width: 100%; max-width: 450px; background: #050505; border: 1px solid var(--border); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; gap: 15px; }
         .input-group { display: flex; flex-direction: column; gap: 6px; }
         .input-group label { font-size: 0.6rem; color: #8e8e93; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
-        
-        input {
-            background: #000; border: 1px solid var(--border); border-radius: 12px;
-            padding: 12px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.8rem;
-        }
+        input, textarea { background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.8rem; }
         input:focus { border-color: var(--accent); }
-
-        .upload-area {
-            border: 2px dashed var(--border); border-radius: 16px; padding: 15px;
-            text-align: center; cursor: pointer; transition: 0.3s;
-        }
+        .upload-area { border: 2px dashed var(--border); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
         #logo-preview { width: 100%; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 8px; }
-
-        .btn-submit {
-            background: linear-gradient(45deg, var(--gold), #d97706); color: #000;
-            border: none; padding: 18px; border-radius: 15px; font-family: 'Orbitron';
-            font-weight: 900; font-size: 0.8rem; text-transform: uppercase;
-            cursor: pointer; margin-top: 10px; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.2);
-        }
-
+        .btn-submit { background: linear-gradient(45deg, var(--gold), #d97706); color: #000; border: none; padding: 18px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.2); }
         .footer-text { font-size: 0.55rem; color: #444; text-align: center; margin-top: 20px; line-height: 1.4; }
     </style>
 </head>
@@ -88,25 +39,16 @@
     </div>
 
     <div class="form-card">
-        <div class="input-group">
-            <label>Galeri Adı *</label>
-            <input type="text" id="galeri-adi" placeholder="Örn: Aslan Otomotiv">
-        </div>
-
-        <div class="input-group">
-            <label>Yetkili Adı Soyadı *</label>
-            <input type="text" id="yetkili-adi" placeholder="Ad Soyad">
-        </div>
-
-        <div class="input-group">
-            <label>Telefon Numarası *</label>
-            <input type="text" id="tel-no" placeholder="05XX XXX XX XX">
-        </div>
+        <div class="input-group"><label>Galeri Adı *</label><input type="text" id="galeri-adi"></div>
+        <div class="input-group"><label>Yetkili Adı Soyadı *</label><input type="text" id="yetkili-adi"></div>
+        <div class="input-group"><label>Telefon Numarası *</label><input type="text" id="tel-no"></div>
+        <div class="input-group"><label>Şehir / İlçe</label><input type="text" id="sehir"></div>
+        <div class="input-group"><label>Açık Adres</label><input type="text" id="adres"></div>
 
         <div class="input-group">
             <label>Dükkan Logosu</label>
             <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">TIKLA VE SEÇ</span>
+                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONUZU SEÇİN</span>
                 <img id="logo-preview">
             </div>
             <input type="file" id="file-input" style="display:none" accept="image/*" onchange="preview(this)">
@@ -117,17 +59,13 @@
         </button>
     </div>
 
-    <div class="footer-text">
-        © 2026 OTOFONFX TECHNOLOGIES<br>
-        Hediye krediler yeni üyelikler için geçerlidir.
-    </div>
+    <div class="footer-text">© 2026 OTOFONFX TECHNOLOGIES</div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
+        tg.ready(); tg.expand();
 
-        const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
+        let base64Logo = "";
 
         function preview(input) {
             const file = input.files[0];
@@ -137,47 +75,54 @@
                     document.getElementById('logo-preview').src = e.target.result;
                     document.getElementById('logo-preview').style.display = 'block';
                     document.getElementById('upload-txt').style.display = 'none';
+                    // n8n'e göndermek için base64 kısmını alıyoruz (prefixsiz)
+                    base64Logo = e.target.result.split(',')[1];
                 };
                 reader.readAsDataURL(file);
             }
         }
 
         async function handleRegister() {
-            const galeri = document.getElementById('galeri-adi').value;
-            const yetkili = document.getElementById('yetkili-adi').value;
-            const tel = document.getElementById('tel-no').value;
             const btn = document.getElementById('submit-btn');
-            const userId = tg.initDataUnsafe?.user?.id || 1017604800;
+            const data = {
+                chat_id: String(tg.initDataUnsafe?.user?.id || "1017604800"),
+                user_name: tg.initDataUnsafe?.user?.username || "Bilinmiyor",
+                galeri_adi: document.getElementById('galeri-adi').value,
+                yetkili: document.getElementById('yetkili-adi').value,
+                telefon: document.getElementById('tel-no').value,
+                sehir: document.getElementById('sehir').value,
+                adres: document.getElementById('adres').value,
+                logo: base64Logo // Base64 veri buraya gidiyor
+            };
 
-            if (!galeri || !yetkili || !tel) {
-                tg.showAlert("Lütfen yıldızlı (*) alanları boş bırakmayın!");
+            if (!data.galeri_adi || !data.yetkili || !data.telefon) {
+                tg.showAlert("Lütfen zorunlu alanları doldurun!");
                 return;
             }
 
-            btn.innerText = "İŞLENİYOR...";
+            btn.innerText = "KAYIT İŞLENİYOR...";
             btn.disabled = true;
 
-            const { error } = await _supabase.from('galeriler').upsert({
-                chat_id: userId,
-                bayi_adi: galeri,
-                yetkili_adi: yetkili,
-                telefon: tel,
-                credits: 10,
-                is_approved: true,
-                created_at: new Date()
-            }, { onConflict: 'chat_id' });
-
-            if (!error) {
-                tg.HapticFeedback.notificationOccurred('success');
-                tg.showPopup({
-                    title: 'Hoş Geldin! 🎁',
-                    message: '10 Kredin tanımlandı. Şimdi dükkanın için bir konsept seçebilirsin.',
-                    buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
-                }, () => {
-                    window.location.href = 'arka_fon.html';
+            // n8n Webhook Tetikleme
+            try {
+                const response = await fetch("https://asininventory.com/webhook/kayit-verisi-al", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
                 });
-            } else {
-                tg.showAlert("Hata oluştu.");
+
+                if (response.ok) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    tg.showPopup({
+                        title: 'Hoş Geldin! 🎁',
+                        message: 'Kaydınız ve 10 krediniz başarıyla tanımlandı.',
+                        buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
+                    }, () => { window.location.href = 'arka_fon.html'; });
+                } else {
+                    throw new Error("Webhook hatası");
+                }
+            } catch (err) {
+                tg.showAlert("Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.");
                 btn.innerText = "10 KREDİMİ TANIMLA VE KAYDOL";
                 btn.disabled = false;
             }
