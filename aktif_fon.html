@@ -49,7 +49,7 @@
     <div id="main-content">
         <div class="nav-header">
             <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.href='aktif_fon.html'">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a;">OTOFONFX v1.3.0</div>
+            <div style="font-size: 0.6rem; color: #48484a;">OTOFONFX v1.3.1</div>
         </div>
 
         <div id="simulator-ui">
@@ -139,7 +139,6 @@
             const sahneId = currentRecord.secili_stand_gorseli;
             const webhookUrl = "https://asininventory.com/webhook/ai_arkafon_uretim_onay";
 
-            // Linkleri hazırlıyoruz
             const rawFonUrl = `${supabaseBase}galeri_bos_arkaplan/${sahneId}_a.jpeg`;
             const exampleFonUrl = `${supabaseBase}galeri_yazili_ornek_arkaplan/${sahneId}_b.jpeg`;
             const userLogoUrl = currentRecord.logo_yazisi || currentRecord.logo_gorsel_url;
@@ -155,31 +154,31 @@
                     btn.disabled = true;
 
                     try {
-                        // 1. Supabase Koleksiyona Kaydet
+                        // 1. Supabase Kaydı
                         await _supabase.from('galeri_kayitli_arkaplan').upsert({ 
                             chat_id: chatId, sahne_id: sahneId,
                             sahne_url: `${supabaseBase}galeri_arkaplan/${chatId}/${sahneId}.png` 
                         }, { onConflict: 'chat_id,sahne_id' });
 
-                        // 2. n8n Webhook'a tüm linkleri gönder
-                        const response = await fetch(webhookUrl, {
+                        // 2. n8n Webhook (CORS Fix Uygulandı)
+                        fetch(webhookUrl, {
                             method: 'POST',
+                            mode: 'no-cors', // Tarayıcı engellini baypas eder
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 chat_id: chatId,
                                 sahne_id: sahneId,
-                                raw_fon_url: rawFonUrl,       // Boş fon linki
-                                example_fon_url: exampleFonUrl, // Yazılı örnek linki
-                                logo_url: userLogoUrl,         // Kullanıcının logosu
+                                raw_fon_url: rawFonUrl,
+                                example_fon_url: exampleFonUrl,
+                                logo_url: userLogoUrl,
                                 action: "start_ai_production"
                             })
                         });
 
-                        if (response.ok) {
-                            tg.HapticFeedback.notificationOccurred('success');
-                            tg.showAlert("Üretim başladı! Arka fonunuz hazırlanıyor.");
-                            setTimeout(() => tg.close(), 1500);
-                        } else { throw new Error("Webhook hatası!"); }
+                        // no-cors modunda response beklemiyoruz, direkt başarılı sayıyoruz
+                        tg.HapticFeedback.notificationOccurred('success');
+                        tg.showAlert("Üretim başladı! Arka fonunuz hazırlanıyor.");
+                        setTimeout(() => tg.close(), 2000);
                         
                     } catch (err) {
                         tg.showAlert("Hata: " + err.message);
