@@ -13,10 +13,10 @@
 
     <div class="nav-header">
         <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v1.5.0</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.0.0</div>
     </div>
 
-    <div id="registration-banner" style="display: block; cursor: default; animation: none;">
+    <div id="registration-banner" style="display: block; cursor: default;">
         <div class="promo-content" style="text-align: center;">
             <h3 style="font-size: 0.85rem;">🎁 KAYIT OL, 10 KREDİ KAZAN!</h3>
             <p>Bilgilerini doldur, ilk 10 çekimin bizden olsun.</p>
@@ -41,9 +41,11 @@
         
         <div class="input-group">
             <label>Şehir *</label>
-            <select id="sehir-select">
-                <option value="">Lütfen Şehir Seçin</option>
-            </select>
+            <div style="position: relative;">
+                <select id="sehir-select">
+                    <option value="">Lütfen Şehir Seçin</option>
+                </select>
+            </div>
         </div>
 
         <button class="btn-submit" id="submit-btn" onclick="handleRegister()">
@@ -58,38 +60,49 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready(); tg.expand();
+        tg.ready(); 
+        tg.expand();
+        tg.headerColor = "#000000";
 
+        // Şehir Listesi
         const sehirler = ["Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İstanbul", "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis", "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"];
         
         const select = document.getElementById('sehir-select');
         sehirler.forEach(s => {
             let opt = document.createElement('option');
-            opt.value = s; opt.innerHTML = s; select.appendChild(opt);
+            opt.value = s; 
+            opt.innerHTML = s; 
+            select.appendChild(opt);
         });
 
         function handleRegister() {
             const btn = document.getElementById('submit-btn');
             const chat_id = String(tg.initDataUnsafe?.user?.id || "1017604800");
             const user_name = encodeURIComponent(tg.initDataUnsafe?.user?.username || "Bilinmiyor");
-            const galeri_adi = encodeURIComponent(document.getElementById('galeri-adi').value);
-            const yetkili = encodeURIComponent(document.getElementById('yetkili-adi').value);
-            const telefon = encodeURIComponent(document.getElementById('tel-no').value);
-            const sehir = encodeURIComponent(document.getElementById('sehir-select').value);
+            
+            // Değerleri al
+            const gAdi = document.getElementById('galeri-adi').value;
+            const yAdi = document.getElementById('yetkili-adi').value;
+            const tNo = document.getElementById('tel-no').value;
+            const sSehir = document.getElementById('sehir-select').value;
 
-            if (!document.getElementById('galeri-adi').value || !document.getElementById('yetkili-adi').value || !document.getElementById('tel-no').value || !document.getElementById('sehir-select').value) {
+            // Kontrol
+            if (!gAdi || !yAdi || !tNo || !sSehir) {
                 tg.showAlert("Lütfen tüm alanları doldurunuz!");
                 return;
             }
 
+            tg.HapticFeedback.impactOccurred('medium');
             btn.innerText = "SİSTEME GİRİLİYOR...";
             btn.disabled = true;
 
-            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${galeri_adi}&yetkili=${yetkili}&telefon=${telefon}&sehir=${sehir}`;
+            // Webhook URL Oluştur
+            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${encodeURIComponent(gAdi)}&yetkili=${encodeURIComponent(yAdi)}&telefon=${encodeURIComponent(tNo)}&sehir=${encodeURIComponent(sSehir)}`;
 
+            // Kayıt İşlemi (Image Beacon)
             const img = new Image();
-            img.onload = () => { finishRegistration(); };
-            img.onerror = () => { setTimeout(() => { finishRegistration(); }, 1200); };
+            img.onload = () => finishRegistration();
+            img.onerror = () => setTimeout(finishRegistration, 1200);
             img.src = webhookUrl;
         }
 
@@ -97,9 +110,11 @@
             tg.HapticFeedback.notificationOccurred('success');
             tg.showPopup({
                 title: 'Hoş Geldin! 🎁',
-                message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı.',
-                buttons: [{type: 'ok', text: 'DEVAM ET'}]
-            }, () => { window.location.href = 'arka_fon.html'; });
+                message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı. Şimdi ilk konseptinizi seçebilirsiniz.',
+                buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
+            }, () => { 
+                window.location.href = 'arka_fon.html'; 
+            });
         }
     </script>
 </body>
