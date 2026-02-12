@@ -4,200 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Ultra Store</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@300;400;700;900&display=swap');
-
-        :root {
-            --bg: #000000;
-            --primary: #007AFF; 
-            --accent: #ffffff;
-            --card-bg: #0a0a0a;
-            --border: #1c1c1e;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            margin: 0;
-            padding: 24px;
-            color: #fff;
-            min-height: 100vh;
-        }
-
-        .nav-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: var(--primary);
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.8rem;
-            letter-spacing: 4px;
-            margin: 0;
-            color: #fff;
-            text-transform: uppercase;
-        }
-
-        .header p {
-            font-size: 0.75rem;
-            color: #636366;
-            letter-spacing: 2px;
-            margin-top: 8px;
-            text-transform: uppercase;
-        }
-
-        .info-bar {
-            background: rgba(28, 28, 30, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .package-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .card:active {
-            transform: scale(0.95);
-            background: #1c1c1e;
-            border-color: var(--primary);
-        }
-
-        .popular {
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 20px rgba(0, 122, 255, 0.1);
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: var(--primary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 0.6rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-
-        .kredi-detay {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .kredi-detay strong {
-            font-size: 1.8rem;
-            font-weight: 900;
-            line-height: 1;
-        }
-
-        .kredi-detay span {
-            color: #8e8e93;
-            font-size: 0.8rem;
-            margin-top: 6px;
-        }
-
-        .fiyat-detay {
-            text-align: right;
-        }
-
-        .fiyat-detay strong {
-            font-size: 1.4rem;
-            display: block;
-            color: #fff;
-        }
-
-        .fiyat-detay small {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.75rem;
-        }
-
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        .footer p {
-            font-size: 0.7rem;
-            color: #48484a;
-            line-height: 1.5;
-        }
-
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: none; align-items: center; justify-content: center;
-            z-index: 1000; flex-direction: column;
-            backdrop-filter: blur(10px);
-        }
-        
-        .loader-bar {
-            width: 100px; height: 2px;
-            background: #1c1c1e;
-            position: relative; overflow: hidden;
-        }
-
-        .loader-bar::after {
-            content: '';
-            position: absolute; left: -100%; width: 100%; height: 100%;
-            background: var(--primary);
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-    </style>
 </head>
 <body>
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a;">OTOFONFX v1.0.4</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v1.5.0</div>
     </div>
 
-    <div class="header">
+    <div class="header-area">
         <h1>OTOFONFX</h1>
         <p>Studio Marketplace</p>
     </div>
@@ -205,20 +25,20 @@
     <div class="info-bar">
         <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 8px;">
             <div style="text-align: center;">
-                <small style="color: #8e8e93; font-size: 0.6rem; display: block; margin-bottom: 2px;">MEVCUT BAKİYE</small>
-                <strong id="current-credit-val" style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.1rem;">--</strong>
+                <small style="display: block; margin-bottom: 2px;">MEVCUT BAKİYE</small>
+                <strong id="current-credit-val" style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.2rem;">--</strong>
             </div>
             <div style="width: 1px; height: 25px; background: var(--border);"></div>
             <div style="text-align: center;">
-                <small style="color: #8e8e93; font-size: 0.6rem; display: block; margin-bottom: 2px;">BİRİM MALİYET</small>
+                <small style="display: block; margin-bottom: 2px;">BİRİM MALİYET</small>
                 <strong style="font-family: 'Orbitron'; font-size: 1.1rem;">1 <span style="font-size: 0.6rem;">KREDİ</span></strong>
             </div>
         </div>
-        <small style="color: #48484a; font-size: 0.65rem;">Kredilerinizin kullanım süresi yoktur.</small>
+        <small>Kredilerinizin kullanım süresi yoktur.</small>
     </div>
 
     <div class="package-list">
-        <div class="card" onclick="pay(10, 500)">
+        <div class="main-card card" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;" onclick="pay(10, 500)">
             <div class="kredi-detay">
                 <strong>10</strong>
                 <span>KREDİ PAKETİ</span>
@@ -229,7 +49,7 @@
             </div>
         </div>
 
-        <div class="card popular" onclick="pay(25, 1100)">
+        <div class="main-card card popular" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;" onclick="pay(25, 1100)">
             <div class="popular-badge">SİSTEM ÖNERİSİ</div>
             <div class="kredi-detay">
                 <strong>25</strong>
@@ -241,7 +61,7 @@
             </div>
         </div>
 
-        <div class="card" onclick="pay(50, 2000)">
+        <div class="main-card card" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;" onclick="pay(50, 2000)">
             <div class="kredi-detay">
                 <strong>50</strong>
                 <span>KREDİ PAKETİ</span>
@@ -254,20 +74,20 @@
     </div>
 
     <div class="footer">
-        <p>Güvenli ödeme altyapısı (SSL).<br>Tüm hakları OtoFonFX stüdyosuna aittir.</p>
+        © 2026 OTOFONFX TECHNOLOGIES<br>
+        Tüm hakları OtoFonFX stüdyosuna aittir.
     </div>
 
     <div id="loader">
         <div class="loader-bar"></div>
-        <p style="margin-top: 15px; font-size: 0.6rem; letter-spacing: 2px;">ÖDEME KANALI AÇILIYOR</p>
+        <p style="margin-top: 18px; font-size: 0.6rem; letter-spacing: 2px; font-weight: 800;">ÖDEME KANALI AÇILIYOR</p>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
-        tg.ready();
-        tg.expand();
+        tg.ready(); tg.expand();
         tg.headerColor = "#000000";
 
         tg.BackButton.show();
@@ -286,10 +106,12 @@
             document.getElementById('loader').style.display = 'flex';
             const userId = tg.initDataUnsafe?.user?.id || "unknown";
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
+            
             const img = new Image();
             img.onload = () => finish();
             img.onerror = () => finish();
             img.src = n8nUrl;
+            
             setTimeout(finish, 3000);
         }
 
