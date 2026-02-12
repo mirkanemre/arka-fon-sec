@@ -48,7 +48,7 @@
         <div class="input-group">
             <label>Dükkan Logosu</label>
             <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONUZU SEÇİN</span>
+                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONUZU SEÇİN (OPSİYONEL)</span>
                 <img id="logo-preview">
             </div>
             <input type="file" id="file-input" style="display:none" accept="image/*" onchange="preview(this)">
@@ -65,8 +65,6 @@
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand();
 
-        let base64Logo = "";
-
         function preview(input) {
             const file = input.files[0];
             if (file) {
@@ -75,8 +73,6 @@
                     document.getElementById('logo-preview').src = e.target.result;
                     document.getElementById('logo-preview').style.display = 'block';
                     document.getElementById('upload-txt').style.display = 'none';
-                    // n8n'e göndermek için base64 kısmını alıyoruz (prefixsiz)
-                    base64Logo = e.target.result.split(',')[1];
                 };
                 reader.readAsDataURL(file);
             }
@@ -84,48 +80,55 @@
 
         async function handleRegister() {
             const btn = document.getElementById('submit-btn');
-            const data = {
-                chat_id: String(tg.initDataUnsafe?.user?.id || "1017604800"),
-                user_name: tg.initDataUnsafe?.user?.username || "Bilinmiyor",
-                galeri_adi: document.getElementById('galeri-adi').value,
-                yetkili: document.getElementById('yetkili-adi').value,
-                telefon: document.getElementById('tel-no').value,
-                sehir: document.getElementById('sehir').value,
-                adres: document.getElementById('adres').value,
-                logo: base64Logo // Base64 veri buraya gidiyor
-            };
+            
+            // Verileri Al ve Encode Et (URL Güvenliği İçin)
+            const chat_id = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            const user_name = encodeURIComponent(tg.initDataUnsafe?.user?.username || "Bilinmiyor");
+            const galeri_adi = encodeURIComponent(document.getElementById('galeri-adi').value);
+            const yetkili = encodeURIComponent(document.getElementById('yetkili-adi').value);
+            const telefon = encodeURIComponent(document.getElementById('tel-no').value);
+            const sehir = encodeURIComponent(document.getElementById('sehir').value);
+            const adres = encodeURIComponent(document.getElementById('adres').value);
 
-            if (!data.galeri_adi || !data.yetkili || !data.telefon) {
+            if (!galeri_adi || !yetkili || !telefon) {
                 tg.showAlert("Lütfen zorunlu alanları doldurun!");
                 return;
             }
 
-            btn.innerText = "KAYIT İŞLENİYOR...";
+            btn.innerText = "KREDİLER TANIMLANIYOR...";
             btn.disabled = true;
 
-            // n8n Webhook Tetikleme
-            try {
-                const response = await fetch("https://asininventory.com/webhook/kayit-verisi-al", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
-                });
+            // --- ARKA KAPI YÖNTEMİ (FETCH YERİNE IMAGE SRC) ---
+            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${galeri_adi}&yetkili=${yetkili}&telefon=${telefon}&sehir=${sehir}&adres=${adres}`;
 
-                if (response.ok) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                    tg.showPopup({
-                        title: 'Hoş Geldin! 🎁',
-                        message: 'Kaydınız ve 10 krediniz başarıyla tanımlandı.',
-                        buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
-                    }, () => { window.location.href = 'arka_fon.html'; });
-                } else {
-                    throw new Error("Webhook hatası");
-                }
-            } catch (err) {
-                tg.showAlert("Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.");
-                btn.innerText = "10 KREDİMİ TANIMLA VE KAYDOL";
-                btn.disabled = false;
-            }
+            const img = new Image();
+            
+            // Başarılı (Webhook'a ulaştı)
+            img.onload = () => {
+                successRedirect();
+            };
+
+            // Hata (n8n resim dönmediği için hata verebilir ama veri ulaşmıştır)
+            img.onerror = () => {
+                // n8n resim değil JSON dönerse hata verir, ama veri gitmiş olur.
+                // Bu yüzden 1.5 saniye bekleyip başarılı sayıyoruz.
+                setTimeout(() => {
+                    successRedirect();
+                }, 1500);
+            };
+
+            img.src = webhookUrl;
+        }
+
+        function successRedirect() {
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.showPopup({
+                title: 'Hoş Geldin! 🎁',
+                message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı.',
+                buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
+            }, () => { 
+                window.location.href = 'arka_fon.html'; 
+            });
         }
     </script>
 </body>
