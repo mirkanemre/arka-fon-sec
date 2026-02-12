@@ -18,10 +18,8 @@
         .form-card { width: 100%; max-width: 450px; background: #050505; border: 1px solid var(--border); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; gap: 15px; }
         .input-group { display: flex; flex-direction: column; gap: 6px; }
         .input-group label { font-size: 0.6rem; color: #8e8e93; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
-        input { background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.8rem; }
-        input:focus { border-color: var(--accent); }
-        .upload-area { border: 2px dashed var(--border); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
-        #logo-preview { width: 100%; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 8px; }
+        input, select { background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.85rem; -webkit-appearance: none; }
+        input:focus, select:focus { border-color: var(--accent); }
         .btn-submit { background: linear-gradient(45deg, var(--gold), #d97706); color: #000; border: none; padding: 18px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.2); }
         .footer-text { font-size: 0.55rem; color: #444; text-align: center; margin-top: 20px; line-height: 1.4; }
     </style>
@@ -38,19 +36,15 @@
     </div>
 
     <div class="form-card">
-        <div class="input-group"><label>Galeri Adı *</label><input type="text" id="galeri-adi"></div>
-        <div class="input-group"><label>Yetkili Adı Soyadı *</label><input type="text" id="yetkili-adi"></div>
-        <div class="input-group"><label>Telefon Numarası *</label><input type="text" id="tel-no"></div>
-        <div class="input-group"><label>Şehir / İlçe</label><input type="text" id="sehir"></div>
-        <div class="input-group"><label>Açık Adres</label><input type="text" id="adres"></div>
-
+        <div class="input-group"><label>Galeri Adı *</label><input type="text" id="galeri-adi" placeholder="Dükkan Adı"></div>
+        <div class="input-group"><label>Yetkili Adı Soyadı *</label><input type="text" id="yetkili-adi" placeholder="Ad Soyad"></div>
+        <div class="input-group"><label>Telefon Numarası *</label><input type="tel" id="tel-no" placeholder="05XX XXX XX XX"></div>
+        
         <div class="input-group">
-            <label>Dükkan Logosu</label>
-            <div class="upload-area" onclick="document.getElementById('logo-input').click()">
-                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONU SEÇ (GEREKLİ DEĞİL)</span>
-                <img id="logo-preview">
-            </div>
-            <input type="file" id="logo-input" style="display:none" accept="image/*" onchange="preview(this)">
+            <label>Şehir *</label>
+            <select id="sehir-select">
+                <option value="">Lütfen Şehir Seçin</option>
+            </select>
         </div>
 
         <button class="btn-submit" id="submit-btn" onclick="handleRegister()">
@@ -62,35 +56,28 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
+        tg.ready(); tg.expand();
 
-        function preview(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('logo-preview').src = e.target.result;
-                    document.getElementById('logo-preview').style.display = 'block';
-                    document.getElementById('upload-txt').style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+        // 81 İl Listesi
+        const sehirler = ["Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin", "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Isparta", "Mersin", "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Şanlıurfa", "Uşak", "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman", "Kırıkkale", "Batman", "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce"];
+        
+        const select = document.getElementById('sehir-select');
+        sehirler.forEach(s => {
+            let opt = document.createElement('option');
+            opt.value = s; opt.innerHTML = s; select.appendChild(opt);
+        });
 
         function handleRegister() {
             const btn = document.getElementById('submit-btn');
-            
             const chat_id = String(tg.initDataUnsafe?.user?.id || "1017604800");
             const user_name = encodeURIComponent(tg.initDataUnsafe?.user?.username || "Bilinmiyor");
             const galeri_adi = encodeURIComponent(document.getElementById('galeri-adi').value);
             const yetkili = encodeURIComponent(document.getElementById('yetkili-adi').value);
             const telefon = encodeURIComponent(document.getElementById('tel-no').value);
-            const sehir = encodeURIComponent(document.getElementById('sehir').value);
-            const adres = encodeURIComponent(document.getElementById('adres').value);
+            const sehir = encodeURIComponent(document.getElementById('sehir-select').value);
 
-            if (!galeri_adi || !yetkili || !telefon) {
-                tg.showAlert("Lütfen zorunlu alanları (*) doldurunuz!");
+            if (!galeri_adi || !yetkili || !telefon || !sehir) {
+                tg.showAlert("Lütfen tüm alanları doldurunuz!");
                 return;
             }
 
@@ -98,16 +85,11 @@
             btn.disabled = true;
 
             // --- ARKA KAPI YÖNTEMİ (GET) ---
-            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${galeri_adi}&yetkili=${yetkili}&telefon=${telefon}&sehir=${sehir}&adres=${adres}`;
+            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${galeri_adi}&yetkili=${yetkili}&telefon=${telefon}&sehir=${sehir}`;
 
             const img = new Image();
-            
             img.onload = () => { finishRegistration(); };
-            img.onerror = () => { 
-                // n8n JSON döndüğü için resim hatası verir ama veri ulaşır. 
-                setTimeout(() => { finishRegistration(); }, 1200); 
-            };
-
+            img.onerror = () => { setTimeout(() => { finishRegistration(); }, 1200); };
             img.src = webhookUrl;
         }
 
@@ -117,9 +99,7 @@
                 title: 'Hoş Geldin! 🎁',
                 message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı.',
                 buttons: [{type: 'ok', text: 'DEVAM ET'}]
-            }, () => {
-                window.location.href = 'arka_fon.html';
-            });
+            }, () => { window.location.href = 'arka_fon.html'; });
         }
     </script>
 </body>
