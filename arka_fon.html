@@ -241,7 +241,7 @@
             
             currentCategoryItems = config[cat].map((fileName, index) => {
                 const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
-                return { id: fileName, url: `${baseUrl}${folder}${fileName}_a.jpeg`, title: `KONSEPT ${index + 1}` };
+                return { id: fileName, url: `${baseUrl}${folder}${fileName}_c.jpeg`, title: `KONSEPT ${index + 1}` };
             });
 
             currentCategoryItems.forEach((item, index) => {
@@ -296,21 +296,22 @@
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    // HATA ÇÖZÜMÜ: UPSERT yerine UPDATE kullanıyoruz. 
-                    // Böylece galeri_adi gibi diğer sütunlar zorunlu olmaktan çıkar.
+                    // KRİTİK NOKTA: Kullanıcı _c (örnek) görüyor, biz _a (ham/boş) kaydediyoruz.
+                    const cleanImageUrl = selectedItem.url.replace('_c.jpeg', '_a.jpeg');
+
                     const { error: updateError } = await _supabase
                         .from('galeriler')
                         .update({ 
-                            stand_gorseli_url: selectedItem.url,
+                            stand_gorseli_url: cleanImageUrl,
                             secili_stand_gorseli: selectedItem.id
                         })
-                        .eq('chat_id', userId); // Sadece bu kullanıcının satırını güncelle
+                        .eq('chat_id', userId);
 
                     if (!updateError) {
                         tg.HapticFeedback.notificationOccurred('success');
+                        // n8n tetiklenmesi için aktif_fon sayfasına yönlendiriyoruz
                         window.location.href = `aktif_fon.html?mode=new`;
                     } else {
-                        // Eğer hala hata verirse detayını göster
                         tg.showAlert("Hata: " + updateError.message);
                         btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
@@ -321,5 +322,3 @@
     </script>
 </body>
 </html>
-
-
