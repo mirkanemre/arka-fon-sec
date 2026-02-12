@@ -34,7 +34,6 @@
             background: #0a0a0a; border: 1px solid var(--border); border-radius: 24px; padding: 12px; position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
-        /* Aktif Sahne Şıklığı */
         .scene-card.active-scene { 
             border-color: var(--success); 
             box-shadow: 0 0 30px rgba(52, 199, 89, 0.1);
@@ -112,16 +111,15 @@
             const container = document.getElementById('scenes-container');
             
             try {
-                // 1. Önce galeriler tablosundan şu an aktif olan sahnenin URL'sini alalım
+                // SÜTUN GÜNCELLENDİ: kayitli_arkaplan_url
                 let { data: galleryInfo } = await _supabase
                     .from('galeriler')
-                    .select('stand_gorseli_url')
+                    .select('kayitli_arkaplan_url')
                     .eq('chat_id', rawID)
                     .single();
 
-                const currentActiveUrl = galleryInfo?.stand_gorseli_url;
+                const currentActiveUrl = galleryInfo?.kayitli_arkaplan_url;
 
-                // 2. Kayıtlı sahneleri çekelim
                 let { data: scenes, error } = await _supabase
                     .from('galeri_kayitli_arkaplan')
                     .select('*')
@@ -133,7 +131,6 @@
                 if (scenes && scenes.length > 0) {
                     container.innerHTML = "";
                     scenes.forEach(scene => {
-                        // EĞER bu sahnenin URL'si galeriler tablosundaki aktif URL ile aynıysa AKTİF say
                         const isActive = (scene.sahne_url === currentActiveUrl);
                         
                         container.innerHTML += `
@@ -152,7 +149,12 @@
                             </div>`;
                     });
                 } else {
-                    container.innerHTML = `<div class="empty-state">...</div>`; // (Boş durum kodu buraya)
+                    container.innerHTML = `<div class="empty-state">
+                        <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;">📂</div>
+                        <div style="font-weight: 800; font-size: 0.8rem; margin-bottom: 10px; font-family:'Orbitron';">HENÜZ KAYITLI SAHNENİZ YOK.</div>
+                        <p style="color: #48484a; font-size: 0.7rem; line-height: 1.5;">Yeni bir kurulum yaparak dükkanınızı süsleyin.</p>
+                        <a href="aktif_fon.html?mode=new" class="btn-create-new">YENİ BİR TANE OLUŞTURUN</a>
+                    </div>`;
                 }
             } catch (err) { 
                 container.innerHTML = `<p style="text-align:center; color:#ff3b30; font-size:0.7rem;">Hata: ${err.message}</p>`; 
@@ -167,18 +169,18 @@
                     tg.HapticFeedback.notificationOccurred('success');
                     
                     try {
-                        // VERİTABANI GÜNCELLEME: galeriler tablosundaki stand_gorseli_url sütununa yaz
+                        // SÜTUN GÜNCELLENDİ: kayitli_arkaplan_url
                         const { error } = await _supabase
                             .from('galeriler')
-                            .update({ stand_gorseli_url: selectedUrl })
+                            .update({ kayitli_arkaplan_url: selectedUrl })
                             .eq('chat_id', rawID);
 
                         if (error) throw error;
 
                         tg.showAlert("Sahne başarıyla aktif edildi!");
-                        loadCollection(); // Sayfayı yenilemeden listeyi güncelle
+                        loadCollection(); 
                     } catch (e) {
-                        tg.showAlert("Güncelleme sırasında hata oluştu: " + e.message);
+                        tg.showAlert("Hata: " + e.message);
                     }
                 }
             });
