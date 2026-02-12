@@ -14,7 +14,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v1.5.0</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.0.0</div>
     </div>
 
     <div class="header-area">
@@ -23,7 +23,7 @@
     </div>
 
     <div id="scenes-container">
-        <p style="text-align:center; opacity:0.3; font-size:0.7rem; font-family:'Orbitron';">Sahneler taranıyor...</p>
+        <p style="text-align:center; opacity:0.6; font-size:0.7rem; font-family:'Orbitron'; color: var(--text-dim); margin-top: 50px;">Sahneler taranıyor...</p>
     </div>
 
     <div class="footer">
@@ -35,9 +35,11 @@
         const tg = window.Telegram.WebApp;
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
-        tg.ready(); tg.expand();
+        tg.ready(); 
+        tg.expand();
         tg.headerColor = "#000000";
 
+        // Telegram Native Geri Butonu (Yedek)
         tg.BackButton.show();
         tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
 
@@ -46,6 +48,7 @@
             const container = document.getElementById('scenes-container');
             
             try {
+                // Mevcut aktif fonu bul
                 let { data: galleryInfo } = await _supabase
                     .from('galeriler')
                     .select('kayitli_arkaplan_url')
@@ -54,6 +57,7 @@
 
                 const currentActiveUrl = galleryInfo?.kayitli_arkaplan_url;
 
+                // Kullanıcının sahnelerini çek
                 let { data: scenes, error } = await _supabase
                     .from('galeri_kayitli_arkaplan')
                     .select('*')
@@ -67,14 +71,19 @@
                     scenes.forEach(scene => {
                         const isActive = (scene.sahne_url === currentActiveUrl);
                         
+                        // Kart HTML Yapısı - CSS v2.1.0 ile tam uyumlu
                         container.innerHTML += `
                             <div class="scene-card ${isActive ? 'active-scene' : ''}">
                                 ${isActive ? '<div class="active-badge">AKTİF FON</div>' : ''}
+                                
                                 <div class="scene-preview">
                                     <img src="${scene.sahne_url}" onerror="this.src='https://via.placeholder.com/400x225?text=Resim+Yok'">
                                 </div>
+                                
                                 <div class="scene-details">
-                                    <div class="scene-name" style="font-family:'Orbitron'; font-size:0.6rem; color:var(--text-dim);">SAHNE #${scene.id.toString().slice(-4).toUpperCase()}</div>
+                                    <div style="font-family:'Orbitron'; font-size:0.65rem; color:var(--text-dim); font-weight:800;">
+                                        SAHNE #${scene.id.toString().slice(-4).toUpperCase()}
+                                    </div>
                                     ${isActive ? 
                                         '<button class="btn-activate current">YAYINDA</button>' : 
                                         `<button class="btn-activate" onclick="activateScene('${scene.sahne_url}')">KULLAN</button>`
@@ -83,12 +92,13 @@
                             </div>`;
                     });
                 } else {
+                    // Boş Durum (Empty State)
                     container.innerHTML = `
-                        <div class="empty-state">
+                        <div style="text-align: center; margin-top: 60px; padding: 20px;">
                             <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;">📂</div>
                             <div style="font-weight: 800; font-size: 0.8rem; margin-bottom: 10px; font-family:'Orbitron';">HENÜZ SAHNENİZ YOK</div>
-                            <p style="color: #48484a; font-size: 0.7rem; line-height: 1.5;">Yeni bir kurulum yaparak dükkanınızı süsleyin.</p>
-                            <a href="arka_fon.html" class="btn-submit" style="display:inline-block; text-decoration:none; padding: 15px 25px; font-size:0.7rem;">YENİ KONSEPT SEÇ</a>
+                            <p style="color: #48484a; font-size: 0.7rem; line-height: 1.5; margin-bottom: 20px;">Yeni bir kurulum yaparak dükkanınızı süsleyin.</p>
+                            <a href="arka_fon.html" class="btn-submit" style="display:inline-block; text-decoration:none; padding: 15px 25px; font-size:0.7rem; width:auto;">YENİ KONSEPT SEÇ</a>
                         </div>`;
                 }
             } catch (err) { 
@@ -98,6 +108,7 @@
 
         async function activateScene(selectedUrl) {
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
+            
             tg.showConfirm("Bu sahneyi aktif dükkan fonu yapmak istiyor musunuz?", async (ok) => {
                 if (ok) { 
                     tg.HapticFeedback.notificationOccurred('success');
@@ -106,9 +117,11 @@
                             .from('galeriler')
                             .update({ kayitli_arkaplan_url: selectedUrl })
                             .eq('chat_id', rawID);
+
                         if (error) throw error;
+
                         tg.showAlert("Sahne başarıyla aktif edildi!");
-                        loadCollection(); 
+                        loadCollection(); // Listeyi yenile
                     } catch (e) {
                         tg.showAlert("Hata: " + e.message);
                     }
