@@ -25,7 +25,6 @@
             overflow-x: hidden;
         }
 
-        /* Arka Plan Parlaması (Index ile uyumlu) */
         body::before {
             content: '';
             position: fixed;
@@ -53,11 +52,7 @@
             letter-spacing: 1px;
         }
 
-        .page-title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
+        .page-title { text-align: center; margin-bottom: 30px; }
         .page-title h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.2rem;
@@ -68,7 +63,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Liste Alanı */
         #scenes-container {
             width: 100%;
             max-width: 500px;
@@ -83,7 +77,6 @@
             border-radius: 24px;
             padding: 12px;
             position: relative;
-            transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .scene-card.active-scene {
@@ -100,11 +93,7 @@
             border: 1px solid #111;
         }
 
-        .scene-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .scene-preview img { width: 100%; height: 100%; object-fit: cover; }
 
         .scene-details {
             display: flex;
@@ -130,7 +119,6 @@
             font-size: 0.65rem;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
 
         .btn-activate.current {
@@ -138,16 +126,27 @@
             color: #34c759;
             border: 1px solid rgba(52, 199, 89, 0.2);
             cursor: default;
-            box-shadow: none;
         }
 
         .empty-state {
             text-align: center;
-            margin-top: 100px;
-            color: #444;
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        .btn-create-new {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
             font-family: 'Orbitron';
             font-size: 0.7rem;
-            letter-spacing: 1px;
+            font-weight: 900;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -155,12 +154,12 @@
 
     <div class="nav-header">
         <a href="index.html" class="btn-back">❮ ANA MENÜ</a>
-        <div style="font-size: 0.55rem; color: #48484a; font-weight: 800; font-family: 'Orbitron';">KATEGORİ: ONAYLI</div>
+        <div style="font-size: 0.55rem; color: #48484a; font-weight: 800; font-family: 'Orbitron';">DURUM: ONAYLI</div>
     </div>
 
     <div class="page-title">
         <h1>KAYITLI SAHNELERİM</h1>
-        <p style="font-size: 0.6rem; color: #48484a; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px;">Koleksiyonunuzu Yönetin</p>
+        <p style="font-size: 0.6rem; color: #48484a; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px;">Dükkan Koleksiyonunuz</p>
     </div>
 
     <div id="scenes-container">
@@ -181,7 +180,6 @@
             const container = document.getElementById('scenes-container');
 
             try {
-                // Sadece satın alınmış (is_approved=true) olanları getir
                 let { data: scenes, error } = await _supabase
                     .from('galeriler')
                     .select('*')
@@ -192,9 +190,7 @@
                 if (scenes && scenes.length > 0) {
                     container.innerHTML = "";
                     scenes.forEach(scene => {
-                        // Eğer bu sahne şu an aktifse 'current' stilini ekle
-                        const isActive = scene.is_active; // Veritabanında is_active sütunu olduğunu varsayıyoruz
-
+                        const isActive = scene.is_active; 
                         container.innerHTML += `
                             <div class="scene-card ${isActive ? 'active-scene' : ''}">
                                 <div class="scene-preview">
@@ -210,27 +206,28 @@
                             </div>
                         `;
                     });
-                    tg.HapticFeedback.impactOccurred('light');
                 } else {
                     container.innerHTML = `
                         <div class="empty-state">
-                            <div style="font-size: 2rem; margin-bottom: 20px;">📂</div>
-                            HENÜZ KAYITLI BİR SAHNENİZ YOK.<br>
-                            <a href="aktif_fon.html" style="color:var(--accent); text-decoration:none; margin-top:10px; display:inline-block;">YENİ BİR TANE OLUŞTURUN</a>
+                            <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;">📂</div>
+                            <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 10px;">HENÜZ KAYITLI SAHNENİZ YOK.</div>
+                            <p style="color: #48484a; font-size: 0.7rem; line-height: 1.5;">
+                                Satın aldığınız sahneler burada listelenir. <br> Yeni bir kurulum yaparak dükkanınızı süsleyin.
+                            </p>
+                            <a href="aktif_fon.html" class="btn-create-new">YENİ BİR TANE OLUŞTURUN</a>
                         </div>
                     `;
                 }
             } catch (err) {
-                container.innerHTML = `<p style="text-align:center; color:red;">Hata: Veriler yüklenemedi.</p>`;
+                container.innerHTML = `<p style="text-align:center; color:red;">Bağlantı Hatası!</p>`;
             }
         }
 
         function activateScene(id) {
-            tg.HapticFeedback.notificationOccurred('warning');
-            tg.showConfirm("Bu sahneyi dükkanınızın yeni fonu olarak ayarlamak istiyor musunuz? (ÜCRETSİZDİR)", (ok) => {
+            tg.showConfirm("Bu sahneyi dükkanınızın aktif fonu yapmak istiyor musunuz? (ÜCRETSİZDİR)", (ok) => {
                 if (ok) {
                     tg.HapticFeedback.notificationOccurred('success');
-                    // Burada veritabanında bu ID'li sahneyi is_active: true yapıp diğerlerini false yapacak bir trigger çalışmalı.
+                    // Buraya aktiflik güncelleme kodun gelecek
                     tg.close();
                 }
             });
