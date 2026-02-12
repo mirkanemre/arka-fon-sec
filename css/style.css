@@ -214,3 +214,36 @@ input, select { background: #050505; border: 1px solid var(--border); border-rad
 
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
+
+/* --- MAĞAZA İÇİN YATAY KART DÜZENLEMESİ --- */
+.store-row {
+    display: flex !important;
+    flex-direction: row !important; /* Yan yana dizer */
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 24px !important;
+}
+
+/* Fiyat ve Adet Yazı Tipleri */
+.kredi-detay { display: flex; flex-direction: column; text-align: left; }
+.kredi-detay strong { font-size: 1.8rem; font-weight: 900; line-height: 1; color: #fff; }
+.kredi-detay span { color: var(--text-dim); font-size: 0.8rem; margin-top: 5px; font-weight: 700; letter-spacing: 0.5px; }
+
+.fiyat-detay { text-align: right; display: flex; flex-direction: column; }
+.fiyat-detay strong { font-size: 1.4rem; display: block; color: #fff; font-weight: 800; }
+.fiyat-detay small { color: var(--primary); font-weight: 700; font-size: 0.75rem; margin-top: 2px; }
+
+/* Popüler Rozeti */
+.popular-badge {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+}
