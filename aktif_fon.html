@@ -20,13 +20,15 @@
         #main-content { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 15px; }
-        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 100px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
         .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; margin-bottom: 15px; }
         img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-img { width: auto !important; height: 60% !important; object-fit: contain; }
+        .logo-img { width: auto !important; height: 50px !important; object-fit: contain; margin-bottom: 8px; }
         .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 20px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; text-align: left; }
         
+        .btn-upload-logo { background: transparent; border: 1px dashed var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 0.55rem; font-weight: 800; cursor: pointer; }
+
         #empty-simulator { display: none; text-align: center; padding: 40px 20px; flex-direction: column; align-items: center; }
         .empty-icon { font-size: 3rem; margin-bottom: 20px; opacity: 0.5; }
 
@@ -42,36 +44,40 @@
         <a href="sahnelerim.html" class="choice-card">
             <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
-            <p style="font-size: 0.7rem; color: #636366;">Satın aldığınız konseptler arasında ücretsiz geçiş yapın.</p>
+            <p style="font-size: 0.7rem; color: #636366;">Aktif konseptleriniz arasında geçiş yapın.</p>
         </a>
 
         <div class="choice-card" onclick="openSimulator()">
             <div style="font-size: 2rem; margin-bottom: 10px;">✨</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
-            <p style="font-size: 0.7rem; color: #636366;">Yeni bir fon seçin ve sisteme dahil edin (1 Kredi).</p>
+            <p style="font-size: 0.7rem; color: #636366;">Katalogdan yeni bir fon sabitleyin (1 Kredi).</p>
         </div>
     </div>
 
     <div id="main-content">
         <div class="nav-header">
             <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.href='aktif_fon.html'">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.6</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.7</div>
         </div>
 
         <div id="simulator-ui" style="display: none;">
             <div class="selection-grid">
                 <div><div class="section-label">SEÇİLEN FON</div><div class="grid-box"><img id="raw-bg-img" src=""></div></div>
-                <div><div class="section-label">SİZİN LOGONUZ</div><div class="grid-box"><img id="user-preview-logo" class="logo-img" src=""></div></div>
+                <div>
+                    <div class="section-label">SİZİN LOGONUZ</div>
+                    <div class="grid-box">
+                        <img id="user-preview-logo" class="logo-img" src="">
+                        <button class="btn-upload-logo" onclick="goToBotForLogo()">LOGO YÜKLE</button>
+                    </div>
+                </div>
             </div>
+            
             <div class="section-label">UYGULAMA ÖRNEĞİ</div>
             <div class="simulator-box">
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scan 3s infinite linear; z-index: 10;"></div>
                 <img id="sim-bg" src="">
             </div>
-            <div style="text-align: center; margin: 20px 0;">
-                <div style="font-family: 'Orbitron'; font-size: 0.6rem; color: var(--primary); letter-spacing: 2px; margin-bottom: 10px;">DİJİTAL SAHNE KURULUMU</div>
-                <p style="font-size: 0.75rem; color: #8e8e93; line-height: 1.5; margin: 0;">Logonuz seçili fona yerleştirilir ve dekor olarak kaydedilir.</p>
-            </div>
+
             <button class="btn-generate" onclick="startProduction()">
                 SİSTEMİ AKTİF ET
                 <span style="font-size: 0.6rem; opacity: 0.8; font-weight: 400;">(1 KREDİ - FON SABİTLENİR)</span>
@@ -81,12 +87,7 @@
         <div id="empty-simulator" style="display: none;">
             <div class="empty-icon">🖼️</div>
             <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; margin-bottom: 15px;">KONSEPT SEÇİLMEDİ</h2>
-            <p id="empty-msg" style="font-size: 0.75rem; color: #8e8e93; line-height: 1.6; margin-bottom: 25px;">
-                Simülatörü çalıştırmak için önce katalogdan bir arka plan seçmelisiniz.
-            </p>
-            <button class="btn-generate" onclick="location.href='arka_fon.html'">
-                FON KATALOĞUNA GİT
-            </button>
+            <button class="btn-generate" onclick="location.href='arka_fon.html'">FON KATALOĞUNA GİT</button>
         </div>
     </div>
 
@@ -106,28 +107,27 @@
             const emptyUI = document.getElementById('empty-simulator');
 
             try {
-                let { data: record, error } = await _supabase
-                    .from('galeriler')
-                    .select('*')
-                    .eq('chat_id', rawID)
-                    .maybeSingle();
+                let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
 
-                if (record && record.stand_gorseli_url && record.stand_gorseli_url !== "") {
+                if (record && record.stand_gorseli_url) {
                     simUI.style.display = 'block';
                     emptyUI.style.display = 'none';
 
-                    // Resim Linki Manipülasyonu
-                    // Örn: .../dismekan_0001_c.jpeg -> .../dismekan_0001_a.jpeg
-                    const baseImgUrl = record.stand_gorseli_url.replace('_c.jpeg', '');
+                    // Resim uzantılarını temizleme (Hata payını siler)
+                    // URL içindeki _c.jpeg kısmını kaldırıp baz URL alıyoruz
+                    let baseImg = record.stand_gorseli_url.split('_c.jpeg')[0];
                     
-                    // SEÇİLEN FON -> _a.jpeg (Boş Arka Plan)
-                    document.getElementById('raw-bg-img').src = baseImgUrl + '_a.jpeg';
+                    document.getElementById('raw-bg-img').src = baseImg + '_a.jpeg';
+                    document.getElementById('sim-bg').src = baseImg + '_b.jpeg';
                     
-                    // UYGULAMA ÖRNEĞİ -> _b.jpeg (Örnekli Arka Plan)
-                    document.getElementById('sim-bg').src = baseImgUrl + '_b.jpeg';
-                    
-                    // LOGO
-                    document.getElementById('user-preview-logo').src = record.logo_gorsel_url || 'https://via.placeholder.com/200x100?text=Logo+Yok';
+                    // Logo Kontrolü
+                    const logoImg = document.getElementById('user-preview-logo');
+                    if(record.logo_gorsel_url && record.logo_gorsel_url !== "") {
+                        logoImg.src = record.logo_gorsel_url;
+                        logoImg.style.display = 'block';
+                    } else {
+                        logoImg.src = 'https://via.placeholder.com/200x100?text=LOGO+EKSİK';
+                    }
                     
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
@@ -135,14 +135,23 @@
                     emptyUI.style.display = 'flex';
                 }
             } catch (err) {
-                console.error("Hata:", err);
-                simUI.style.display = 'none';
+                console.error(err);
                 emptyUI.style.display = 'flex';
             }
         }
 
+        function goToBotForLogo() {
+            tg.showPopup({
+                title: 'Logo Yükleme',
+                message: 'Logonuzu sisteme işleyebilmemiz için lütfen Telegram Botumuza "Görsel" olarak gönderin.',
+                buttons: [{id: 'ok', type: 'default', text: 'BOTA GİT'}]
+            }, (id) => {
+                if(id === 'ok') tg.openTelegramLink("https://t.me/asininventory_bot"); // Kendi bot linkini yaz abi
+            });
+        }
+
         function startProduction() { 
-            tg.showConfirm("Yeni konsept aktif edilecek ve 1 kredi düşülecektir. Onaylıyor musunuz?", (ok) => { 
+            tg.showConfirm("Fon dükkanınıza kurulacak. 1 Kredi düşülecektir. Onaylıyor musunuz?", (ok) => { 
                 if (ok) {
                     tg.HapticFeedback.notificationOccurred('success');
                     tg.close(); 
@@ -152,10 +161,7 @@
 
         window.onload = () => { 
             tg.ready(); tg.expand();
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('mode') === 'new') { 
-                openSimulator(); 
-            }
+            if (new URLSearchParams(window.location.search).get('mode') === 'new') openSimulator();
         };
     </script>
 </body>
