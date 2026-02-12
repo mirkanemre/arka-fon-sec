@@ -4,172 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Arka Fon Seçimi</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;600;700;800&display=swap');
-
-        :root {
-            --bg: #000000;
-            --primary: #007AFF; /* Diğer sayfalarla uyumlu Apple Blue */
-            --card-bg: #0a0a0a;
-            --border: #1c1c1e;
-            --text-dim: #94a3b8;
-            --gold: #f59e0b;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            margin: 0;
-            padding: 24px; /* Dashboard ile aynı padding */
-            color: #fff;
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Navigasyon - Diğer sayfalarla tam uyumlu hale getirildi */
-        .nav-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: var(--primary);
-            font-size: 0.8rem; /* Boyut Dashboard ile eşitlendi */
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .header { text-align: center; margin-bottom: 35px; }
-        .header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            margin: 0;
-            color: #fff;
-            text-transform: uppercase;
-        }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-        .card { 
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 24px; 
-            overflow: hidden; 
-            cursor: pointer; 
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .card:active { 
-            transform: scale(0.96); 
-            border-color: var(--primary);
-        }
-
-        .img-wrapper { 
-            width: 100%; 
-            height: 110px; 
-            overflow: hidden;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .card img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            filter: brightness(0.9);
-        }
-
-        .card-title { 
-            padding: 12px 5px; 
-            text-align: center; 
-            font-weight: 800; 
-            font-size: 0.65rem; 
-            letter-spacing: 1.5px;
-            background: #000;
-            color: var(--text-dim);
-            text-transform: uppercase;
-        }
-
-        /* Modal Tasarımı */
-        #preview-modal { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000; z-index: 1000; display: none; 
-            flex-direction: column; align-items: center; justify-content: center; 
-        }
-
-        .img-frame {
-            position: relative;
-            width: 90%;
-            background: #0a0a0a;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            padding: 5px;
-            margin-top: -60px;
-        }
-
-        #preview-img { 
-            width: 100%; 
-            border-radius: 20px;
-            display: block;
-        }
-
-        .modal-controls {
-            position: absolute;
-            bottom: 50px;
-            left: 24px;
-            right: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .btn-save { 
-            background: var(--primary); 
-            color: white; border: none; 
-            padding: 18px; border-radius: 18px; font-weight: 800; 
-            font-size: 0.9rem; letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        #back-btn { 
-            background: var(--card-bg); color: #fff; border: 1px solid var(--border); 
-            padding: 12px; border-radius: 15px; width: 100%; margin-top: 20px; 
-            font-weight: 700; font-size: 0.7rem; text-transform: uppercase;
-        }
-
-        .home-footer { 
-            margin-top: auto; 
-            padding-top: 40px;
-            text-align: center; 
-            font-size: 0.58rem;
-            color: #48484a;
-            line-height: 1.6;
-        }
-    </style>
 </head>
 <body>
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v1.1.8</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v1.5.0</div>
     </div>
 
-    <div class="header">
+    <div class="header-area">
         <h1>STÜDYO</h1>
-        <p id="view-title" style="color: var(--primary); font-weight: 800; letter-spacing: 2px; font-size: 0.65rem; margin-top: 8px; text-transform: uppercase;">Kategori Seçiniz</p>
+        <p id="view-title">Kategori Seçiniz</p>
     </div>
 
     <div id="category-view" class="grid">
@@ -191,7 +41,7 @@
     
     <button id="back-btn" style="display: none;" onclick="showCategoryMenu()">← KATEGORİLERE DÖN</button>
 
-    <div class="home-footer">
+    <div class="footer">
         © 2026 OTOFONFX TECHNOLOGIES<br>
         Tüm hakları OtoFonFX stüdyosuna aittir.
     </div>
@@ -202,9 +52,9 @@
         <div class="modal-controls">
             <div style="text-align: center;">
                 <span id="preview-title" style="font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; letter-spacing: 2px; display: block;"></span>
-                <span style="font-size: 0.6rem; color: #48484a; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block;">Stüdyo Konsepti Seçildi</span>
+                <span style="font-size: 0.6rem; color: #8e8e93; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block;">Stüdyo Konsepti Seçildi</span>
             </div>
-            <button class="btn-save" id="save-btn-text" onclick="saveSelection()">BU FONU KULLAN</button>
+            <button class="btn-submit" id="save-btn-text" onclick="saveSelection()">BU FONU KULLAN</button>
         </div>
     </div>
 
@@ -265,20 +115,19 @@
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    // Senin istediğin Storage klasör adresi
                     const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
                     const { error } = await _supabase
                         .from('galeriler')
                         .update({ 
-                            kayitli_arkaplan_url: finalStorageUrl, // Sütun adı güncellendi
+                            kayitli_arkaplan_url: finalStorageUrl,
                             secili_stand_gorseli: selectedItem.id 
                         })
                         .eq('chat_id', userId);
 
                     if (!error) {
                         tg.HapticFeedback.notificationOccurred('success');
-                        window.location.href = `index.html`; // İşlem bitince ana sayfaya dön
+                        window.location.href = `index.html`;
                     } else {
                         tg.showAlert("Hata: " + error.message);
                         btn.innerText = "BU FONU KULLAN";
