@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Dashboard</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
 
@@ -13,6 +14,7 @@
             --primary: #007AFF;
             --card-bg: #0a0a0a;
             --border: #1c1c1e;
+            --gold: #f59e0b;
         }
 
         body {
@@ -36,12 +38,31 @@
             z-index: -1;
         }
 
-        .logo-area {
-            text-align: center;
-            margin-top: 10px;
-            margin-bottom: 40px;
+        /* HEDİYE/KAYIT KARTI STİLİ */
+        #registration-banner {
+            display: none; /* Başta gizli, JS ile açılacak */
+            width: 100%;
+            background: linear-gradient(45deg, #d97706, #f59e0b);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            text-decoration: none;
+            color: #000;
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2s infinite;
         }
 
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        .promo-content h3 { margin: 0; font-family: 'Orbitron'; font-size: 0.8rem; font-weight: 900; }
+        .promo-content p { margin: 4px 0 0; font-size: 0.65rem; font-weight: 700; opacity: 0.8; }
+
+        .logo-area { text-align: center; margin-bottom: 40px; }
         .logo-area h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 2.2rem;
@@ -52,12 +73,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .menu-grid {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .menu-grid { width: 100%; display: flex; flex-direction: column; gap: 15px; }
 
         .main-card {
             background: var(--card-bg);
@@ -74,51 +90,26 @@
             color: white;
         }
 
-        .main-card:active {
-            transform: scale(0.96);
-            background: #1c1c1e;
-        }
-
-        .main-card h2 {
-            font-size: 1.2rem;
-            font-weight: 900;
-            margin: 0;
-            z-index: 2;
-        }
-
-        .main-card p {
-            font-size: 0.75rem;
-            color: #8e8e93;
-            margin: 6px 0 0 0;
-            z-index: 2;
-        }
-
-        .card-icon {
-            position: absolute;
-            right: -10px;
-            bottom: -10px;
-            font-size: 4rem;
-            opacity: 0.05;
-            transform: rotate(-15deg);
-            z-index: 1;
-        }
+        .main-card:active { transform: scale(0.96); background: #1c1c1e; }
+        .main-card h2 { font-size: 1.2rem; font-weight: 900; margin: 0; z-index: 2; }
+        .main-card p { font-size: 0.75rem; color: #8e8e93; margin: 6px 0 0 0; z-index: 2; }
+        .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 4rem; opacity: 0.05; transform: rotate(-15deg); z-index: 1; }
 
         .studio-card { border-left: 5px solid var(--primary); }
         .store-card { border-left: 5px solid #34c759; }
-        .active-card { border-left: 5px solid #f59e0b; }
+        .active-card { border-left: 5px solid var(--gold); }
 
-        .footer {
-            margin-top: auto;
-            padding-top: 40px;
-            font-size: 0.6rem;
-            color: #48484a;
-            text-align: center;
-            letter-spacing: 1px;
-            line-height: 1.5;
-        }
+        .footer { margin-top: auto; padding-top: 40px; font-size: 0.6rem; color: #48484a; text-align: center; letter-spacing: 1px; line-height: 1.5; }
     </style>
 </head>
 <body>
+
+    <a href="kayit.html" id="registration-banner">
+        <div class="promo-content">
+            <h3>🎁 10 KREDİ HEDİYENİZİ ALIN</h3>
+            <p>Dükkan kaydınızı tamamlayın, ücretsiz çekim kazanın.</p>
+        </div>
+    </a>
 
     <div class="logo-area">
         <h1>OTOFONFX</h1>
@@ -126,19 +117,19 @@
     </div>
 
     <div class="menu-grid">
-        <a href="https://mirkanemre.github.io/arka-fon-sec/arka_fon.html" class="main-card studio-card">
+        <a href="arka_fon.html" class="main-card studio-card">
             <h2>Stüdyo Konsept Örnekleri</h2>
             <p>Arka fon konseptinizi seçin ve çekimi başlatın.</p>
             <div class="card-icon">🖼️</div>
         </a>
 
-        <a href="https://mirkanemre.github.io/arka-fon-sec/kredial.html" class="main-card store-card">
+        <a href="kredial.html" class="main-card store-card">
             <h2>Kredi Mağazası</h2>
             <p>Paket yükleyin, çekime kesintisiz devam edin.</p>
             <div class="card-icon">💳</div>
         </a>
 
-        <a href="https://mirkanemre.github.io/arka-fon-sec/aktif_fon.html" class="main-card active-card">
+        <a href="aktif_fon.html" class="main-card active-card">
             <h2>Seçili Konsept</h2>
             <p id="active-status-text">Mevcut konseptinizi görüntüleyin.</p>
             <div class="card-icon">✨</div>
@@ -148,29 +139,46 @@
     <div class="footer">
         © 2026 OTOFONFX TECHNOLOGIES<br>
         Tüm hakları OtoFonFX stüdyosuna aittir.<br>
-        <span style="opacity: 0.5;">v1.0.4 PREMIUM ACCESS</span>
+        <span style="opacity: 0.5;">v1.1.0 PREMIUM ACCESS</span>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
+        const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
+        
         tg.ready();
         tg.expand();
         tg.headerColor = "#000000";
 
-        function checkActiveFon() {
+        async function checkUserRegistration() {
+            const userId = tg.initDataUnsafe?.user?.id || 1017604800;
+            
+            // 1. Supabase'den kaydı kontrol et
+            let { data: record } = await _supabase
+                .from('galeriler')
+                .select('chat_id')
+                .eq('chat_id', userId)
+                .maybeSingle();
+
+            // 2. Kayıt yoksa hediye kartını göster
+            if (!record) {
+                document.getElementById('registration-banner').style.display = 'block';
+            }
+
+            // 3. Aktif fon ismini göster (senin eski mantık)
             const savedName = localStorage.getItem('selectedFonName');
             if (savedName) {
                 document.getElementById('active-status-text').innerText = "Aktif: " + savedName.toUpperCase();
             }
         }
 
-        document.querySelectorAll('.main-card').forEach(card => {
+        document.querySelectorAll('.main-card, #registration-banner').forEach(card => {
             card.onclick = () => {
                 tg.HapticFeedback.impactOccurred('medium');
             };
         });
 
-        window.onload = checkActiveFon;
+        window.onload = checkUserRegistration;
     </script>
 </body>
 </html>
