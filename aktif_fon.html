@@ -9,9 +9,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;700&display=swap');
         
-        /* Box-sizing hatasını globalde çözelim */
         * { box-sizing: border-box; }
-
         :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; }
         
         body { 
@@ -24,7 +22,7 @@
             flex-direction: column; 
             align-items: center; 
             min-height: 100vh; 
-            overflow-x: hidden; /* Sağa kaymayı kesin olarak engeller */
+            overflow-x: hidden; 
         }
         
         /* Seçim Ekranı Overlay */
@@ -55,56 +53,33 @@
 
         .choice-card {
             width: 100%;
-            max-width: 340px; /* Mobilde taşmaması için daralttık */
+            max-width: 340px;
             background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%);
             border: 1px solid var(--border);
             border-radius: 25px;
             padding: 25px;
             margin-bottom: 20px;
             text-align: center;
+            text-decoration: none;
+            color: white;
+            display: block;
         }
 
-        /* Ana İçerik ve Simülatör Alanı */
-        #main-content, #scenes-list { 
+        .choice-card:active { transform: scale(0.96); border-color: var(--accent); }
+
+        /* Simülatör Alanı */
+        #main-content { 
             display: none; 
             width: 100%; 
-            max-width: 500px; /* Masaüstünde bile bu genişliği geçmez */
-            margin: 0 auto;  /* Tam ortalar */
+            max-width: 500px; 
+            margin: 0 auto; 
         }
 
         .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 15px; }
+        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 100px; display: flex; align-items: center; justify-content: center; }
+        .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; margin-bottom: 15px; }
         
-        .selection-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 12px; 
-            width: 100%; 
-            margin-bottom: 15px; 
-        }
-
-        .grid-box { 
-            border-radius: 15px; 
-            overflow: hidden; 
-            border: 1px solid var(--border); 
-            background: #050505; 
-            height: 100px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            width: 100%; 
-        }
-
-        .simulator-box { 
-            width: 100%; 
-            aspect-ratio: 16/9; 
-            border-radius: 20px; 
-            overflow: hidden; 
-            border: 1px solid var(--accent); 
-            background: #000; 
-            position: relative; 
-            margin-bottom: 15px; 
-        }
-
         img { width: 100%; height: 100%; object-fit: cover; }
         .logo-img { width: auto !important; height: 60% !important; object-fit: contain; }
 
@@ -121,17 +96,8 @@
             text-transform: uppercase;
         }
 
-        .my-scene-card { 
-            width: 100%; 
-            background: #0a0a0a; 
-            border: 1px solid var(--border); 
-            border-radius: 20px; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-        }
-
-        /* Mobilde Grid Yazıları */
         .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; width: 100%; text-align: left; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
@@ -140,13 +106,13 @@
         <div class="btn-back-float" onclick="location.href='index.html'">❮ GERİ</div>
         <h1 style="font-family:'Orbitron'; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 30px;">STUDIO CONTROL</h1>
         
-        <div class="choice-card" onclick="openMode('my-scenes')">
+        <a href="sahnelerim.html" class="choice-card">
             <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
             <p style="font-size: 0.7rem; color: #636366;">Satın aldığınız konseptler arasında ücretsiz geçiş yapın.</p>
-        </div>
+        </a>
 
-        <div class="choice-card" onclick="openMode('simulator')">
+        <div class="choice-card" onclick="openSimulator()">
             <div style="font-size: 2rem; margin-bottom: 10px;">✨</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
             <p style="font-size: 0.7rem; color: #636366;">Yeni bir fon seçin ve sisteme dahil edin (1 Kredi).</p>
@@ -187,27 +153,14 @@
         </button>
     </div>
 
-    <div id="scenes-list">
-        <div class="nav-header">
-            <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.reload()">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">KAYITLI LİSTE</div>
-        </div>
-        <div id="my-scenes-container"></div>
-    </div>
-
     <script>
         const tg = window.Telegram.WebApp;
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
-        function openMode(mode) {
+        function openSimulator() {
             document.getElementById('choice-overlay').style.display = 'none';
-            if(mode === 'simulator') {
-                document.getElementById('main-content').style.display = 'block';
-                syncDatabase();
-            } else {
-                document.getElementById('scenes-list').style.display = 'block';
-                loadMyScenes();
-            }
+            document.getElementById('main-content').style.display = 'block';
+            syncDatabase();
         }
 
         async function syncDatabase() {
@@ -217,38 +170,15 @@
                 document.getElementById('raw-bg-img').src = data[0].stand_gorseli_url;
                 document.getElementById('sim-bg').src = data[0].galeri_yazili_ornek_arkaplan_url;
                 document.getElementById('user-preview-logo').src = data[0].logo_gorsel_url;
+                tg.HapticFeedback.impactOccurred('light');
             }
         }
 
-        async function loadMyScenes() {
-            const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
-            let { data } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).eq('is_approved', true);
-            const container = document.getElementById('my-scenes-container');
-            container.innerHTML = "";
-            if (data && data.length > 0) {
-                data.forEach(scene => {
-                    container.innerHTML += `
-                        <div class="my-scene-card">
-                            <img src="${scene.galeri_yazili_ornek_arkaplan_url}" style="height:140px; border-radius:12px; margin-bottom:12px; width:100%;">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-family:'Orbitron'; font-size:0.55rem; letter-spacing:1px;">${scene.secili_stand_gorseli.toUpperCase()}</span>
-                                <button onclick="activateScene('${scene.id}')" style="background:var(--accent); border:none; color:white; padding:8px 15px; border-radius:10px; font-size:0.6rem; font-weight:900; font-family:'Orbitron';">KULLAN</button>
-                            </div>
-                        </div>`;
-                });
-            } else {
-                container.innerHTML = `<p style="text-align:center; color:#444; margin-top:50px;">Kayıtlı sahne bulunamadı.</p>`;
-            }
+        function startProduction() { 
+            tg.showConfirm("Yeni konsept aktif edilecek. Onaylıyor musunuz?", (ok) => { if (ok) tg.close(); }); 
         }
-
-        function startProduction() { tg.showConfirm("Yeni konsept aktif edilecek. Onaylıyor musunuz?", (ok) => { if (ok) tg.close(); }); }
-        function activateScene(id) { tg.showConfirm("Bu sahneyi aktif fonunuz yapmak istiyor musunuz?", (ok) => { if (ok) tg.close(); }); }
 
         window.onload = () => { tg.ready(); tg.expand(); };
     </script>
-
-    <style>
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-    </style>
 </body>
 </html>
