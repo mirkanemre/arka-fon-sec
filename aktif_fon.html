@@ -54,8 +54,8 @@
 
     <div id="main-content">
         <div class="nav-header">
-            <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.reload()">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.5</div>
+            <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.href='aktif_fon.html'">❮ SEÇİME DÖN</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.6</div>
         </div>
 
         <div id="simulator-ui" style="display: none;">
@@ -106,31 +106,33 @@
             const emptyUI = document.getElementById('empty-simulator');
 
             try {
-                // En güncel kaydı çekiyoruz
                 let { data: record, error } = await _supabase
                     .from('galeriler')
                     .select('*')
                     .eq('chat_id', rawID)
                     .maybeSingle();
 
-                // KRİTİK: Kayıt var mı ve Fon URL'si dolu mu?
                 if (record && record.stand_gorseli_url && record.stand_gorseli_url !== "") {
                     simUI.style.display = 'block';
                     emptyUI.style.display = 'none';
 
-                    // Görselleri yerleştir
-                    document.getElementById('raw-bg-img').src = record.stand_gorseli_url;
-                    document.getElementById('sim-bg').src = record.galeri_yazili_ornek_arkaplan_url || record.stand_gorseli_url;
+                    // Resim Linki Manipülasyonu
+                    // Örn: .../dismekan_0001_c.jpeg -> .../dismekan_0001_a.jpeg
+                    const baseImgUrl = record.stand_gorseli_url.replace('_c.jpeg', '');
+                    
+                    // SEÇİLEN FON -> _a.jpeg (Boş Arka Plan)
+                    document.getElementById('raw-bg-img').src = baseImgUrl + '_a.jpeg';
+                    
+                    // UYGULAMA ÖRNEĞİ -> _b.jpeg (Örnekli Arka Plan)
+                    document.getElementById('sim-bg').src = baseImgUrl + '_b.jpeg';
+                    
+                    // LOGO
                     document.getElementById('user-preview-logo').src = record.logo_gorsel_url || 'https://via.placeholder.com/200x100?text=Logo+Yok';
                     
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    // Kayıt olsa bile fon yoksa burası çalışır
                     simUI.style.display = 'none';
                     emptyUI.style.display = 'flex';
-                    if(record) {
-                        document.getElementById('empty-msg').innerText = "Dükkan kaydınız aktif ancak henüz bir konsept seçmediniz. Lütfen katalogdan bir seçim yapın.";
-                    }
                 }
             } catch (err) {
                 console.error("Hata:", err);
@@ -151,7 +153,6 @@
         window.onload = () => { 
             tg.ready(); tg.expand();
             const params = new URLSearchParams(window.location.search);
-            // Eğer URL'de mode=new varsa (arka_fon.html'den geliyorsa) direkt simülatörü aç
             if (params.get('mode') === 'new') { 
                 openSimulator(); 
             }
