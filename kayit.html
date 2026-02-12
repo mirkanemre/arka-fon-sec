@@ -8,17 +8,44 @@
     <link rel="stylesheet" href="css/style.css">
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <style>
+        /* Checkbox'ı beyaz yap ve belirginleştir */
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: #fff;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+        }
+        /* İşaretlendiğinde içi mavi olsun */
+        input[type="checkbox"]:checked {
+            background-color: var(--primary);
+        }
+        /* İşaretlendiğinde tık işareti (✔) */
+        input[type="checkbox"]:checked::before {
+            content: "✔";
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
     <div class="nav-header">
         <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.0.0</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.1.0</div>
     </div>
 
     <div id="registration-banner" style="display: block; cursor: default;">
-        <div class="promo-content" style="text-align: center;">
-            <h3 style="font-size: 0.85rem;">🎁 KAYIT OL, 10 KREDİ KAZAN!</h3>
+        <div class="promo-content">
+            <h3>🎁 KAYIT OL, 10 KREDİ KAZAN!</h3>
             <p>Bilgilerini doldur, ilk 10 çekimin bizden olsun.</p>
         </div>
     </div>
@@ -44,13 +71,13 @@
             <div style="position: relative;">
                 <select id="sehir-select">
                     <option value="">Lütfen Şehir Seçin</option>
-                </select>
+                    </select>
             </div>
         </div>
 
-        <div class="input-group" style="flex-direction: row; align-items: center; gap: 12px; margin-top: 5px;">
-            <input type="checkbox" id="kvkk-check" style="width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer;">
-            <label for="kvkk-check" style="font-size: 0.65rem; color: #fff; text-transform: none; padding: 0; cursor: pointer;">
+        <div class="input-group" style="flex-direction: row; align-items: flex-start; gap: 12px; margin-top: 5px;">
+            <input type="checkbox" id="kvkk-check">
+            <label for="kvkk-check" style="font-size: 0.7rem; color: #fff; text-transform: none; padding: 0; cursor: pointer; line-height: 1.4;">
                 <span onclick="openKvkk(event)" style="color: var(--primary); text-decoration: underline; font-weight: 800;">KVKK Aydınlatma Metni</span>'ni okudum ve onaylıyorum.
             </label>
         </div>
@@ -65,13 +92,12 @@
         Tüm hakları OtoFonFX stüdyosuna aittir.
     </div>
 
-    <div id="kvkk-modal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; align-items:center; justify-content:center; padding: 20px; backdrop-filter: blur(5px);">
+    <div id="kvkk-modal">
         <div style="background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 24px; max-height: 80vh; width: 100%; max-width: 500px; display: flex; flex-direction: column;">
             
             <h3 style="margin-top: 0; font-family: 'Orbitron'; font-size: 1rem; text-align: center; color: var(--primary); margin-bottom: 15px;">AYDINLATMA METNİ</h3>
             
             <div style="overflow-y: auto; text-align: left; font-size: 0.7rem; color: #ccc; line-height: 1.6; margin-bottom: 20px; padding-right: 5px; border-top: 1px solid var(--border); padding-top: 10px;">
-                
                 <p><strong>1. Veri Sorumlusu:</strong><br>
                 Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") kapsamında, <strong>OtoFonFX</strong> tarafından hazırlanmıştır.</p>
 
@@ -106,7 +132,8 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        const sehirler = ["Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İstanbul", "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis", "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"];
+        // Şehir Listesi (İstanbul En Başta)
+        const sehirler = ["İstanbul", "Ankara", "İzmir", "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis", "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"];
         
         const select = document.getElementById('sehir-select');
         sehirler.forEach(s => {
@@ -114,7 +141,6 @@
             opt.value = s; opt.innerHTML = s; select.appendChild(opt);
         });
 
-        // KVKK İşlemleri
         function openKvkk(e) {
             if(e) e.preventDefault(); 
             document.getElementById('kvkk-modal').style.display = 'flex';
