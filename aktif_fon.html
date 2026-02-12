@@ -14,7 +14,7 @@
         
         #choice-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         .btn-back-float { position: absolute; top: 40px; left: 20px; color: var(--accent); text-decoration: none; font-size: 0.8rem; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
-        .choice-card { width: 100%; max-width: 340px; background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%); border: 1px solid var(--border); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: center; text-decoration: none; color: white; }
+        .choice-card { width: 100%; max-width: 340px; background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%); border: 1px solid var(--border); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: center; text-decoration: none; color: white; transition: 0.2s; }
         .choice-card:active { transform: scale(0.96); border-color: var(--accent); }
 
         #main-content { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
@@ -24,25 +24,27 @@
         .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; margin-bottom: 15px; }
         img { width: 100%; height: 100%; object-fit: cover; }
         .logo-img { width: auto !important; height: 60% !important; object-fit: contain; }
-        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 20px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px;}
+        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 20px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; text-align: left; }
         
-        /* Boş Durum Paneli */
-        #empty-simulator { display: none; text-align: center; padding: 40px 20px; }
+        #empty-simulator { display: none; text-align: center; padding: 40px 20px; flex-direction: column; align-items: center; }
         .empty-icon { font-size: 3rem; margin-bottom: 20px; opacity: 0.5; }
 
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
+
     <div id="choice-overlay">
         <div class="btn-back-float" onclick="location.href='index.html'">❮ GERİ</div>
         <h1 style="font-family:'Orbitron'; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 30px;">STUDIO CONTROL</h1>
+        
         <a href="sahnelerim.html" class="choice-card">
             <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
             <p style="font-size: 0.7rem; color: #636366;">Satın aldığınız konseptler arasında ücretsiz geçiş yapın.</p>
         </a>
+
         <div class="choice-card" onclick="openSimulator()">
             <div style="font-size: 2rem; margin-bottom: 10px;">✨</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
@@ -52,11 +54,11 @@
 
     <div id="main-content">
         <div class="nav-header">
-            <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="goBackToChoice()">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.4</div>
+            <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.reload()">❮ SEÇİME DÖN</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.5</div>
         </div>
 
-        <div id="simulator-ui">
+        <div id="simulator-ui" style="display: none;">
             <div class="selection-grid">
                 <div><div class="section-label">SEÇİLEN FON</div><div class="grid-box"><img id="raw-bg-img" src=""></div></div>
                 <div><div class="section-label">SİZİN LOGONUZ</div><div class="grid-box"><img id="user-preview-logo" class="logo-img" src=""></div></div>
@@ -76,10 +78,10 @@
             </button>
         </div>
 
-        <div id="empty-simulator">
+        <div id="empty-simulator" style="display: none;">
             <div class="empty-icon">🖼️</div>
             <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; margin-bottom: 15px;">KONSEPT SEÇİLMEDİ</h2>
-            <p style="font-size: 0.75rem; color: #8e8e93; line-height: 1.6; margin-bottom: 25px;">
+            <p id="empty-msg" style="font-size: 0.75rem; color: #8e8e93; line-height: 1.6; margin-bottom: 25px;">
                 Simülatörü çalıştırmak için önce katalogdan bir arka plan seçmelisiniz.
             </p>
             <button class="btn-generate" onclick="location.href='arka_fon.html'">
@@ -98,48 +100,58 @@
             syncDatabase();
         }
 
-        function goBackToChoice() {
-            window.location.href = window.location.pathname;
-        }
-
         async function syncDatabase() {
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
             const simUI = document.getElementById('simulator-ui');
             const emptyUI = document.getElementById('empty-simulator');
 
             try {
-                let { data, error } = await _supabase
+                // En güncel kaydı çekiyoruz
+                let { data: record, error } = await _supabase
                     .from('galeriler')
                     .select('*')
                     .eq('chat_id', rawID)
-                    .order('created_at', { ascending: false });
+                    .maybeSingle();
 
-                if (data && data.length > 0) {
-                    // Veri varsa simülatörü göster
+                // KRİTİK: Kayıt var mı ve Fon URL'si dolu mu?
+                if (record && record.stand_gorseli_url && record.stand_gorseli_url !== "") {
                     simUI.style.display = 'block';
                     emptyUI.style.display = 'none';
 
-                    document.getElementById('raw-bg-img').src = data[0].stand_gorseli_url;
-                    document.getElementById('sim-bg').src = data[0].galeri_yazili_ornek_arkaplan_url;
-                    document.getElementById('user-preview-logo').src = data[0].logo_gorsel_url;
+                    // Görselleri yerleştir
+                    document.getElementById('raw-bg-img').src = record.stand_gorseli_url;
+                    document.getElementById('sim-bg').src = record.galeri_yazili_ornek_arkaplan_url || record.stand_gorseli_url;
+                    document.getElementById('user-preview-logo').src = record.logo_gorsel_url || 'https://via.placeholder.com/200x100?text=Logo+Yok';
+                    
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    // Veri yoksa uyarıyı göster
+                    // Kayıt olsa bile fon yoksa burası çalışır
                     simUI.style.display = 'none';
-                    emptyUI.style.display = 'block';
+                    emptyUI.style.display = 'flex';
+                    if(record) {
+                        document.getElementById('empty-msg').innerText = "Dükkan kaydınız aktif ancak henüz bir konsept seçmediniz. Lütfen katalogdan bir seçim yapın.";
+                    }
                 }
             } catch (err) {
                 console.error("Hata:", err);
+                simUI.style.display = 'none';
+                emptyUI.style.display = 'flex';
             }
         }
 
         function startProduction() { 
-            tg.showConfirm("Yeni konsept aktif edilecek. Onaylıyor musunuz?", (ok) => { if (ok) tg.close(); }); 
+            tg.showConfirm("Yeni konsept aktif edilecek ve 1 kredi düşülecektir. Onaylıyor musunuz?", (ok) => { 
+                if (ok) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    tg.close(); 
+                }
+            }); 
         }
 
         window.onload = () => { 
             tg.ready(); tg.expand();
             const params = new URLSearchParams(window.location.search);
+            // Eğer URL'de mode=new varsa (arka_fon.html'den geliyorsa) direkt simülatörü aç
             if (params.get('mode') === 'new') { 
                 openSimulator(); 
             }
