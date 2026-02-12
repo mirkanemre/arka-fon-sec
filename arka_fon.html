@@ -284,36 +284,34 @@
             if (!record) {
                 tg.showPopup({
                     title: '🎁 Hediye Kredinizi Alın',
-                    message: 'Konsept seçebilmek için önce kaydınızı tamamlamalı ve 10 ücretsiz kredinizi almalısınız.',
-                    buttons: [{id: 'reg', type: 'default', text: 'KAYIT OL VE KREDİ KAZAN'}]
-                }, (buttonId) => {
-                    if (buttonId === 'reg') {
-                        window.location.href = 'kayit.html'; 
-                    }
-                });
+                    message: 'Önce kaydınızı tamamlamalı ve 10 ücretsiz kredinizi almalısınız.',
+                    buttons: [{id: 'reg', type: 'default', text: 'KAYIT OL'}]
+                }, (id) => { if (id === 'reg') window.location.href = 'kayit.html'; });
                 return; 
             }
 
             // 2. Onay ve Kaydetme
-            tg.showConfirm(`${selectedItem.title} konseptini dükkanınıza kurmak istiyor musunuz?`, async (isConfirmed) => {
-                if (isConfirmed) {
+            tg.showConfirm(`${selectedItem.title} dükkanınıza kurulsun mu?`, async (ok) => {
+                if (ok) {
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    // Hata veren 'updated_at' alanını sildik
-                    const { error: upsertError } = await _supabase
+                    // HATA ÇÖZÜMÜ: UPSERT yerine UPDATE kullanıyoruz. 
+                    // Böylece galeri_adi gibi diğer sütunlar zorunlu olmaktan çıkar.
+                    const { error: updateError } = await _supabase
                         .from('galeriler')
-                        .upsert({ 
-                            chat_id: userId,
+                        .update({ 
                             stand_gorseli_url: selectedItem.url,
                             secili_stand_gorseli: selectedItem.id
-                        }, { onConflict: 'chat_id' });
+                        })
+                        .eq('chat_id', userId); // Sadece bu kullanıcının satırını güncelle
 
-                    if (!upsertError) {
+                    if (!updateError) {
                         tg.HapticFeedback.notificationOccurred('success');
                         window.location.href = `aktif_fon.html?mode=new`;
                     } else {
-                        tg.showAlert("Hata: " + upsertError.message);
+                        // Eğer hala hata verirse detayını göster
+                        tg.showAlert("Hata: " + updateError.message);
                         btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
                     }
@@ -323,3 +321,4 @@
     </script>
 </body>
 </html>
+
