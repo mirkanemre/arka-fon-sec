@@ -17,52 +17,74 @@
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* Hediye Banner Alanı */
+        /* GERİ BUTONU */
+        .nav-header {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            align-items: center;
+            padding: 10px 5px;
+            margin-bottom: 10px;
+        }
+
+        .btn-back {
+            text-decoration: none;
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 800;
+            font-family: 'Orbitron';
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        /* KÜÇÜLTÜLMÜŞ HEDİYE BANNERI */
         .promo-banner {
             width: 100%; max-width: 450px; background: linear-gradient(45deg, #1e3a8a, #3b82f6);
-            border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px; padding: 12px; text-align: center; margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); border: 1px solid rgba(255,255,255,0.1);
         }
-        .promo-banner h2 { font-family: 'Orbitron'; font-size: 0.9rem; margin: 0; letter-spacing: 1px; }
-        .promo-banner p { font-size: 0.7rem; margin: 8px 0 0; opacity: 0.9; font-weight: 600; }
+        .promo-banner h2 { font-family: 'Orbitron'; font-size: 0.75rem; margin: 0; letter-spacing: 1px; }
+        .promo-banner p { font-size: 0.6rem; margin: 4px 0 0; opacity: 0.8; font-weight: 600; }
 
         .form-card {
             width: 100%; max-width: 450px; background: #050505; border: 1px solid var(--border);
-            border-radius: 28px; padding: 25px; display: flex; flex-direction: column; gap: 18px;
+            border-radius: 28px; padding: 25px; display: flex; flex-direction: column; gap: 15px;
         }
 
         .input-group { display: flex; flex-direction: column; gap: 6px; }
-        .input-group label { font-size: 0.65rem; color: #8e8e93; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
+        .input-group label { font-size: 0.6rem; color: #8e8e93; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
         
         input {
-            background: #000; border: 1px solid var(--border); border-radius: 14px;
-            padding: 14px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.85rem;
+            background: #000; border: 1px solid var(--border); border-radius: 12px;
+            padding: 12px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.8rem;
         }
         input:focus { border-color: var(--accent); }
 
-        /* Logo Yükleme Alanı */
         .upload-area {
-            border: 2px dashed var(--border); border-radius: 16px; padding: 20px;
+            border: 2px dashed var(--border); border-radius: 16px; padding: 15px;
             text-align: center; cursor: pointer; transition: 0.3s;
         }
-        .upload-area:active { border-color: var(--accent); background: rgba(59, 130, 246, 0.05); }
-        #logo-preview { width: 100%; max-height: 100px; object-fit: contain; display: none; margin-top: 10px; border-radius: 10px; }
+        #logo-preview { width: 100%; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 8px; }
 
         .btn-submit {
             background: linear-gradient(45deg, var(--gold), #d97706); color: #000;
-            border: none; padding: 20px; border-radius: 18px; font-family: 'Orbitron';
-            font-weight: 900; font-size: 0.85rem; text-transform: uppercase;
+            border: none; padding: 18px; border-radius: 15px; font-family: 'Orbitron';
+            font-weight: 900; font-size: 0.8rem; text-transform: uppercase;
             cursor: pointer; margin-top: 10px; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.2);
         }
 
-        .footer-text { font-size: 0.6rem; color: #444; text-align: center; margin-top: 20px; line-height: 1.4; }
+        .footer-text { font-size: 0.55rem; color: #444; text-align: center; margin-top: 20px; line-height: 1.4; }
     </style>
 </head>
 <body>
 
+    <div class="nav-header">
+        <div class="btn-back" onclick="window.history.back()">❮ GERİ</div>
+    </div>
+
     <div class="promo-banner">
         <h2>🎁 KAYIT OL, 10 KREDİ KAZAN!</h2>
-        <p>Bilgilerinizi doldurun, ilk 10 çekiminiz bizden olsun.</p>
+        <p>Bilgilerini doldur, ilk 10 çekimin bizden olsun.</p>
     </div>
 
     <div class="form-card">
@@ -82,14 +104,9 @@
         </div>
 
         <div class="input-group">
-            <label>Şehir / İlçe</label>
-            <input type="text" id="konum" placeholder="İstanbul / Kadıköy">
-        </div>
-
-        <div class="input-group">
-            <label>Dükkan Logosu (Önerilir)</label>
+            <label>Dükkan Logosu</label>
             <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <span id="upload-txt" style="font-size: 0.65rem; color: #444;">LOGONUZU SEÇMEK İÇİN TIKLAYIN</span>
+                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">TIKLA VE SEÇ</span>
                 <img id="logo-preview">
             </div>
             <input type="file" id="file-input" style="display:none" accept="image/*" onchange="preview(this)">
@@ -102,11 +119,14 @@
 
     <div class="footer-text">
         © 2026 OTOFONFX TECHNOLOGIES<br>
-        Kredileriniz kayıt sonrası otomatik tanımlanacaktır.
+        Hediye krediler yeni üyelikler için geçerlidir.
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
         function preview(input) {
@@ -126,7 +146,6 @@
             const galeri = document.getElementById('galeri-adi').value;
             const yetkili = document.getElementById('yetkili-adi').value;
             const tel = document.getElementById('tel-no').value;
-            const konum = document.getElementById('konum').value;
             const btn = document.getElementById('submit-btn');
             const userId = tg.initDataUnsafe?.user?.id || 1017604800;
 
@@ -135,17 +154,15 @@
                 return;
             }
 
-            btn.innerText = "KREDİLER TANIMLANIYOR...";
+            btn.innerText = "İŞLENİYOR...";
             btn.disabled = true;
 
-            // Supabase Veritabanına Kayıt
             const { error } = await _supabase.from('galeriler').upsert({
                 chat_id: userId,
                 bayi_adi: galeri,
                 yetkili_adi: yetkili,
                 telefon: tel,
-                adres: konum,
-                credits: 10, // 10 Kredi Hediyesi Burada Tanımlanıyor
+                credits: 10,
                 is_approved: true,
                 created_at: new Date()
             }, { onConflict: 'chat_id' });
@@ -153,20 +170,18 @@
             if (!error) {
                 tg.HapticFeedback.notificationOccurred('success');
                 tg.showPopup({
-                    title: 'Tebrikler! 🎁',
-                    message: '10 Ücretsiz krediniz hesabınıza tanımlandı. Şimdi ilk konseptinizi seçebilirsiniz.',
-                    buttons: [{type: 'ok', text: 'HAZIRIM'}]
+                    title: 'Hoş Geldin! 🎁',
+                    message: '10 Kredin tanımlandı. Şimdi dükkanın için bir konsept seçebilirsin.',
+                    buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
                 }, () => {
                     window.location.href = 'arka_fon.html';
                 });
             } else {
-                tg.showAlert("Kayıt başarısız, lütfen tekrar deneyin.");
+                tg.showAlert("Hata oluştu.");
                 btn.innerText = "10 KREDİMİ TANIMLA VE KAYDOL";
                 btn.disabled = false;
             }
         }
-
-        window.onload = () => { tg.ready(); tg.expand(); };
     </script>
 </body>
 </html>
