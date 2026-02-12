@@ -172,7 +172,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">OTOFONFX v1.1.6</div>
+        <div style="font-size: 0.6rem; color: #48484a; letter-spacing: 1px; font-weight: 700;">OTOFONFX v1.1.8</div>
     </div>
 
     <div class="header">
@@ -300,14 +300,13 @@
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    // UPSERT mantığı: Varsa güncelle, yoksa hata verme
+                    // Hata veren 'updated_at' alanını sildik
                     const { error: upsertError } = await _supabase
                         .from('galeriler')
                         .upsert({ 
                             chat_id: userId,
                             stand_gorseli_url: selectedItem.url,
-                            secili_stand_gorseli: selectedItem.id,
-                            updated_at: new Date()
+                            secili_stand_gorseli: selectedItem.id
                         }, { onConflict: 'chat_id' });
 
                     if (!upsertError) {
