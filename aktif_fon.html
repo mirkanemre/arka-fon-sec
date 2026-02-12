@@ -8,110 +8,38 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;700&display=swap');
-        
         * { box-sizing: border-box; }
         :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 15px; 
-            color: #fff; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh; 
-            overflow-x: hidden; 
-        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
         
         /* Seçim Ekranı Overlay */
-        #choice-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(15px);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .btn-back-float {
-            position: absolute;
-            top: 40px;
-            left: 20px;
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 900;
-            font-family: 'Orbitron';
-            cursor: pointer;
-        }
-
-        .choice-card {
-            width: 100%;
-            max-width: 340px;
-            background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%);
-            border: 1px solid var(--border);
-            border-radius: 25px;
-            padding: 25px;
-            margin-bottom: 20px;
-            text-align: center;
-            text-decoration: none;
-            color: white;
-            display: block;
-        }
-
+        #choice-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .btn-back-float { position: absolute; top: 40px; left: 20px; color: var(--accent); text-decoration: none; font-size: 0.8rem; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
+        .choice-card { width: 100%; max-width: 340px; background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%); border: 1px solid var(--border); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: center; text-decoration: none; color: white; }
         .choice-card:active { transform: scale(0.96); border-color: var(--accent); }
 
-        /* Simülatör Alanı */
-        #main-content { 
-            display: none; 
-            width: 100%; 
-            max-width: 500px; 
-            margin: 0 auto; 
-        }
-
+        /* Ana İçerik */
+        #main-content { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 15px; }
         .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 100px; display: flex; align-items: center; justify-content: center; }
         .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; margin-bottom: 15px; }
-        
         img { width: 100%; height: 100%; object-fit: cover; }
         .logo-img { width: auto !important; height: 60% !important; object-fit: contain; }
-
-        .btn-generate { 
-            width: 100%; 
-            background: linear-gradient(45deg, var(--accent), #1e40af); 
-            color: #fff; 
-            border: none; 
-            padding: 20px; 
-            border-radius: 18px; 
-            font-family: 'Orbitron'; 
-            font-weight: 900; 
-            font-size: 0.9rem; 
-            text-transform: uppercase;
-        }
-
-        .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; width: 100%; text-align: left; }
+        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 20px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px;}
+        .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; text-align: left; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
-
     <div id="choice-overlay">
         <div class="btn-back-float" onclick="location.href='index.html'">❮ GERİ</div>
         <h1 style="font-family:'Orbitron'; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 30px;">STUDIO CONTROL</h1>
-        
         <a href="sahnelerim.html" class="choice-card">
             <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
             <p style="font-size: 0.7rem; color: #636366;">Satın aldığınız konseptler arasında ücretsiz geçiş yapın.</p>
         </a>
-
         <div class="choice-card" onclick="openSimulator()">
             <div style="font-size: 2rem; margin-bottom: 10px;">✨</div>
             <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
@@ -124,32 +52,22 @@
             <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.reload()">❮ SEÇİME DÖN</div>
             <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.3</div>
         </div>
-
         <div class="selection-grid">
-            <div>
-                <div class="section-label">SEÇİLEN FON</div>
-                <div class="grid-box"><img id="raw-bg-img" src=""></div>
-            </div>
-            <div>
-                <div class="section-label">SİZİN LOGONUZ</div>
-                <div class="grid-box"><img id="user-preview-logo" class="logo-img" src=""></div>
-            </div>
+            <div><div class="section-label">SEÇİLEN FON</div><div class="grid-box"><img id="raw-bg-img" src=""></div></div>
+            <div><div class="section-label">SİZİN LOGONUZ</div><div class="grid-box"><img id="user-preview-logo" class="logo-img" src=""></div></div>
         </div>
-
         <div class="section-label">UYGULAMA ÖRNEĞİ</div>
         <div class="simulator-box">
             <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scan 3s infinite linear; z-index: 10;"></div>
             <img id="sim-bg" src="">
         </div>
-
         <div style="text-align: center; margin: 20px 0;">
             <div style="font-family: 'Orbitron'; font-size: 0.6rem; color: var(--primary); letter-spacing: 2px; margin-bottom: 10px;">DİJİTAL SAHNE KURULUMU</div>
-            <p style="font-size: 0.75rem; color: #8e8e93; line-height: 1.5; margin: 0;">Logonuz seçili fona yerleştirilir ve dükkan dekorunuz olarak kaydedilir.</p>
+            <p style="font-size: 0.75rem; color: #8e8e93; line-height: 1.5; margin: 0;">Logonuz seçili fona yerleştirilir ve dekor olarak kaydedilir.</p>
         </div>
-
         <button class="btn-generate" onclick="startProduction()">
             SİSTEMİ AKTİF ET
-            <span style="font-size: 0.6rem; opacity: 0.8; font-weight: 400; display: block; margin-top: 4px;">(1 KREDİ - FON SABİTLENİR)</span>
+            <span style="font-size: 0.6rem; opacity: 0.8; font-weight: 400;">(1 KREDİ - FON SABİTLENİR)</span>
         </button>
     </div>
 
@@ -178,7 +96,11 @@
             tg.showConfirm("Yeni konsept aktif edilecek. Onaylıyor musunuz?", (ok) => { if (ok) tg.close(); }); 
         }
 
-        window.onload = () => { tg.ready(); tg.expand(); };
+        window.onload = () => { 
+            tg.ready(); tg.expand();
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('mode') === 'new') { openSimulator(); }
+        };
     </script>
 </body>
 </html>
