@@ -1,4 +1,4 @@
-/* OtoFonFX Pro Master Style Sheet v2.1.0 - FIX EDITION */
+/* OtoFonFX Pro Master Style Sheet v3.0.0 - FINAL STABLE */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;700;800;900&display=swap');
 
 :root {
@@ -13,15 +13,10 @@
     --danger: #ff3b30;
 }
 
-/* 1. TEMEL SIFIRLAMA VE GÖRSEL KORUMA (SAYFA PATLAMASINI ENGELLER) */
+/* =========================================
+   1. TEMEL SIFIRLAMA & GÖRSEL KORUMA
+   ========================================= */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-
-/* TÜM RESİMLERİN VARSAYILAN OLARAK KUTULARINA SIĞMASINI SAĞLAR */
-img { 
-    max-width: 100%; 
-    height: auto; 
-    display: block; 
-}
 
 body {
     font-family: 'Inter', sans-serif;
@@ -36,62 +31,50 @@ body {
     overflow-x: hidden;
 }
 
-/* 2. NAVİGASYON */
+/* CRITICAL: Resimlerin taşmasını ve dev gibi görünmesini engeller */
+img { max-width: 100%; height: auto; display: block; }
+
+/* =========================================
+   2. NAVİGASYON & HEADER
+   ========================================= */
 .nav-header {
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    width: 100%; max-width: 500px;
+    display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 25px;
 }
 
 .back-link {
-    text-decoration: none;
-    color: var(--primary);
-    font-size: 0.8rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-decoration: none; color: var(--primary);
+    font-size: 0.8rem; font-weight: 700;
+    display: flex; align-items: center; gap: 5px;
+    text-transform: uppercase; letter-spacing: 1px;
 }
 
-/* 3. BAŞLIK VE LOGO ALANI */
-.header-area { text-align: center; margin-bottom: 35px; width: 100%; }
+.header-area { text-align: center; margin-bottom: 30px; width: 100%; }
 .header-area h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: 1.8rem;
-    letter-spacing: 4px;
-    margin: 0;
+    font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: 4px; margin: 0;
     background: linear-gradient(180deg, #fff 0%, #636366 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     text-transform: uppercase;
 }
-.header-area p {
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    letter-spacing: 2px;
-    margin-top: 8px;
-    text-transform: uppercase;
-    font-weight: 600;
-}
+.header-area p { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 2px; margin-top: 8px; text-transform: uppercase; font-weight: 600; }
 
 .logo-area { text-align: center; margin-bottom: 35px; }
 .logo-area h1 { font-family: 'Orbitron'; font-weight: 900; font-size: 1.9rem; letter-spacing: 4px; margin: 0; }
 
-/* 4. DASHBOARD KARTLARI */
+/* =========================================
+   3. KART SİSTEMİ (DASHBOARD & MAĞAZA)
+   ========================================= */
 .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Standart Kart (Dikey) */
 .main-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 24px;
     padding: 22px 24px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Varsayılan: Alt alta */
     position: relative;
     overflow: hidden;
     transition: 0.2s;
@@ -100,61 +83,116 @@ body {
     width: 100%;
 }
 .main-card:active { transform: scale(0.97); background: #121214; }
+
 .main-card h2 { font-size: 1.05rem; font-weight: 900; margin: 0; }
 .main-card p { font-size: 0.72rem; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
 
+/* Mağaza Kartları için Yatay Mod (ÖZEL) */
+.store-row {
+    flex-direction: row !important; /* Yan yana zorla */
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 24px !important;
+}
+
+/* Renkli Kenarlıklar */
 .studio-card { border-left: 4px solid var(--primary); }
 .store-card { border-left: 4px solid var(--success); }
 .active-card { border-left: 4px solid var(--gold); }
+.popular { border: 1px solid var(--primary) !important; box-shadow: 0 0 20px rgba(0, 122, 255, 0.1); }
+
 .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
 
-/* 5. KREDİ VE INFO BAR */
+/* =========================================
+   4. MAĞAZA DETAYLARI
+   ========================================= */
+.package-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 450px; }
+
+.kredi-detay { display: flex; flex-direction: column; text-align: left; }
+.kredi-detay strong { font-size: 1.8rem; font-weight: 900; line-height: 1; color: #fff; }
+.kredi-detay span { color: var(--text-dim); font-size: 0.7rem; font-weight: 700; margin-top: 5px; }
+
+.fiyat-detay { text-align: right; display: flex; flex-direction: column; }
+.fiyat-detay strong { font-size: 1.3rem; display: block; color: #fff; font-weight: 800; }
+.fiyat-detay small { color: var(--primary); font-weight: 800; font-size: 0.7rem; margin-top: 2px; }
+
+.popular-badge {
+    position: absolute; top: -10px; left: 20px; background: var(--primary); color: white;
+    padding: 4px 12px; border-radius: 8px; font-size: 0.6rem; font-weight: 900; letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+}
+
+/* =========================================
+   5. BİLGİ VE BAKİYE ÇUBUKLARI
+   ========================================= */
 .user-status-bar { width: 100%; max-width: 400px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
 .credit-badge {
-    background: rgba(0, 122, 255, 0.1);
-    border: 1px solid rgba(0, 122, 255, 0.2);
-    padding: 6px 14px;
-    border-radius: 100px;
-    display: flex; gap: 6px; align-items: center;
+    background: rgba(0, 122, 255, 0.1); border: 1px solid rgba(0, 122, 255, 0.2);
+    padding: 6px 14px; border-radius: 100px; display: flex; gap: 6px; align-items: center;
 }
 .credit-badge span { font-size: 0.65rem; font-weight: 800; font-family: 'Orbitron'; color: var(--primary); }
 
 .info-bar {
-    background: rgba(28, 28, 30, 0.6);
-    border: 1px solid var(--border);
+    background: rgba(28, 28, 30, 0.6); border: 1px solid var(--border);
     border-radius: 20px; padding: 15px; margin-bottom: 25px;
     text-align: center; width: 100%; max-width: 450px;
 }
+.info-flex { display: flex; justify-content: space-around; align-items: center; margin-bottom: 8px; }
+.info-divider { width: 1px; height: 30px; background: var(--border); }
 
-/* 6. GRID SİSTEMİ (RESİM BOYUTLARINI BURADA HAPSEDİYORUZ) */
+/* =========================================
+   6. GRID VE RESİM KARTLARI (Kategori & Arka Fon)
+   ========================================= */
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px; }
-.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; position: relative; }
 
-.img-wrapper { 
-    width: 100%; 
-    height: 110px; /* RESİMLERİN DEV GİBİ OLMASINI ENGELLER */
-    overflow: hidden; 
-    border-bottom: 1px solid var(--border); 
+.card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden; cursor: pointer;
+    transition: all 0.3s ease; position: relative;
 }
-.img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.card:active { transform: scale(0.96); border-color: var(--primary); }
+
+/* Resimlerin Yüksekliğini Sabitler (Patlamayı Önler) */
+.img-wrapper {
+    width: 100%; height: 110px; 
+    overflow: hidden; border-bottom: 1px solid var(--border);
+}
+.img-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9); }
 
 .card-title {
     padding: 10px 5px; text-align: center; font-weight: 800; font-size: 0.6rem;
     letter-spacing: 1.2px; background: #000; color: var(--text-dim); text-transform: uppercase;
 }
 
-/* 7. SAHNELERİM ÖZEL (KAYITLI SAHNELER EKRANI) */
-.scene-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 12px; position: relative; margin-bottom: 15px; }
-.scene-card.active-scene { border-color: var(--success) !important; box-shadow: 0 0 30px rgba(52, 199, 89, 0.1); }
-.scene-preview { width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; margin-bottom: 12px; background: #111; }
+/* =========================================
+   7. SAHNELERİM (Listeleme)
+   ========================================= */
+.scene-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 24px; padding: 12px; position: relative;
+    margin-bottom: 15px; transition: all 0.3s ease;
+}
+.scene-card.active-scene {
+    border-color: var(--success) !important;
+    box-shadow: 0 0 30px rgba(52, 199, 89, 0.1); transform: scale(1.02);
+}
+
+.scene-preview {
+    width: 100%; aspect-ratio: 16/9; border-radius: 16px;
+    overflow: hidden; margin-bottom: 12px; background: #111; border: 1px solid #111;
+}
 .scene-preview img { width: 100%; height: 100%; object-fit: cover; }
 
 .active-badge {
     position: absolute; top: 20px; right: 20px; background: var(--success); color: #000;
-    font-family: 'Orbitron'; font-size: 0.55rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; z-index: 10;
+    font-family: 'Orbitron'; font-size: 0.55rem; font-weight: 900;
+    padding: 4px 10px; border-radius: 8px; z-index: 10; letter-spacing: 1px;
 }
+.scene-details { display: flex; justify-content: space-between; align-items: center; padding: 0 5px 5px 5px; }
 
-/* 8. SİMÜLATÖR VE OVERLAY */
+/* =========================================
+   8. SİMÜLATÖR (Active Fon)
+   ========================================= */
 #choice-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: #000; z-index: 9999; display: flex; flex-direction: column;
@@ -165,6 +203,17 @@ body {
     border: 1px solid var(--border); border-radius: 28px; padding: 30px;
     margin-bottom: 20px; text-align: center; cursor: pointer; transition: 0.2s;
 }
+.choice-card:active { transform: scale(0.97); border-color: var(--primary); }
+
+.selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 20px; }
+
+.grid-box {
+    border-radius: 20px; border: 1px solid var(--border);
+    background: #050505; height: 135px; display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 10px; overflow: hidden;
+}
+.logo-img { height: 45px !important; width: auto !important; object-fit: contain; margin-bottom: 10px; }
 
 .simulator-box {
     width: 100%; aspect-ratio: 16/9; border-radius: 24px;
@@ -179,218 +228,69 @@ body {
     animation: scan 3s infinite linear; z-index: 10;
 }
 
-.selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 20px; }
-.grid-box { 
-    border-radius: 20px; border: 1px solid var(--border); 
-    background: #050505; height: 135px; display: flex; 
-    flex-direction: column; align-items: center; justify-content: center; 
-    padding: 10px; overflow: hidden; 
-}
-.logo-img { height: 45px !important; width: auto !important; object-fit: contain; }
-
-/* 9. MODAL & FORM & LOADER */
+/* =========================================
+   9. MODAL, FORM VE BUTONLAR
+   ========================================= */
 #preview-modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.98); z-index: 1000; display: none;
     flex-direction: column; align-items: center; justify-content: center; padding: 24px;
 }
-.img-frame { width: 100%; max-width: 400px; background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); padding: 8px; }
-#preview-img { width: 100%; border-radius: 18px; }
+.img-frame {
+    width: 100%; max-width: 400px; background: var(--card-bg);
+    border-radius: 24px; border: 1px solid var(--border); padding: 8px; margin-top: -40px;
+}
+#preview-img { width: 100%; border-radius: 18px; display: block; }
+.modal-controls { position: absolute; bottom: 40px; left: 24px; right: 24px; display: flex; flex-direction: column; gap: 15px; }
 
 .form-card { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
-input, select { background: #050505; border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: #fff; font-family: 'Inter'; font-size: 0.9rem; width: 100%; appearance: none; }
+.input-group label { font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
+input, select {
+    background: #050505; border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px; color: #fff; font-family: 'Inter'; font-size: 0.9rem;
+    width: 100%; appearance: none; transition: 0.3s;
+}
+input:focus, select:focus { border-color: var(--primary); background: #0a0a0a; box-shadow: 0 0 15px rgba(0, 122, 255, 0.15); }
 
-#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; }
-.loader-bar { width: 120px; height: 3px; background: #1c1c1e; position: relative; overflow: hidden; border-radius: 10px; }
-.loader-bar::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--primary); animation: loading 1.5s infinite; }
+/* Butonlar */
+.btn-submit {
+    background: linear-gradient(45deg, var(--gold), #d97706); color: #000;
+    border: none; padding: 18px; border-radius: 18px; width: 100%;
+    font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem;
+    text-transform: uppercase; cursor: pointer; transition: 0.2s;
+    box-shadow: 0 5px 20px rgba(245, 158, 11, 0.2);
+}
+.btn-submit:active { transform: scale(0.96); opacity: 0.9; }
 
-/* 10. BUTONLAR VE DİĞER */
-.btn-submit { background: linear-gradient(45deg, var(--gold), #d97706); color: #000; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; width: 100%; }
-.btn-activate { background: #1c1c1e; color: #fff; border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; cursor: pointer; }
+.btn-activate {
+    background: #1c1c1e; color: #fff; border: 1px solid var(--border);
+    padding: 10px 20px; border-radius: 12px;
+    font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; cursor: pointer;
+}
 .btn-activate.current { background: rgba(52, 199, 89, 0.1); color: var(--success); border: 1px solid var(--success); cursor: default; }
 
+.btn-upload-logo {
+    background: transparent; border: 1px dashed var(--primary);
+    color: var(--primary); padding: 8px 12px; border-radius: 10px;
+    font-size: 0.6rem; font-weight: 800; cursor: pointer;
+}
+
+/* =========================================
+   10. DİĞER (Loader, Footer, Animasyon)
+   ========================================= */
+.footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; line-height: 1.6; }
 .section-label { font-size: 0.6rem; color: var(--text-dim); font-weight: 800; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
-.footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; }
-
-@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-@keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
-
-/* --- MAĞAZA İÇİN YATAY KART DÜZENLEMESİ --- */
-.store-row {
-    display: flex !important;
-    flex-direction: row !important; /* Yan yana dizer */
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 24px !important;
-}
-
-/* Fiyat ve Adet Yazı Tipleri */
-.kredi-detay { display: flex; flex-direction: column; text-align: left; }
-.kredi-detay strong { font-size: 1.8rem; font-weight: 900; line-height: 1; color: #fff; }
-.kredi-detay span { color: var(--text-dim); font-size: 0.8rem; margin-top: 5px; font-weight: 700; letter-spacing: 0.5px; }
-
-.fiyat-detay { text-align: right; display: flex; flex-direction: column; }
-.fiyat-detay strong { font-size: 1.4rem; display: block; color: #fff; font-weight: 800; }
-.fiyat-detay small { color: var(--primary); font-weight: 700; font-size: 0.75rem; margin-top: 2px; }
-
-/* Popüler Rozeti */
-.popular-badge {
-    position: absolute;
-    top: -10px;
-    left: 20px;
-    background: var(--primary);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 0.6rem;
-    font-weight: 900;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
-}
-/* OtoFonFX Pro Master Style Sheet v2.3.0 */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;700;800;900&display=swap');
-
-:root {
-    --bg: #000000;
-    --primary: #007AFF;
-    --accent: #3b82f6; 
-    --card-bg: #0a0a0a;
-    --border: #1c1c1e;
-    --text-dim: #8e8e93;
-    --gold: #f59e0b;
-    --success: #34c759;
-}
-
-/* 1. TEMEL AYARLAR (RESİM KORUMASI DAHİL) */
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-img { max-width: 100%; height: auto; display: block; } /* Resimler taşmasın */
-
-body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    margin: 0;
-    padding: 24px;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-x: hidden;
-}
-
-/* 2. NAVİGASYON VE HEADER */
-.nav-header { width: 100%; max-width: 500px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
-.back-link { text-decoration: none; color: var(--primary); font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 1px; }
-
-.header-area { text-align: center; margin-bottom: 30px; width: 100%; }
-.header-area h1 { font-family: 'Orbitron'; font-weight: 900; font-size: 1.8rem; letter-spacing: 4px; margin: 0; background: linear-gradient(180deg, #fff 0%, #636366 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
-.header-area p { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 2px; margin-top: 8px; text-transform: uppercase; font-weight: 600; }
-
-.logo-area { text-align: center; margin-bottom: 35px; }
-.logo-area h1 { font-family: 'Orbitron'; font-weight: 900; font-size: 1.9rem; letter-spacing: 4px; margin: 0; }
-
-/* 3. KARTLAR (GENEL VE MAĞAZA ÖZEL) */
-.menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
-
-.main-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 22px 24px;
-    display: flex;
-    flex-direction: column; /* Varsayılan Dikey */
-    position: relative;
-    overflow: hidden;
-    transition: 0.2s;
-    text-decoration: none;
-    color: white;
-    width: 100%;
-}
-.main-card:active { transform: scale(0.97); background: #121214; }
-
-/* MAĞAZA İÇİN YATAY KART DÜZENLEMESİ (BURASI EKLENDİ) */
-.store-row {
-    flex-direction: row !important; /* Yan yana zorla */
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 24px !important;
-}
-
-.main-card h2 { font-size: 1.05rem; font-weight: 900; margin: 0; }
-.main-card p { font-size: 0.72rem; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
-
-/* Kart Kenar Renkleri */
-.studio-card { border-left: 4px solid var(--primary); }
-.store-card { border-left: 4px solid var(--success); }
-.active-card { border-left: 4px solid var(--gold); }
-.popular { border: 1px solid var(--primary) !important; box-shadow: 0 0 20px rgba(0, 122, 255, 0.1); }
-
-.card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
-
-/* 4. MAĞAZA DETAYLARI */
-.package-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 450px; }
-
-.kredi-detay { display: flex; flex-direction: column; }
-.kredi-detay strong { font-size: 1.8rem; font-weight: 900; line-height: 1; }
-.kredi-detay span { color: var(--text-dim); font-size: 0.7rem; font-weight: 700; margin-top: 5px; }
-
-.fiyat-detay { text-align: right; }
-.fiyat-detay strong { font-size: 1.3rem; display: block; color: #fff; font-weight: 800; }
-.fiyat-detay small { color: var(--primary); font-weight: 800; font-size: 0.7rem; }
-
-.popular-badge {
-    position: absolute; top: -10px; left: 20px; background: var(--primary); color: white;
-    padding: 4px 12px; border-radius: 8px; font-size: 0.6rem; font-weight: 900; letter-spacing: 1px;
-}
-
-/* 5. BAKİYE VE KREDİ BARLARI */
-.user-status-bar { width: 100%; max-width: 400px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
-.credit-badge { background: rgba(0, 122, 255, 0.1); border: 1px solid rgba(0, 122, 255, 0.2); padding: 6px 14px; border-radius: 100px; display: flex; gap: 6px; align-items: center; }
-.credit-badge span { font-size: 0.65rem; font-weight: 800; font-family: 'Orbitron'; color: var(--primary); }
-
-.info-bar {
-    background: rgba(28, 28, 30, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 15px; margin-bottom: 25px;
-    text-align: center; width: 100%; max-width: 450px;
-}
-/* Info Bar İç Düzen (Flex) */
-.info-flex { display: flex; justify-content: space-around; align-items: center; margin-bottom: 8px; }
-.info-divider { width: 1px; height: 30px; background: var(--border); }
-
-/* 6. GRID VE RESİMLER */
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px; }
-.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; position: relative; }
-.img-wrapper { width: 100%; height: 110px; overflow: hidden; border-bottom: 1px solid var(--border); }
-.img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-.card-title { padding: 10px 5px; text-align: center; font-weight: 800; font-size: 0.6rem; letter-spacing: 1.2px; background: #000; color: var(--text-dim); text-transform: uppercase; }
-
-/* 7. DİĞER BİLEŞENLER (Modal, Form, Butonlar) */
-#preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
-.img-frame { width: 100%; max-width: 400px; background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); padding: 8px; }
-#preview-img { width: 100%; border-radius: 18px; }
-
-.btn-submit { background: linear-gradient(45deg, var(--gold), #d97706); color: #000; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; width: 100%; }
-
-.form-card { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
-input, select { background: #050505; border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: #fff; font-family: 'Inter'; font-size: 0.9rem; width: 100%; appearance: none; }
-
-.footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; }
-
-/* Simülatör Özel */
-#choice-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; }
-.choice-card { width: 100%; max-width: 340px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 28px; padding: 30px; margin-bottom: 20px; text-align: center; cursor: pointer; transition: 0.2s; }
-.simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 24px; overflow: hidden; border: 1px solid var(--primary); position: relative; margin-bottom: 20px; background: #050505; }
-.simulator-box img { width: 100%; height: 100%; object-fit: cover; }
-.scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: scan 3s infinite linear; z-index: 10; }
-.grid-box { border-radius: 20px; border: 1px solid var(--border); background: #050505; height: 135px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
-.logo-img { height: 45px !important; width: auto !important; object-fit: contain; }
-.selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 20px; }
-.section-label { font-size: 0.6rem; color: var(--text-dim); font-weight: 800; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
-.btn-upload-logo { background: transparent; border: 1px dashed var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 10px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
 
 /* Loader */
-#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; }
+#loader {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95); display: none; align-items: center;
+    justify-content: center; z-index: 1000; flex-direction: column; backdrop-filter: blur(10px);
+}
 .loader-bar { width: 120px; height: 3px; background: #1c1c1e; position: relative; overflow: hidden; border-radius: 10px; }
 .loader-bar::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--primary); animation: loading 1.5s infinite; }
+
+/* Animasyonlar */
 @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.01); } 100% { transform: scale(1); } }
+@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 50% { transform: scale(1.01); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
