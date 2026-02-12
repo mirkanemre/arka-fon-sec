@@ -20,12 +20,12 @@
             </div>
         </div>
 
-        <a href="kayit.html" id="registration-banner" style="display: none;">
+        <div id="registration-banner" style="display: none;" onclick="navigate('kayit.html')">
             <div class="promo-content">
                 <h3>🎁 10 KREDİ HEDİYENİZİ ALIN</h3>
                 <p>Dükkan kaydınızı tamamlayın, hemen üretime başlayın.</p>
             </div>
-        </a>
+        </div>
 
         <div class="logo-area">
             <h1>OTOFONFX</h1>
@@ -56,7 +56,7 @@
 
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            <span style="opacity: 0.5;">v2.3.0 PREMIUM ACCESS</span>
+            <span style="opacity: 0.5;">v3.1.0 PREMIUM ACCESS</span>
         </div>
     </div>
 
@@ -68,15 +68,12 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Tıklama ve Yönlendirme Fonksiyonu
+        // Sayfa Değiştirme Fonksiyonu
         function navigate(url) {
-            // Titreşim ver
             tg.HapticFeedback.impactOccurred('medium');
-            
-            // Sayfaya git
             setTimeout(() => {
                 window.location.href = url;
-            }, 50); // Çok kısa bir gecikme titreşimin hissedilmesini sağlar
+            }, 50);
         }
 
         async function initDashboard() {
@@ -89,6 +86,7 @@
                 .maybeSingle();
 
             if (!record) {
+                // Kayıtlı değilse Mor Banner görünür
                 document.getElementById('registration-banner').style.display = 'block';
                 document.getElementById('user-credit-count').innerText = "0";
             } else {
