@@ -1,4 +1,4 @@
-/* OtoFonFX Pro Master Style Sheet v2.0.0 */
+/* OtoFonFX Pro Master Style Sheet v2.1.0 - FIX EDITION */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;700;800;900&display=swap');
 
 :root {
@@ -13,8 +13,15 @@
     --danger: #ff3b30;
 }
 
-/* 1. TEMEL SIFIRLAMA */
+/* 1. TEMEL SIFIRLAMA VE GÖRSEL KORUMA (SAYFA PATLAMASINI ENGELLER) */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+/* TÜM RESİMLERİN VARSAYILAN OLARAK KUTULARINA SIĞMASINI SAĞLAR */
+img { 
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+}
 
 body {
     font-family: 'Inter', sans-serif;
@@ -29,7 +36,7 @@ body {
     overflow-x: hidden;
 }
 
-/* 2. NAVİGASYON (TÜM SAYFALARDA AYNI) */
+/* 2. NAVİGASYON */
 .nav-header {
     width: 100%;
     max-width: 500px;
@@ -64,13 +71,20 @@ body {
     -webkit-text-fill-color: transparent;
     text-transform: uppercase;
 }
+.header-area p {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-top: 8px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
 
 .logo-area { text-align: center; margin-bottom: 35px; }
-.logo-area h1 { font-family: 'Orbitron'; font-weight: 900; font-size: 1.9rem; letter-spacing: 4px; }
+.logo-area h1 { font-family: 'Orbitron'; font-weight: 900; font-size: 1.9rem; letter-spacing: 4px; margin: 0; }
 
-/* 4. KARTLAR VE DASHBOARD */
+/* 4. DASHBOARD KARTLARI */
 .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
-
 .main-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -92,10 +106,9 @@ body {
 .studio-card { border-left: 4px solid var(--primary); }
 .store-card { border-left: 4px solid var(--success); }
 .active-card { border-left: 4px solid var(--gold); }
-
 .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
 
-/* 5. KREDİ ROZETİ VE BAKİYE */
+/* 5. KREDİ VE INFO BAR */
 .user-status-bar { width: 100%; max-width: 400px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
 .credit-badge {
     background: rgba(0, 122, 255, 0.1);
@@ -113,36 +126,16 @@ body {
     text-align: center; width: 100%; max-width: 450px;
 }
 
-/* 6. FORM ELEMANLARI */
-.form-card { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
-.input-group { display: flex; flex-direction: column; gap: 8px; }
-.input-group label { font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-
-input, select {
-    background: #050505; border: 1px solid var(--border); border-radius: 14px;
-    padding: 14px; color: #fff; font-family: 'Inter'; font-size: 0.9rem;
-    transition: 0.3s; width: 100%; appearance: none;
-}
-input:focus, select:focus { border-color: var(--primary); background: #0a0a0a; box-shadow: 0 0 15px rgba(0, 122, 255, 0.15); }
-
-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23007AFF' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C2.185 5.355 2.398 5 2.806 5h9.388c.408 0 .621.355.355.658l-4.796 5.482a.5.5 0 0 1-.708 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 15px center;
-}
-
-/* 7. BUTONLAR */
-.btn-submit {
-    background: linear-gradient(45deg, var(--gold), #d97706);
-    color: #000; border: none; padding: 18px; border-radius: 18px;
-    font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem;
-    text-transform: uppercase; cursor: pointer; transition: 0.2s;
-}
-.btn-submit:active { transform: scale(0.96); }
-
-/* 8. GRID SİSTEMİ (SAHNELER & KATEGORİLER) */
+/* 6. GRID SİSTEMİ (RESİM BOYUTLARINI BURADA HAPSEDİYORUZ) */
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; position: relative; }
 
-.img-wrapper { width: 100%; height: 110px; overflow: hidden; border-bottom: 1px solid var(--border); }
+.img-wrapper { 
+    width: 100%; 
+    height: 110px; /* RESİMLERİN DEV GİBİ OLMASINI ENGELLER */
+    overflow: hidden; 
+    border-bottom: 1px solid var(--border); 
+}
 .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
 .card-title {
@@ -150,18 +143,18 @@ select {
     letter-spacing: 1.2px; background: #000; color: var(--text-dim); text-transform: uppercase;
 }
 
-/* 9. MODAL & PREVIEW */
-#preview-modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.98); z-index: 1000; display: none;
-    flex-direction: column; align-items: center; justify-content: center; padding: 24px;
-}
-.img-frame {
-    width: 100%; max-width: 400px; background: var(--card-bg);
-    border-radius: 24px; border: 1px solid var(--border); padding: 8px;
+/* 7. SAHNELERİM ÖZEL (KAYITLI SAHNELER EKRANI) */
+.scene-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 12px; position: relative; margin-bottom: 15px; }
+.scene-card.active-scene { border-color: var(--success) !important; box-shadow: 0 0 30px rgba(52, 199, 89, 0.1); }
+.scene-preview { width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; margin-bottom: 12px; background: #111; }
+.scene-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.active-badge {
+    position: absolute; top: 20px; right: 20px; background: var(--success); color: #000;
+    font-family: 'Orbitron'; font-size: 0.55rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; z-index: 10;
 }
 
-/* 10. SIMULATOR & OVERLAY */
+/* 8. SİMÜLATÖR VE OVERLAY */
 #choice-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: #000; z-index: 9999; display: flex; flex-direction: column;
@@ -178,6 +171,7 @@ select {
     overflow: hidden; border: 1px solid var(--primary);
     position: relative; margin-bottom: 20px; background: #050505;
 }
+.simulator-box img { width: 100%; height: 100%; object-fit: cover; }
 
 .scan-line {
     position: absolute; top: 0; left: 0; width: 100%; height: 2px;
@@ -185,17 +179,38 @@ select {
     animation: scan 3s infinite linear; z-index: 10;
 }
 
-/* 11. DİĞER */
-.footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; }
-
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.01); } 100% { transform: scale(1); } }
-@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-#loader {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); display: none; align-items: center;
-    justify-content: center; z-index: 1000; flex-direction: column;
+.selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 20px; }
+.grid-box { 
+    border-radius: 20px; border: 1px solid var(--border); 
+    background: #050505; height: 135px; display: flex; 
+    flex-direction: column; align-items: center; justify-content: center; 
+    padding: 10px; overflow: hidden; 
 }
+.logo-img { height: 45px !important; width: auto !important; object-fit: contain; }
+
+/* 9. MODAL & FORM & LOADER */
+#preview-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.98); z-index: 1000; display: none;
+    flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+}
+.img-frame { width: 100%; max-width: 400px; background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); padding: 8px; }
+#preview-img { width: 100%; border-radius: 18px; }
+
+.form-card { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
+input, select { background: #050505; border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: #fff; font-family: 'Inter'; font-size: 0.9rem; width: 100%; appearance: none; }
+
+#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; }
 .loader-bar { width: 120px; height: 3px; background: #1c1c1e; position: relative; overflow: hidden; border-radius: 10px; }
 .loader-bar::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--primary); animation: loading 1.5s infinite; }
+
+/* 10. BUTONLAR VE DİĞER */
+.btn-submit { background: linear-gradient(45deg, var(--gold), #d97706); color: #000; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; width: 100%; }
+.btn-activate { background: #1c1c1e; color: #fff; border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; cursor: pointer; }
+.btn-activate.current { background: rgba(52, 199, 89, 0.1); color: var(--success); border: 1px solid var(--success); cursor: default; }
+
+.section-label { font-size: 0.6rem; color: var(--text-dim); font-weight: 800; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
+.footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; }
+
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
