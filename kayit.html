@@ -80,44 +80,51 @@
 
         async function handleRegister() {
             const btn = document.getElementById('submit-btn');
-            
-            // Verileri Al ve Encode Et (URL Güvenliği İçin)
-            const chat_id = String(tg.initDataUnsafe?.user?.id || "1017604800");
-            const user_name = encodeURIComponent(tg.initDataUnsafe?.user?.username || "Bilinmiyor");
-            const galeri_adi = encodeURIComponent(document.getElementById('galeri-adi').value);
-            const yetkili = encodeURIComponent(document.getElementById('yetkili-adi').value);
-            const telefon = encodeURIComponent(document.getElementById('tel-no').value);
-            const sehir = encodeURIComponent(document.getElementById('sehir').value);
-            const adres = encodeURIComponent(document.getElementById('adres').value);
-
-            if (!galeri_adi || !yetkili || !telefon) {
+            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
+        
+            // Form Verileri
+            const payload = {
+                chat_id: userId,
+                user_name: tg.initDataUnsafe?.user?.username || "Bilinmiyor",
+                galeri_adi: document.getElementById('galeri-adi').value,
+                yetkili: document.getElementById('yetkili-adi').value,
+                telefon: document.getElementById('tel-no').value,
+                sehir: document.getElementById('sehir').value,
+                adres: document.getElementById('adres').value,
+                logo: base64Logo // Burası n8n'deki items[0].json.body.logo kısmına düşer
+            };
+        
+            if (!payload.galeri_adi || !payload.yetkili || !payload.telefon) {
                 tg.showAlert("Lütfen zorunlu alanları doldurun!");
                 return;
             }
-
-            btn.innerText = "KREDİLER TANIMLANIYOR...";
+        
+            btn.innerText = "LOGO PAKETLENİYOR...";
             btn.disabled = true;
-
-            // --- ARKA KAPI YÖNTEMİ (FETCH YERİNE IMAGE SRC) ---
-            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${galeri_adi}&yetkili=${yetkili}&telefon=${telefon}&sehir=${sehir}&adres=${adres}`;
-
-            const img = new Image();
-            
-            // Başarılı (Webhook'a ulaştı)
-            img.onload = () => {
-                successRedirect();
+        
+            // POST İsteği (Logo sadece POST ile gider)
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://asininventory.com/webhook/kayit-verisi-al", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+        
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200 || xhr.status === 204) {
+                        // BAŞARILI
+                        tg.showPopup({
+                            title: 'Hoş Geldin! 🎁',
+                            message: 'Kaydınız ve 10 krediniz başarıyla tanımlandı. Logonuz sisteme işlendi.',
+                            buttons: [{type: 'ok', text: 'DEVAM ET'}]
+                        }, () => { window.location.href = 'arka_fon.html'; });
+                    } else {
+                        tg.showAlert("Logo boyutu büyük olabilir veya sunucu POST kabul etmiyor. Hata: " + xhr.status);
+                        btn.disabled = false;
+                        btn.innerText = "TEKRAR DENE";
+                    }
+                }
             };
-
-            // Hata (n8n resim dönmediği için hata verebilir ama veri ulaşmıştır)
-            img.onerror = () => {
-                // n8n resim değil JSON dönerse hata verir, ama veri gitmiş olur.
-                // Bu yüzden 1.5 saniye bekleyip başarılı sayıyoruz.
-                setTimeout(() => {
-                    successRedirect();
-                }, 1500);
-            };
-
-            img.src = webhookUrl;
+        
+            xhr.send(JSON.stringify(payload));
         }
 
         function successRedirect() {
@@ -133,3 +140,4 @@
     </script>
 </body>
 </html>
+
