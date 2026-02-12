@@ -275,14 +275,13 @@
 
             tg.HapticFeedback.impactOccurred('medium');
 
-            // 1. Önce veritabanında bu chat_id'ye sahip bir galeri kaydı var mı bak
+            // 1. Kayıt Kontrolü
             let { data: record, error } = await _supabase
                 .from('galeriler')
                 .select('chat_id')
                 .eq('chat_id', userId)
                 .maybeSingle();
 
-            // 2. Eğer kayıt yoksa, Pop-up göster ve durdur
             if (!record) {
                 tg.showPopup({
                     title: 'Kayıt Gerekli',
@@ -290,34 +289,37 @@
                     buttons: [{id: 'reg', type: 'default', text: 'KAYIT EKRANINA GİT'}]
                 }, (buttonId) => {
                     if (buttonId === 'reg') {
-                        // Burada senin kayıt sayfanın adı neyse onu yazıyoruz (Örn: kayit.html)
                         window.location.href = 'kredial.html'; 
                     }
                 });
-                return; // Fonksiyonu burada keser, aşağıya inmez
+                return; 
             }
 
-            // 3. Kayıt varsa onay al ve kaydet
+            // 2. Onay ve Kaydetme (EKRAN KAPANMA SORUNU BURADA ÇÖZÜLDÜ)
             tg.showConfirm(`${selectedItem.title} konseptini kullanmak istediğinize emin misiniz?`, async (isConfirmed) => {
                 if (isConfirmed) {
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    const { upsertError } = await _supabase
+                    // Veritabanını güncelle
+                    const { error: upsertError } = await _supabase
                         .from('galeriler')
-                        .upsert({ 
-                            chat_id: userId, 
+                        .update({ 
                             stand_gorseli_url: selectedItem.url,
                             secili_stand_gorseli: selectedItem.id,
                             updated_at: new Date()
-                        });
+                        })
+                        .eq('chat_id', userId); // Sadece bu kullanıcının satırını güncelle
 
                     if (!upsertError) {
                         tg.HapticFeedback.notificationOccurred('success');
-                        // Başarılıysa simülatöre fırlat
-                        window.location.href = 'aktif_fon.html?mode=new';
+                        
+                        // KRİTİK NOKTA: tg.close() YAPMIYORUZ! 
+                        // Doğrudan simülatöre yönlendiriyoruz.
+                        window.location.href = `aktif_fon.html?mode=new`;
                     } else {
-                        tg.showAlert("Hata oluştu, tekrar deneyin.");
+                        console.error(upsertError);
+                        tg.showAlert("Veritabanı güncellenemedi.");
                         btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
                     }
@@ -328,3 +330,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
+
