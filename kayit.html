@@ -19,7 +19,7 @@
         .form-card { width: 100%; max-width: 450px; background: #050505; border: 1px solid var(--border); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; gap: 15px; }
         .input-group { display: flex; flex-direction: column; gap: 6px; }
         .input-group label { font-size: 0.6rem; color: #8e8e93; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
-        input, textarea { background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.8rem; }
+        input { background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: #fff; font-family: 'Inter'; outline: none; font-size: 0.8rem; }
         input:focus { border-color: var(--accent); }
         .upload-area { border: 2px dashed var(--border); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
         #logo-preview { width: 100%; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 8px; }
@@ -48,10 +48,10 @@
         <div class="input-group">
             <label>Dükkan Logosu</label>
             <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONUZU SEÇİN (OPSİYONEL)</span>
+                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONU SEÇ (OPSİYONEL)</span>
                 <img id="logo-preview">
             </div>
-            <input type="file" id="file-input" style="display:none" accept="image/*" onchange="preview(this)">
+            <input type="file" id="logo-input" style="display:none" accept="image/*" onchange="preview(this)">
         </div>
 
         <button class="btn-submit" id="submit-btn" onclick="handleRegister()">
@@ -63,8 +63,12 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready(); tg.expand();
+        tg.ready();
+        tg.expand();
 
+        let base64Logo = "";
+
+        // Logo Önizleme ve Hazırlama
         function preview(input) {
             const file = input.files[0];
             if (file) {
@@ -73,71 +77,67 @@
                     document.getElementById('logo-preview').src = e.target.result;
                     document.getElementById('logo-preview').style.display = 'block';
                     document.getElementById('upload-txt').style.display = 'none';
+                    // Logo verisini temizle (n8n body için)
+                    base64Logo = e.target.result.split(',')[1];
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        async function handleRegister() {
+        function handleRegister() {
             const btn = document.getElementById('submit-btn');
-            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
-        
-            // Form Verileri
+            
+            // Verileri topla
             const payload = {
-                chat_id: userId,
+                chat_id: String(tg.initDataUnsafe?.user?.id || "1017604800"),
                 user_name: tg.initDataUnsafe?.user?.username || "Bilinmiyor",
                 galeri_adi: document.getElementById('galeri-adi').value,
                 yetkili: document.getElementById('yetkili-adi').value,
                 telefon: document.getElementById('tel-no').value,
                 sehir: document.getElementById('sehir').value,
                 adres: document.getElementById('adres').value,
-                logo: base64Logo // Burası n8n'deki items[0].json.body.logo kısmına düşer
+                logo: base64Logo
             };
-        
+
+            // Zorunlu alan kontrolü
             if (!payload.galeri_adi || !payload.yetkili || !payload.telefon) {
-                tg.showAlert("Lütfen zorunlu alanları doldurun!");
+                tg.showAlert("Lütfen zorunlu alanları (*) doldurunuz!");
                 return;
             }
-        
-            btn.innerText = "LOGO PAKETLENİYOR...";
+
+            // Butonu kilitle
+            btn.innerText = "İŞLENİYOR...";
             btn.disabled = true;
-        
-            // POST İsteği (Logo sadece POST ile gider)
+
+            // --- XMLHTTPREQUEST (KESİN ÇÖZÜM) ---
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "https://asininventory.com/webhook/kayit-verisi-al", true);
             xhr.setRequestHeader("Content-Type", "application/json");
-        
+
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200 || xhr.status === 204) {
-                        // BAŞARILI
+                        // Başarılı kayıt
+                        tg.HapticFeedback.notificationOccurred('success');
                         tg.showPopup({
                             title: 'Hoş Geldin! 🎁',
-                            message: 'Kaydınız ve 10 krediniz başarıyla tanımlandı. Logonuz sisteme işlendi.',
+                            message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı.',
                             buttons: [{type: 'ok', text: 'DEVAM ET'}]
-                        }, () => { window.location.href = 'arka_fon.html'; });
+                        }, () => {
+                            window.location.href = 'arka_fon.html';
+                        });
                     } else {
-                        tg.showAlert("Logo boyutu büyük olabilir veya sunucu POST kabul etmiyor. Hata: " + xhr.status);
+                        // Hata durumu
+                        tg.showAlert("Kayıt iletilemedi. Lütfen internetinizi kontrol edip tekrar deneyin. (Hata: " + xhr.status + ")");
+                        btn.innerText = "10 KREDİMİ TANIMLA VE KAYDOL";
                         btn.disabled = false;
-                        btn.innerText = "TEKRAR DENE";
                     }
                 }
             };
-        
-            xhr.send(JSON.stringify(payload));
-        }
 
-        function successRedirect() {
-            tg.HapticFeedback.notificationOccurred('success');
-            tg.showPopup({
-                title: 'Hoş Geldin! 🎁',
-                message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı.',
-                buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
-            }, () => { 
-                window.location.href = 'arka_fon.html'; 
-            });
+            // Gönder
+            xhr.send(JSON.stringify(payload));
         }
     </script>
 </body>
 </html>
-
