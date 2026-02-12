@@ -109,18 +109,23 @@
             try {
                 let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
 
-                if (record && record.stand_gorseli_url) {
+                if (record && record.secili_stand_gorseli) {
                     simUI.style.display = 'block';
                     emptyUI.style.display = 'none';
 
-                    // Resim uzantılarını temizleme (Hata payını siler)
-                    // URL içindeki _c.jpeg kısmını kaldırıp baz URL alıyoruz
-                    let baseImg = record.stand_gorseli_url.split('_c.jpeg')[0];
+                    // Resim ID'sini alıyoruz (Örn: icmekan_0004)
+                    const imgID = record.secili_stand_gorseli;
+                    const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
                     
-                    document.getElementById('raw-bg-img').src = baseImg + '_a.jpeg';
-                    document.getElementById('sim-bg').src = baseImg + '_b.jpeg';
+                    // SEÇİLEN FON (Yazısız) -> _a.jpeg
+                    // galeri_bos_arkaplan klasöründen çekiyoruz
+                    document.getElementById('raw-bg-img').src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
                     
-                    // Logo Kontrolü
+                    // UYGULAMA ÖRNEĞİ (Yazılı) -> _b.jpeg
+                    // galeri_yazili_ornek_arkaplan klasöründen çekiyoruz
+                    document.getElementById('sim-bg').src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
+                    
+                    // LOGO KONTROLÜ
                     const logoImg = document.getElementById('user-preview-logo');
                     if(record.logo_gorsel_url && record.logo_gorsel_url !== "") {
                         logoImg.src = record.logo_gorsel_url;
@@ -135,7 +140,7 @@
                     emptyUI.style.display = 'flex';
                 }
             } catch (err) {
-                console.error(err);
+                console.error("Veri çekme hatası:", err);
                 emptyUI.style.display = 'flex';
             }
         }
@@ -166,3 +171,4 @@
     </script>
 </body>
 </html>
+
