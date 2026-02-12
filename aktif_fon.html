@@ -49,7 +49,7 @@
 
     <div id="main-content">
         <div class="nav-header">
-            <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.reload()">❮ SEÇİME DÖN</div>
+            <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="goBackToChoice()">❮ SEÇİME DÖN</div>
             <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.3</div>
         </div>
         <div class="selection-grid">
@@ -81,6 +81,11 @@
             syncDatabase();
         }
 
+        // Parametreyi silip ana seçime döndüren fonksiyon
+        function goBackToChoice() {
+            window.location.href = window.location.pathname;
+        }
+
         async function syncDatabase() {
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
             let { data } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).order('created_at', { ascending: false });
@@ -99,7 +104,9 @@
         window.onload = () => { 
             tg.ready(); tg.expand();
             const params = new URLSearchParams(window.location.search);
-            if (params.get('mode') === 'new') { openSimulator(); }
+            if (params.get('mode') === 'new') { 
+                openSimulator(); 
+            }
         };
     </script>
 </body>
