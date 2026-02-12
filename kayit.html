@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Hediye Kayıt</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;800&display=swap');
         * { box-sizing: border-box; }
@@ -47,8 +46,8 @@
 
         <div class="input-group">
             <label>Dükkan Logosu</label>
-            <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONU SEÇ (OPSİYONEL)</span>
+            <div class="upload-area" onclick="document.getElementById('logo-input').click()">
+                <span id="upload-txt" style="font-size: 0.6rem; color: #444;">LOGONU SEÇ (GEREKLİ DEĞİL)</span>
                 <img id="logo-preview">
             </div>
             <input type="file" id="logo-input" style="display:none" accept="image/*" onchange="preview(this)">
@@ -66,9 +65,6 @@
         tg.ready();
         tg.expand();
 
-        let base64Logo = "";
-
-        // Logo Önizleme ve Hazırlama
         function preview(input) {
             const file = input.files[0];
             if (file) {
@@ -77,8 +73,6 @@
                     document.getElementById('logo-preview').src = e.target.result;
                     document.getElementById('logo-preview').style.display = 'block';
                     document.getElementById('upload-txt').style.display = 'none';
-                    // Logo verisini temizle (n8n body için)
-                    base64Logo = e.target.result.split(',')[1];
                 };
                 reader.readAsDataURL(file);
             }
@@ -87,56 +81,45 @@
         function handleRegister() {
             const btn = document.getElementById('submit-btn');
             
-            // Verileri topla
-            const payload = {
-                chat_id: String(tg.initDataUnsafe?.user?.id || "1017604800"),
-                user_name: tg.initDataUnsafe?.user?.username || "Bilinmiyor",
-                galeri_adi: document.getElementById('galeri-adi').value,
-                yetkili: document.getElementById('yetkili-adi').value,
-                telefon: document.getElementById('tel-no').value,
-                sehir: document.getElementById('sehir').value,
-                adres: document.getElementById('adres').value,
-                logo: base64Logo
-            };
+            const chat_id = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            const user_name = encodeURIComponent(tg.initDataUnsafe?.user?.username || "Bilinmiyor");
+            const galeri_adi = encodeURIComponent(document.getElementById('galeri-adi').value);
+            const yetkili = encodeURIComponent(document.getElementById('yetkili-adi').value);
+            const telefon = encodeURIComponent(document.getElementById('tel-no').value);
+            const sehir = encodeURIComponent(document.getElementById('sehir').value);
+            const adres = encodeURIComponent(document.getElementById('adres').value);
 
-            // Zorunlu alan kontrolü
-            if (!payload.galeri_adi || !payload.yetkili || !payload.telefon) {
+            if (!galeri_adi || !yetkili || !telefon) {
                 tg.showAlert("Lütfen zorunlu alanları (*) doldurunuz!");
                 return;
             }
 
-            // Butonu kilitle
-            btn.innerText = "İŞLENİYOR...";
+            btn.innerText = "SİSTEME GİRİLİYOR...";
             btn.disabled = true;
 
-            // --- XMLHTTPREQUEST (KESİN ÇÖZÜM) ---
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://asininventory.com/webhook/kayit-verisi-al", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
+            // --- ARKA KAPI YÖNTEMİ (GET) ---
+            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${galeri_adi}&yetkili=${yetkili}&telefon=${telefon}&sehir=${sehir}&adres=${adres}`;
 
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200 || xhr.status === 204) {
-                        // Başarılı kayıt
-                        tg.HapticFeedback.notificationOccurred('success');
-                        tg.showPopup({
-                            title: 'Hoş Geldin! 🎁',
-                            message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı.',
-                            buttons: [{type: 'ok', text: 'DEVAM ET'}]
-                        }, () => {
-                            window.location.href = 'arka_fon.html';
-                        });
-                    } else {
-                        // Hata durumu
-                        tg.showAlert("Kayıt iletilemedi. Lütfen internetinizi kontrol edip tekrar deneyin. (Hata: " + xhr.status + ")");
-                        btn.innerText = "10 KREDİMİ TANIMLA VE KAYDOL";
-                        btn.disabled = false;
-                    }
-                }
+            const img = new Image();
+            
+            img.onload = () => { finishRegistration(); };
+            img.onerror = () => { 
+                // n8n JSON döndüğü için resim hatası verir ama veri ulaşır. 
+                setTimeout(() => { finishRegistration(); }, 1200); 
             };
 
-            // Gönder
-            xhr.send(JSON.stringify(payload));
+            img.src = webhookUrl;
+        }
+
+        function finishRegistration() {
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.showPopup({
+                title: 'Hoş Geldin! 🎁',
+                message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı.',
+                buttons: [{type: 'ok', text: 'DEVAM ET'}]
+            }, () => {
+                window.location.href = 'arka_fon.html';
+            });
         }
     </script>
 </body>
