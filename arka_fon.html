@@ -268,48 +268,45 @@
         function closePreview() { document.getElementById('preview-modal').style.display = 'none'; }
 
         async function saveSelection() {
-            const selectedItem = currentCategoryItems[currentIndex];
+            const selectedItem = currentCategoryItems[currentIndex]; // Örn: id: "dismekan_0001"
             const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
             const btn = document.getElementById('save-btn-text');
-
+        
             tg.HapticFeedback.impactOccurred('medium');
-
-            // 1. Kayıt Kontrolü
-            let { data: record, error: fetchError } = await _supabase
+        
+            // 1. Kayıt Kontrolü (Aynı kalıyor)
+            let { data: record } = await _supabase
                 .from('galeriler')
                 .select('chat_id')
                 .eq('chat_id', userId)
                 .maybeSingle();
-
+        
             if (!record) {
-                tg.showPopup({
-                    title: '🎁 Hediye Kredinizi Alın',
-                    message: 'Önce kaydınızı tamamlamalı ve 10 ücretsiz kredinizi almalısınız.',
-                    buttons: [{id: 'reg', type: 'default', text: 'KAYIT OL'}]
-                }, (id) => { if (id === 'reg') window.location.href = 'kayit.html'; });
+                // Kayıt ol uyarısı... (Aynı kalıyor)
                 return; 
             }
-
+        
             // 2. Onay ve Kaydetme
             tg.showConfirm(`${selectedItem.title} dükkanınıza kurulsun mu?`, async (ok) => {
                 if (ok) {
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
-
-                    // KRİTİK NOKTA: Kullanıcı _c (örnek) görüyor, biz _a (ham/boş) kaydediyoruz.
-                    const cleanImageUrl = selectedItem.url.replace('_c.jpeg', '_a.jpeg');
-
+        
+                    // MANTIK BURADA DEĞİŞİYOR:
+                    // GitHub linkini çöpe atıyoruz, ID'yi alıp senin Supabase Storage linkini kuruyoruz
+                    // Sonuç: https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/dismekan_0001_a.jpeg
+                    const storageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
+        
                     const { error: updateError } = await _supabase
                         .from('galeriler')
                         .update({ 
-                            stand_gorseli_url: cleanImageUrl,
-                            secili_stand_gorseli: selectedItem.id
+                            stand_gorseli_url: storageUrl, // Boş olan _a versiyonu
+                            secili_stand_gorseli: selectedItem.id // Seçilen ID (dismekan_0001 gibi)
                         })
                         .eq('chat_id', userId);
-
+        
                     if (!updateError) {
                         tg.HapticFeedback.notificationOccurred('success');
-                        // n8n tetiklenmesi için aktif_fon sayfasına yönlendiriyoruz
                         window.location.href = `aktif_fon.html?mode=new`;
                     } else {
                         tg.showAlert("Hata: " + updateError.message);
@@ -322,3 +319,4 @@
     </script>
 </body>
 </html>
+
