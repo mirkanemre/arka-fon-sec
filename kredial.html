@@ -14,7 +14,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.2.0</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.3.0</div>
     </div>
 
     <div class="header-area">
@@ -23,12 +23,12 @@
     </div>
 
     <div class="info-bar">
-        <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 8px;">
+        <div class="info-flex">
             <div style="text-align: center;">
                 <small style="display: block; margin-bottom: 2px;">MEVCUT BAKİYE</small>
                 <strong id="current-credit-val" style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.2rem;">--</strong>
             </div>
-            <div style="width: 1px; height: 25px; background: var(--border);"></div>
+            <div class="info-divider"></div>
             <div style="text-align: center;">
                 <small style="display: block; margin-bottom: 2px;">BİRİM MALİYET</small>
                 <strong style="font-family: 'Orbitron'; font-size: 1.1rem;">1 <span style="font-size: 0.6rem; color: var(--text-dim);">KREDİ</span></strong>
@@ -38,6 +38,7 @@
     </div>
 
     <div class="package-list">
+        
         <div class="main-card store-row" onclick="pay(10, 500)">
             <div class="kredi-detay">
                 <strong>10</strong>
@@ -105,7 +106,6 @@
             tg.HapticFeedback.notificationOccurred('success');
             document.getElementById('loader').style.display = 'flex';
             const userId = tg.initDataUnsafe?.user?.id || "unknown";
-            // Webhook'u (Beacon) tetikle
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
             const img = new Image();
             img.onload = () => finish();
