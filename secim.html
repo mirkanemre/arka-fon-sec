@@ -4,179 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Konsept Seçimi</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
-
-        :root {
-            --bg: #000000;
-            --primary: #007AFF;
-            --card-bg: #0a0a0a;
-            --border: #1c1c1e;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            margin: 0;
-            padding: 24px;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Arka plan parlama efekti index ile aynı */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.1) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        .nav-header {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .btn-back {
-            text-decoration: none;
-            color: var(--primary);
-            font-size: 0.8rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .page-title {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .page-title h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.4rem;
-            letter-spacing: 2px;
-            margin: 0;
-            color: white;
-        }
-
-        .menu-grid {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .main-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 35px 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-            text-decoration: none;
-            color: white;
-        }
-
-        .main-card:active {
-            transform: scale(0.96);
-            background: #1c1c1e;
-            border-color: var(--primary);
-        }
-
-        .main-card h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 900;
-            margin: 0;
-            z-index: 2;
-            letter-spacing: 1px;
-        }
-
-        .main-card p {
-            font-size: 0.75rem;
-            color: #8e8e93;
-            margin: 10px 0 0 0;
-            z-index: 2;
-            line-height: 1.4;
-        }
-
-        /* İkonlar */
-        .icon-circle {
-            width: 60px;
-            height: 60px;
-            background: rgba(0, 122, 255, 0.1);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            border: 1px solid rgba(0, 122, 255, 0.2);
-        }
-
-        /* Kart özel renkleri */
-        .my-scenes-card { border-top: 4px solid #f59e0b; }
-        .new-setup-card { border-top: 4px solid var(--primary); }
-
-        .footer {
-            margin-top: auto;
-            font-size: 0.6rem;
-            color: #48484a;
-            text-align: center;
-            letter-spacing: 1px;
-        }
-    </style>
 </head>
 <body>
 
     <div class="nav-header">
-        <a href="index.html" class="btn-back">❮ GERİ</a>
+        <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.3.0</div>
     </div>
 
-    <div class="page-title">
+    <div class="header-area">
         <h1>KONSEPT YÖNETİMİ</h1>
-        <p style="font-size: 0.6rem; color: #48484a; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px;">Studio Control Center</p>
+        <p>Studio Control Center</p>
     </div>
 
     <div class="menu-grid">
-        <a href="sahnelerim.html" class="main-card my-scenes-card">
-            <div class="icon-circle" style="color: #f59e0b;">📂</div>
+        
+        <div class="main-card active-card" onclick="navigate('sahnelerim.html')">
             <h2>KAYITLI KONSEPTLERİM</h2>
             <p>Daha önce oluşturduğunuz ve satın aldığınız sahneler arasından seçim yapın.</p>
-        </a>
+            <div class="card-icon">📂</div>
+        </div>
 
-        <a href="aktif_fon.html" class="main-card new-setup-card">
-            <div class="icon-circle" style="color: #007AFF;">✨</div>
+        <div class="main-card studio-card" onclick="navigate('aktif_fon.html')">
             <h2>YENİ KONSEPT OLUŞTUR</h2>
             <p>Seçtiğiniz yeni fonu logonuzla test edin ve dükkanınıza kurun.</p>
-        </a>
+            <div class="card-icon">✨</div>
+        </div>
+
     </div>
 
     <div class="footer">
-        OTOFONFX CORE ENGINE v1.1.0
+        © 2026 OTOFONFX TECHNOLOGIES<br>
+        CORE ENGINE v2.3.0
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
+        tg.expand();
+        tg.headerColor = "#000000";
 
-        document.querySelectorAll('.main-card').forEach(card => {
-            card.onclick = () => {
-                tg.HapticFeedback.impactOccurred('medium');
-            };
-        });
+        // Uygulama hissi veren navigasyon fonksiyonu
+        function navigate(url) {
+            tg.HapticFeedback.impactOccurred('medium');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 50);
+        }
     </script>
 </body>
 </html>
