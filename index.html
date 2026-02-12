@@ -10,19 +10,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
 
         * { box-sizing: border-box; }
-        :root { --bg: #000; --primary: #007AFF; --card-bg: #0a0a0a; --border: #1c1c1e; --gold: #f59e0b; }
+        :root { --bg: #000; --accent: #007AFF; --card-bg: #0a0a0a; --border: #1c1c1e; --gold: #f59e0b; }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             margin: 0;
-            padding: 15px 20px; /* Padding daraltıldı */
+            padding: 0 25px; 
             color: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow: hidden; /* Taşmayı engeller */
+            overflow: hidden;
         }
 
         body::before {
@@ -30,45 +30,54 @@
             position: fixed;
             top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.08) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.06) 0%, transparent 70%);
             z-index: -1;
         }
 
-        /* Banner daha kompakt hale getirildi */
+        /* Dashboard İçeriğini Biraz Aşağı Çekiyoruz */
+        #app-container {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 45px; /* Tepeden profesyonel boşluk */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
         #registration-banner {
             display: none;
             width: 100%;
-            max-width: 400px;
             background: linear-gradient(45deg, #d97706, #f59e0b);
-            border-radius: 16px;
-            padding: 10px 15px;
-            margin-bottom: 15px;
+            border-radius: 18px;
+            padding: 12px 18px;
+            margin-bottom: 25px; /* Banner ile logo arası nefes alsın */
             text-decoration: none;
             color: #000;
-            animation: pulse 2s infinite;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
+            animation: pulse 2.5s infinite;
         }
 
         .promo-content h3 { margin: 0; font-family: 'Orbitron'; font-size: 0.75rem; font-weight: 900; }
-        .promo-content p { margin: 2px 0 0; font-size: 0.6rem; font-weight: 700; opacity: 0.8; }
+        .promo-content p { margin: 3px 0 0; font-size: 0.6rem; font-weight: 700; opacity: 0.9; }
 
-        .logo-area { text-align: center; margin-bottom: 25px; } /* Boşluk azaltıldı */
+        .logo-area { text-align: center; margin-bottom: 35px; } 
         .logo-area h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem; /* Boyut küçültüldü */
-            letter-spacing: 3px;
+            font-size: 1.9rem;
+            letter-spacing: 4px;
             margin: 0;
             background: linear-gradient(180deg, #fff 0%, #636366 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; } /* Gap daraltıldı */
+        .menu-grid { width: 100%; display: flex; flex-direction: column; gap: 12px; }
 
         .main-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 18px 22px; /* İç boşluk optimize edildi */
+            border-radius: 24px;
+            padding: 22px 24px;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -78,62 +87,72 @@
             color: white;
         }
 
-        .main-card:active { transform: scale(0.97); background: #111; }
-        .main-card h2 { font-size: 1rem; font-weight: 900; margin: 0; }
-        .main-card p { font-size: 0.7rem; color: #8e8e93; margin: 4px 0 0 0; }
-        .card-icon { position: absolute; right: -8px; bottom: -8px; font-size: 3rem; opacity: 0.05; transform: rotate(-15deg); }
+        .main-card:active { transform: scale(0.97); background: #0c0c0e; border-color: #2c2c2e; }
+        .main-card h2 { font-size: 1.05rem; font-weight: 900; margin: 0; letter-spacing: -0.2px; }
+        .main-card p { font-size: 0.72rem; color: #8e8e93; margin: 5px 0 0 0; line-height: 1.3; }
+        .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
 
-        .studio-card { border-left: 4px solid var(--primary); }
+        .studio-card { border-left: 4px solid var(--accent); }
         .store-card { border-left: 4px solid #34c759; }
         .active-card { border-left: 4px solid var(--gold); }
 
-        .footer { margin-top: auto; padding: 20px 0 10px; font-size: 0.55rem; color: #48484a; text-align: center; line-height: 1.4; }
+        .footer { 
+            margin-top: auto; 
+            padding: 30px 0 20px; 
+            font-size: 0.58rem; 
+            color: #48484a; 
+            text-align: center; 
+            line-height: 1.6; 
+            letter-spacing: 0.5px;
+        }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { transform: scale(1.01); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
         }
     </style>
 </head>
 <body>
 
-    <a href="kayit.html" id="registration-banner">
-        <div class="promo-content">
-            <h3>🎁 10 KREDİ HEDİYENİZİ ALIN</h3>
-            <p>Dükkan kaydını tamamlayın, ücretsiz çekim kazanın.</p>
+    <div id="app-container">
+        <a href="kayit.html" id="registration-banner">
+            <div class="promo-content">
+                <h3>🎁 10 KREDİ HEDİYENİZİ ALIN</h3>
+                <p>Dükkan kaydınızı tamamlayın, hemen üretime başlayın.</p>
+            </div>
+        </a>
+
+        <div class="logo-area">
+            <h1>OTOFONFX</h1>
+            <p style="font-size: 0.58rem; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; font-weight: 900; margin-top: 5px;">Pro Studio Engine</p>
         </div>
-    </a>
 
-    <div class="logo-area">
-        <h1>OTOFONFX</h1>
-        <p style="font-size: 0.55rem; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; font-weight: 900; margin-top: 3px;">Pro Studio Engine</p>
-    </div>
+        <div class="menu-grid">
+            <a href="arka_fon.html" class="main-card studio-card">
+                <h2>Stüdyo Konsept Örnekleri</h2>
+                <p>Arka fon konseptinizi seçin ve çekimi başlatın.</p>
+                <div class="card-icon">🖼️</div>
+            </a>
 
-    <div class="menu-grid">
-        <a href="arka_fon.html" class="main-card studio-card">
-            <h2>Stüdyo Konsept Örnekleri</h2>
-            <p>Arka fon konseptinizi seçin ve çekimi başlatın.</p>
-            <div class="card-icon">🖼️</div>
-        </a>
+            <a href="kredial.html" class="main-card store-card">
+                <h2>Kredi Mağazası</h2>
+                <p>Paket yükleyin, çekime kesintisiz devam edin.</p>
+                <div class="card-icon">💳</div>
+            </a>
 
-        <a href="kredial.html" class="main-card store-card">
-            <h2>Kredi Mağazası</h2>
-            <p>Paket yükleyin, çekime kesintisiz devam edin.</p>
-            <div class="card-icon">💳</div>
-        </a>
+            <a href="aktif_fon.html" class="main-card active-card">
+                <h2>Seçili Konsept</h2>
+                <p id="active-status-text">Mevcut konseptinizi görüntüleyin.</p>
+                <div class="card-icon">✨</div>
+            </a>
+        </div>
 
-        <a href="aktif_fon.html" class="main-card active-card">
-            <h2>Seçili Konsept</h2>
-            <p id="active-status-text">Mevcut konseptinizi görüntüleyin.</p>
-            <div class="card-icon">✨</div>
-        </a>
-    </div>
-
-    <div class="footer">
-        © 2026 OTOFONFX TECHNOLOGIES<br>
-        Tüm hakları OtoFonFX stüdyosuna aittir.<br>
-        <span style="opacity: 0.4;">v1.1.1 PREMIUM ACCESS</span>
+        <div class="footer">
+            © 2026 OTOFONFX TECHNOLOGIES<br>
+            Tüm hakları OtoFonFX stüdyosuna aittir.<br>
+            <span style="opacity: 0.5;">v1.1.2 PREMIUM ACCESS</span>
+        </div>
     </div>
 
     <script>
