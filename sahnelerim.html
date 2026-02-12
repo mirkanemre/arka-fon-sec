@@ -8,231 +8,78 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;700;900&display=swap');
-        
         * { box-sizing: border-box; }
         :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 20px; 
-            color: #fff; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        .nav-header { 
-            width: 100%; 
-            max-width: 500px;
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            margin-bottom: 30px; 
-        }
-
-        .btn-back { 
-            text-decoration: none; 
-            color: var(--accent); 
-            font-size: 0.8rem; 
-            font-weight: 900; 
-            font-family: 'Orbitron';
-            letter-spacing: 1px;
-        }
-
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(59, 130, 246, 0.08) 0%, transparent 70%); z-index: -1; }
+        .nav-header { width: 100%; max-width: 500px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+        .btn-back { text-decoration: none; color: var(--accent); font-size: 0.8rem; font-weight: 900; font-family: 'Orbitron'; letter-spacing: 1px; }
         .page-title { text-align: center; margin-bottom: 30px; }
-        .page-title h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 3px;
-            margin: 0;
-            background: linear-gradient(180deg, #fff 0%, #636366 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        #scenes-container {
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .scene-card {
-            background: #0a0a0a;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 12px;
-            position: relative;
-        }
-
-        .scene-card.active-scene {
-            border-color: var(--accent);
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
-        }
-
-        .scene-preview {
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            border: 1px solid #111;
-        }
-
+        .page-title h1 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 3px; margin: 0; background: linear-gradient(180deg, #fff 0%, #636366 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #scenes-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        .scene-card { background: #0a0a0a; border: 1px solid var(--border); border-radius: 24px; padding: 12px; position: relative; }
+        .scene-card.active-scene { border-color: var(--accent); box-shadow: 0 0 25px rgba(59, 130, 246, 0.15); }
+        .scene-preview { width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; margin-bottom: 15px; border: 1px solid #111; }
         .scene-preview img { width: 100%; height: 100%; object-fit: cover; }
-
-        .scene-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 5px 5px 5px;
-        }
-
-        .scene-name {
-            font-family: 'Orbitron';
-            font-size: 0.65rem;
-            letter-spacing: 1px;
-            color: #8e8e93;
-        }
-
-        .btn-activate {
-            background: linear-gradient(45deg, var(--accent), #1e40af);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-family: 'Orbitron';
-            font-size: 0.65rem;
-            font-weight: 900;
-            cursor: pointer;
-        }
-
-        .btn-activate.current {
-            background: #1c1c1e;
-            color: #34c759;
-            border: 1px solid rgba(52, 199, 89, 0.2);
-            cursor: default;
-        }
-
-        .empty-state {
-            text-align: center;
-            margin-top: 80px;
-            padding: 20px;
-        }
-
-        .btn-create-new {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 15px 30px;
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            border-radius: 15px;
-            font-family: 'Orbitron';
-            font-size: 0.7rem;
-            font-weight: 900;
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
-            text-transform: uppercase;
-        }
+        .scene-details { display: flex; justify-content: space-between; align-items: center; padding: 0 5px 5px 5px; }
+        .scene-name { font-family: 'Orbitron'; font-size: 0.65rem; letter-spacing: 1px; color: #8e8e93; }
+        .btn-activate { background: linear-gradient(45deg, var(--accent), #1e40af); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; cursor: pointer; }
+        .btn-activate.current { background: #1c1c1e; color: #34c759; border: 1px solid rgba(52, 199, 89, 0.2); cursor: default; }
+        .empty-state { text-align: center; margin-top: 80px; padding: 20px; }
+        /* LİNK GÜNCELLENDİ: ?mode=new parametresi eklendi */
+        .btn-create-new { display: inline-block; margin-top: 20px; padding: 15px 30px; background: var(--accent); color: white; text-decoration: none; border-radius: 15px; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: 900; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2); text-transform: uppercase; }
     </style>
 </head>
 <body>
-
     <div class="nav-header">
         <a href="index.html" class="btn-back">❮ ANA MENÜ</a>
         <div style="font-size: 0.55rem; color: #48484a; font-weight: 800; font-family: 'Orbitron';">DURUM: ONAYLI</div>
     </div>
-
     <div class="page-title">
         <h1>KAYITLI SAHNELERİM</h1>
         <p style="font-size: 0.6rem; color: #48484a; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px;">Dükkan Koleksiyonunuz</p>
     </div>
-
     <div id="scenes-container">
         <p style="text-align:center; opacity:0.3; font-size:0.7rem;">Sahneler taranıyor...</p>
     </div>
-
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-
-        const SUPABASE_URL = "https://bhyeemsvcforqnddhoot.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q"; 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        tg.ready(); tg.expand();
+        const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
         async function loadCollection() {
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
             const container = document.getElementById('scenes-container');
-
             try {
-                let { data: scenes, error } = await _supabase
-                    .from('galeriler')
-                    .select('*')
-                    .eq('chat_id', rawID)
-                    .eq('is_approved', true)
-                    .order('created_at', { ascending: false });
-
+                let { data: scenes } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).eq('is_approved', true).order('created_at', { ascending: false });
                 if (scenes && scenes.length > 0) {
                     container.innerHTML = "";
                     scenes.forEach(scene => {
                         const isActive = scene.is_active; 
                         container.innerHTML += `
                             <div class="scene-card ${isActive ? 'active-scene' : ''}">
-                                <div class="scene-preview">
-                                    <img src="${scene.galeri_yazili_ornek_arkaplan_url}" alt="Sahne">
-                                </div>
+                                <div class="scene-preview"><img src="${scene.galeri_yazili_ornek_arkaplan_url}"></div>
                                 <div class="scene-details">
                                     <div class="scene-name">${scene.secili_stand_gorseli.toUpperCase()}</div>
-                                    ${isActive 
-                                        ? '<button class="btn-activate current">YAYINDA</button>' 
-                                        : `<button class="btn-activate" onclick="activateScene('${scene.id}')">KULLAN</button>`
-                                    }
+                                    ${isActive ? '<button class="btn-activate current">YAYINDA</button>' : `<button class="btn-activate" onclick="activateScene('${scene.id}')">KULLAN</button>`}
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
                     });
                 } else {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;">📂</div>
-                            <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 10px;">HENÜZ KAYITLI SAHNENİZ YOK.</div>
-                            <p style="color: #48484a; font-size: 0.7rem; line-height: 1.5;">
-                                Satın aldığınız sahneler burada listelenir. <br> Yeni bir kurulum yaparak dükkanınızı süsleyin.
-                            </p>
-                            <a href="aktif_fon.html" class="btn-create-new">YENİ BİR TANE OLUŞTURUN</a>
-                        </div>
-                    `;
+                    container.innerHTML = `<div class="empty-state">
+                        <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;">📂</div>
+                        <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 10px;">HENÜZ KAYITLI SAHNENİZ YOK.</div>
+                        <p style="color: #48484a; font-size: 0.7rem; line-height: 1.5;">Yeni bir kurulum yaparak dükkanınızı süsleyin.</p>
+                        <a href="aktif_fon.html?mode=new" class="btn-create-new">YENİ BİR TANE OLUŞTURUN</a>
+                    </div>`;
                 }
-            } catch (err) {
-                container.innerHTML = `<p style="text-align:center; color:red;">Bağlantı Hatası!</p>`;
-            }
+            } catch (err) { container.innerHTML = `<p style="text-align:center; color:red;">Hata oluştu.</p>`; }
         }
-
         function activateScene(id) {
             tg.showConfirm("Bu sahneyi dükkanınızın aktif fonu yapmak istiyor musunuz? (ÜCRETSİZDİR)", (ok) => {
-                if (ok) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                    // Buraya aktiflik güncelleme kodun gelecek
-                    tg.close();
-                }
+                if (ok) { tg.HapticFeedback.notificationOccurred('success'); tg.close(); }
             });
         }
-
         window.onload = loadCollection;
     </script>
 </body>
