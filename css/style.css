@@ -78,9 +78,9 @@ body {
 
 .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
 
-/* --- KAYIT BANNER (YENİ EKLENDİ - GÜZELLEŞTİRİLDİ) --- */
+/* --- KAYIT BANNER (YENİ TASARIM) --- */
 #registration-banner {
-    width: 100%; max-width: 400px; text-decoration: none; margin-bottom: 25px; display: block;
+    width: 100%; max-width: 400px; text-decoration: none; margin-bottom: 25px; display: block; cursor: pointer;
     animation: pulse 2s infinite ease-in-out;
 }
 .promo-content {
