@@ -241,7 +241,7 @@
             
             currentCategoryItems = config[cat].map((fileName, index) => {
                 const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
-                return { id: fileName, url: `${baseUrl}${folder}${fileName}_c.jpeg`, title: `KONSEPT ${index + 1}` };
+                return { id: fileName, url: `${baseUrl}${folder}${fileName}_a.jpeg`, title: `KONSEPT ${index + 1}` };
             });
 
             currentCategoryItems.forEach((item, index) => {
@@ -321,4 +321,5 @@
     </script>
 </body>
 </html>
+
 
