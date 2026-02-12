@@ -14,22 +14,20 @@
         
         #choice-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         .btn-back-float { position: absolute; top: 40px; left: 20px; color: var(--accent); text-decoration: none; font-size: 0.8rem; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
-        .choice-card { width: 100%; max-width: 340px; background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%); border: 1px solid var(--border); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: center; color: white; transition: 0.2s; cursor: pointer; border: 1px solid transparent; }
-        .choice-card:active { transform: scale(0.96); border-color: var(--accent); }
+        .choice-card { width: 100%; max-width: 340px; background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%); border: 1px solid var(--border); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: center; color: white; transition: 0.2s; cursor: pointer; }
 
         #main-content { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 15px; }
-        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 135px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
-        .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; margin-bottom: 15px; }
+        .grid-box { border-radius: 15px; border: 1px solid var(--border); background: #050505; height: 135px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
+        .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); position: relative; margin-bottom: 15px; }
         img { width: 100%; height: 100%; object-fit: cover; }
         .logo-img { width: auto !important; height: 55px !important; object-fit: contain; margin-bottom: 8px; }
-        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
-        .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; text-align: left; }
         
-        .btn-upload-logo { background: transparent; border: 1px dashed var(--accent); color: var(--accent); padding: 6px 10px; border-radius: 8px; font-size: 0.55rem; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; }
+        .btn-upload-logo { background: transparent; border: 1px dashed var(--accent); color: var(--accent); padding: 6px 10px; border-radius: 8px; font-size: 0.55rem; font-weight: 800; cursor: pointer; }
 
-        #empty-simulator { display: none; text-align: center; padding: 40px 20px; flex-direction: column; align-items: center; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
@@ -37,24 +35,24 @@
 
     <div id="choice-overlay">
         <div class="btn-back-float" onclick="location.href='index.html'">❮ GERİ</div>
-        <h1 style="font-family:'Orbitron'; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 30px;">STUDIO CONTROL</h1>
+        <h1 style="font-family:'Orbitron'; font-size: 1rem; color: var(--accent); margin-bottom: 30px;">STUDIO CONTROL</h1>
         <div class="choice-card" onclick="location.href='sahnelerim.html'">
             <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
-            <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
+            <h2 style="font-family:'Orbitron'; font-size: 0.8rem;">KAYITLI SAHNELERİM</h2>
         </div>
         <div class="choice-card" onclick="openSimulator()">
             <div style="font-size: 2rem; margin-bottom: 10px;">✨</div>
-            <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
+            <h2 style="font-family:'Orbitron'; font-size: 0.8rem;">YENİ KONSEPT KUR</h2>
         </div>
     </div>
 
     <div id="main-content">
         <div class="nav-header">
             <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.href='aktif_fon.html'">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a;">OTOFONFX v1.2.6</div>
+            <div style="font-size: 0.6rem; color: #48484a;">OTOFONFX v1.3.0</div>
         </div>
 
-        <div id="simulator-ui" style="display: none;">
+        <div id="simulator-ui">
             <div class="selection-grid">
                 <div>
                     <div class="section-label">SEÇİLEN FON</div>
@@ -76,19 +74,19 @@
                 <img id="sim-bg" src="">
             </div>
 
-            <button class="btn-generate" onclick="startProduction()">SİSTEMİ AKTİF ET</button>
-        </div>
-
-        <div id="empty-simulator" style="display: none;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">🖼️</div>
-            <h2 style="font-family: 'Orbitron'; font-size: 0.9rem;">KONSEPT SEÇİLMEDİ</h2>
-            <button class="btn-generate" onclick="location.href='arka_fon.html'">FON KATALOĞUNA GİT</button>
+            <button class="btn-generate" id="production-btn" onclick="startProduction()">
+                ARKA FONUMU OLUŞTUR
+                <span style="font-size: 0.6rem; opacity: 0.8; font-weight: 400;">(1 KREDİ HARCANIR)</span>
+            </button>
         </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
+
+        let currentRecord = null;
+        const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
 
         function openSimulator() {
             document.getElementById('choice-overlay').style.display = 'none';
@@ -100,76 +98,96 @@
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
             try {
                 let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
+                currentRecord = record;
 
                 if (record && record.secili_stand_gorseli) {
-                    document.getElementById('simulator-ui').style.display = 'block';
-                    document.getElementById('empty-simulator').style.display = 'none';
-
                     const imgID = record.secili_stand_gorseli;
-                    const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
-                    
                     document.getElementById('raw-bg-img').src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
                     document.getElementById('sim-bg').src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
                     
-                    // Logo çekme mantığı (logo_yazisi öncelikli, Cache kırmalı)
-                    const currentLogo = record.logo_yazisi || record.logo_gorsel_url;
-                    if(currentLogo) {
-                        document.getElementById('user-preview-logo').src = currentLogo + "?t=" + new Date().getTime();
-                    }
+                    const logo = record.logo_yazisi || record.logo_gorsel_url;
+                    if(logo) document.getElementById('user-preview-logo').src = logo + "?t=" + new Date().getTime();
+                    
                     tg.HapticFeedback.impactOccurred('light');
-                } else {
-                    document.getElementById('empty-simulator').style.display = 'flex';
                 }
             } catch (err) { console.error(err); }
         }
 
-        // --- SUPABASE STORAGE YÜKLEME VE ÇİFT SÜTUN GÜNCELLEME ---
         async function handleLogoUpload(input) {
             const file = input.files[0];
             if (!file) return;
-
             const btn = document.getElementById('upload-btn');
-            const originalText = btn.innerText;
             btn.innerText = "YÜKLENİYOR...";
-            btn.disabled = true;
-
             const chatId = String(tg.initDataUnsafe?.user?.id || "1017604800");
             const fileName = `${chatId}_logo.png`;
 
             try {
-                // 1. Storage'a yükle (Bucket: galeri_logo)
-                const { error: uploadError } = await _supabase
-                    .storage
-                    .from('galeri_logo')
-                    .upload(fileName, file, { upsert: true });
-
-                if (uploadError) throw uploadError;
-
-                const publicUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_logo/${fileName}`;
-
-                // 2. Tabloda hem logo_yazisi hem logo_gorsel_url sütunlarını güncelle
-                const { error: updateError } = await _supabase
-                    .from('galeriler')
-                    .update({ 
-                        logo_yazisi: publicUrl,
-                        logo_gorsel_url: publicUrl 
-                    })
-                    .eq('chat_id', chatId);
-
-                if (updateError) throw updateError;
-
-                tg.showAlert("Logo başarıyla güncellendi!");
-                syncDatabase(); // Arayüzü tazele
-            } catch (err) {
-                tg.showAlert("Hata: " + err.message);
-            } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
+                await _supabase.storage.from('galeri_logo').upload(fileName, file, { upsert: true });
+                const publicUrl = `${supabaseBase}galeri_logo/${fileName}`;
+                await _supabase.from('galeriler').update({ logo_yazisi: publicUrl, logo_gorsel_url: publicUrl }).eq('chat_id', chatId);
+                tg.showAlert("Logo güncellendi!");
+                syncDatabase(); 
+            } catch (err) { tg.showAlert("Hata: " + err.message); }
+            finally { btn.innerText = "LOGO YÜKLE"; }
         }
 
-        function startProduction() { 
-            tg.showConfirm("Fon aktif edilsin mi?", (ok) => { if (ok) tg.close(); }); 
+        async function startProduction() {
+            if (!currentRecord || !currentRecord.secili_stand_gorseli) return;
+            
+            const btn = document.getElementById('production-btn');
+            const chatId = currentRecord.chat_id;
+            const sahneId = currentRecord.secili_stand_gorseli;
+            const webhookUrl = "https://asininventory.com/webhook/ai_arkafon_uretim_onay";
+
+            // Linkleri hazırlıyoruz
+            const rawFonUrl = `${supabaseBase}galeri_bos_arkaplan/${sahneId}_a.jpeg`;
+            const exampleFonUrl = `${supabaseBase}galeri_yazili_ornek_arkaplan/${sahneId}_b.jpeg`;
+            const userLogoUrl = currentRecord.logo_yazisi || currentRecord.logo_gorsel_url;
+
+            if(!userLogoUrl) {
+                tg.showAlert("Lütfen önce logonuzu yükleyin!");
+                return;
+            }
+
+            tg.showConfirm("Arka fon oluşturulsun mu? (1 Kredi)", async (ok) => {
+                if (ok) {
+                    btn.innerText = "İŞLENİYOR...";
+                    btn.disabled = true;
+
+                    try {
+                        // 1. Supabase Koleksiyona Kaydet
+                        await _supabase.from('galeri_kayitli_arkaplan').upsert({ 
+                            chat_id: chatId, sahne_id: sahneId,
+                            sahne_url: `${supabaseBase}galeri_arkaplan/${chatId}/${sahneId}.png` 
+                        }, { onConflict: 'chat_id,sahne_id' });
+
+                        // 2. n8n Webhook'a tüm linkleri gönder
+                        const response = await fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                chat_id: chatId,
+                                sahne_id: sahneId,
+                                raw_fon_url: rawFonUrl,       // Boş fon linki
+                                example_fon_url: exampleFonUrl, // Yazılı örnek linki
+                                logo_url: userLogoUrl,         // Kullanıcının logosu
+                                action: "start_ai_production"
+                            })
+                        });
+
+                        if (response.ok) {
+                            tg.HapticFeedback.notificationOccurred('success');
+                            tg.showAlert("Üretim başladı! Arka fonunuz hazırlanıyor.");
+                            setTimeout(() => tg.close(), 1500);
+                        } else { throw new Error("Webhook hatası!"); }
+                        
+                    } catch (err) {
+                        tg.showAlert("Hata: " + err.message);
+                        btn.disabled = false;
+                        btn.innerHTML = `ARKA FONUMU OLUŞTUR <span style="font-size: 0.6rem;">(1 KREDİ HARCANIR)</span>`;
+                    }
+                }
+            });
         }
 
         window.onload = () => { 
