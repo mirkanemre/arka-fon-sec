@@ -30,7 +30,7 @@
     <div id="main-content">
         <div class="nav-header">
             <a href="javascript:void(0)" onclick="location.reload()" class="back-link">❮ SEÇİME DÖN</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v1.5.0</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.1.0</div>
         </div>
 
         <div id="simulator-ui">
@@ -53,8 +53,7 @@
             
             <div class="section-label">UYGULAMA ÖRNEĞİ</div>
             <div class="simulator-box">
-                <div class="scan-line"></div>
-                <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover;">
+                <div class="scan-line"></div> <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover;">
             </div>
 
             <button class="btn-submit" id="production-btn" onclick="startProduction()">
@@ -65,7 +64,7 @@
         
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            v1.5.0 PRO SIMULATOR
+            v2.1.0 PRO SIMULATOR
         </div>
     </div>
 
@@ -89,6 +88,7 @@
 
                 if (record && record.secili_stand_gorseli) {
                     const imgID = record.secili_stand_gorseli;
+                    // Resim yollarını veritabanı mantığına göre ayarladık
                     document.getElementById('raw-bg-img').src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
                     document.getElementById('sim-bg').src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
                     
@@ -132,18 +132,30 @@
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
+                    // Webhook URL'si
+                    const webhookUrl = "https://asininventory.com/webhook/ai_arkafon_uretim_onay";
+                    // Fon URL'leri
+                    const rawFonUrl = `${supabaseBase}galeri_bos_arkaplan/${sahneId}_a.jpeg`;
+                    const exampleFonUrl = `${supabaseBase}galeri_yazili_ornek_arkaplan/${sahneId}_b.jpeg`;
+
                     try {
+                        // 1. Supabase'e Kayıt (Geçmişe ekle)
                         await _supabase.from('galeri_kayitli_arkaplan').upsert({ 
                             chat_id: chatId, sahne_id: sahneId,
                             sahne_url: `${supabaseBase}galeri_arkaplan/${chatId}/${sahneId}.png` 
                         }, { onConflict: 'chat_id,sahne_id' });
 
-                        fetch("https://asininventory.com/webhook/ai_arkafon_uretim_onay", {
+                        // 2. n8n Tetikleme
+                        fetch(webhookUrl, {
                             method: 'POST', mode: 'no-cors',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                chat_id: chatId, sahne_id: sahneId,
-                                logo_url: userLogoUrl, action: "start_ai_production"
+                                chat_id: chatId, 
+                                sahne_id: sahneId,
+                                raw_fon_url: rawFonUrl,
+                                example_fon_url: exampleFonUrl,
+                                logo_url: userLogoUrl, 
+                                action: "start_ai_production"
                             })
                         });
 
