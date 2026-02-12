@@ -3,138 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OtoFonFX | Panel</title>
+    <title>OtoFonFX | Pro Simulator</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;800&display=swap');
-        :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; --card-bg: #0a0a0a; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; }
-
-        /* TAB SİSTEMİ */
-        .tabs { display: flex; width: 100%; max-width: 500px; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: #111; color: #666; font-family: 'Orbitron'; font-size: 0.65rem; cursor: pointer; transition: 0.3s; }
-        .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-
-        .content-section { display: none; width: 100%; max-width: 500px; animation: fadeIn 0.3s ease; }
-        .content-section.active { display: block; }
-
-        /* SAHNE KARTLARI (LİSTE) */
-        .scene-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 12px; margin-bottom: 15px; position: relative; }
-        .scene-card.active-scene { border-color: var(--accent); box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
-        .scene-thumb { width: 100%; height: 120px; border-radius: 12px; object-fit: cover; margin-bottom: 10px; }
-        .scene-info { display: flex; justify-content: space-between; align-items: center; }
-        .scene-name { font-weight: 800; font-size: 0.8rem; }
-        .badge { font-size: 0.55rem; padding: 4px 8px; border-radius: 6px; font-family: 'Orbitron'; }
-        .badge-active { background: var(--accent); color: #fff; }
-
-        /* SİMÜLATÖR (YENİ KUR) */
-        .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); position: relative; margin-bottom: 15px; }
-        #sim-bg { width: 100%; height: 100%; object-fit: cover; }
-        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scan 3s infinite linear; }
-
-        .btn-main { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 18px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;700&display=swap');
+        :root { --bg: #000; --accent: #3b82f6; --primary: #f59e0b; --border: #1c1c1e; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
+        .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .btn-top-back { text-decoration: none; color: var(--accent); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+
+        .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 500px; margin-bottom: 15px; }
+        .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 6px; text-transform: uppercase; text-align: left; width: 100%; }
+        
+        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 100px; display: flex; align-items: center; justify-content: center; }
+        img { width: 100%; height: 100%; object-fit: cover; }
+        .logo-img { width: auto; height: 60%; object-fit: contain; }
+
+        /* Simülatör Kutusu */
+        .simulator-box { width: 100%; max-width: 500px; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; box-shadow: 0 0 30px rgba(59, 130, 246, 0.15); }
+        #sim-bg { filter: brightness(0.8); } /* Örnek görsel net görünsün diye parlaklığı artırdık */
+        
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scan 3s infinite linear; z-index: 10; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .info-panel { width: 100%; max-width: 500px; text-align: center; margin: 15px 0; padding: 0 10px; }
+        .info-title { font-family: 'Orbitron'; font-size: 0.65rem; color: var(--primary); letter-spacing: 2px; margin-bottom: 8px; }
+        .info-desc { font-size: 0.75rem; color: #8e8e93; line-height: 1.5; }
+
+        .btn-generate { width: 100%; max-width: 500px; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 18px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .btn-subtext { font-size: 0.6rem; opacity: 0.8; font-weight: 400; }
+        .status-badge { font-size: 0.6rem; color: var(--primary); margin-top: 10px; opacity: 0.7; }
     </style>
 </head>
 <body>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('my-scenes', this)">SAHNELERİM</button>
-        <button class="tab-btn" onclick="switchTab('new-setup', this)">YENİ KURULUM</button>
+    <div class="nav-header">
+        <a href="index.html" class="btn-top-back">❮ GERİ</a>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.0</div>
     </div>
 
-    <div id="my-scenes" class="content-section active">
-        <div id="scenes-list">
-            <p style="text-align: center; color: #444; font-size: 0.7rem;">Sahneler yükleniyor...</p>
+    <div class="selection-grid">
+        <div>
+            <div class="section-label">SEÇİLEN FON (BOŞ)</div>
+            <div class="grid-box"><img id="raw-bg-img" src=""></div>
+        </div>
+        <div>
+            <div class="section-label">SİZİN LOGONUZ</div>
+            <div class="grid-box"><img id="user-preview-logo" class="logo-img" src=""></div>
         </div>
     </div>
 
-    <div id="new-setup" class="content-section">
-        <div class="simulator-box">
-            <div class="scan-line"></div>
-            <img id="new-sim-bg" src="" alt="Örnek Yükleniyor...">
-        </div>
-        <div style="text-align: center; margin-bottom: 20px;">
-            <p style="font-size: 0.75rem; color: #888;">Bu fonu beğendiyseniz dükkanınıza kurun.</p>
-            <button class="btn-main" onclick="approveNewScene()">SİSTEMİ AKTİF ET (1 KREDİ)</button>
-        </div>
+    <div class="section-label" style="max-width: 500px;">UYGULAMA ÖRNEĞİ</div>
+    <div class="simulator-box">
+        <div class="scan-line"></div>
+        <img id="sim-bg" src="">
     </div>
+
+    <div class="info-panel">
+        <div class="info-title">DİJİTAL SAHNE KURULUMU</div>
+        <p class="info-desc">
+            Sistem, logonuzu yukarıdaki örnekte olduğu gibi sahneye yerleştirecektir. 
+            <b>Sistemi bir kez kurduğunuzda</b> tüm araçlarınız bu dekor ile çekilmiş gibi görünür.
+        </p>
+    </div>
+
+    <button class="btn-generate" onclick="startProduction()">
+        SİSTEMİ AKTİF ET
+        <span class="btn-subtext">(1 KREDİ - LOGO VE FON SABİTLENİR)</span>
+    </button>
+
+    <div id="status-display" class="status-badge">SENKRONİZASYON AKTİF</div>
 
     <script>
         const tg = window.Telegram.WebApp;
+        tg.ready();
+
         const SUPABASE_URL = "https://bhyeemsvcforqnddhoot.supabase.co";
         const SUPABASE_KEY = "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q"; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        async function loadDashboard() {
+        async function syncDatabase() {
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
-            
             try {
-                // Tüm onaylı sahneleri ve en son denediği sahneyi çekiyoruz
-                let { data: galeriler } = await _supabase
+                // Yeni sütunu (galeri_yazili_ornek_arkaplan_url) sorguya ekledik abi
+                let { data: galeri } = await _supabase
                     .from('galeriler')
-                    .select('*')
+                    .select('stand_gorseli_url, logo_gorsel_url, galeri_yazili_ornek_arkaplan_url')
                     .eq('chat_id', rawID)
                     .order('created_at', { ascending: false });
 
-                if (!galeriler || galeriler.length === 0) return;
+                if (galeri && galeri.length > 0) {
+                    const row = galeri[0];
+                    
+                    // Boş fon ve logo
+                    document.getElementById('raw-bg-img').src = row.stand_gorseli_url;
+                    document.getElementById('user-preview-logo').src = row.logo_gorsel_url;
+                    
+                    // Simülatöre senin hazırladığın ÖRNEK (YAZILI) görseli koyuyoruz
+                    document.getElementById('sim-bg').src = row.galeri_yazili_ornek_arkaplan_url;
 
-                const listCont = document.getElementById('scenes-list');
-                listCont.innerHTML = ""; 
-
-                galeriler.forEach(scene => {
-                    // Eğer sahne zaten onaylıysa (is_approved sütunu olduğunu varsayıyoruz)
-                    if (scene.is_approved) {
-                        const isActive = scene.is_active; // Hangi sahne yayında?
-                        listCont.innerHTML += `
-                            <div class="scene-card ${isActive ? 'active-scene' : ''}">
-                                <img src="${scene.galeri_yazili_ornek_arkaplan_url}" class="scene-thumb">
-                                <div class="scene-info">
-                                    <div class="scene-name">${scene.secili_stand_gorseli.toUpperCase()}</div>
-                                    ${isActive ? '<span class="badge badge-active">YAYINDA</span>' : 
-                                    '<button onclick="setActive(\''+scene.id+'\')" style="font-size:0.6rem; padding:5px 10px; border-radius:8px; border:1px solid #333; background:none; color:#fff;">YAYINA AL</button>'}
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-
-                // En son denediği fonu "Yeni Kurulum" sekmesine atıyoruz
-                document.getElementById('new-sim-bg').src = galeriler[0].galeri_yazili_ornek_arkaplan_url;
-
-            } catch (err) { console.error(err); }
-        }
-
-        async function setActive(id) {
-            // Burada Supabase'de is_active sütunlarını güncelleyen kod çalışacak
-            tg.showConfirm("Bu sahneyi dükkanınızın yeni fonu olarak ayarlamak istiyor musunuz?", (ok) => {
-                if(ok) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                    // n8n'e veya direkt Supabase'e "is_active" güncellemesi gönderilecek
-                    tg.close();
+                    tg.HapticFeedback.impactOccurred('light');
                 }
-            });
+            } catch (err) { 
+                document.getElementById('status-display').innerText = "BAĞLANTI HATASI"; 
+            }
         }
 
-        function approveNewScene() {
-            tg.showConfirm("Bu yeni sahne kurulumu 1 KREDİ tutarındadır. Onaylıyor musunuz?", (ok) => {
-                if(ok) tg.close();
-            });
+        function startProduction() {
+            tg.showConfirm(
+                "Logonuz bu sahneye örnekteki gibi yerleştirilecek ve dükkanınızın yeni dekoru olarak kaydedilecektir. Onaylıyor musunuz?", 
+                (ok) => { if (ok) tg.close(); }
+            );
         }
-
-        window.onload = loadDashboard;
-        tg.ready();
-        tg.expand();
+        window.onload = syncDatabase;
     </script>
 </body>
 </html>
