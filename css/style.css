@@ -217,3 +217,101 @@ select {
     transition: 0.2s;
 }
 .btn-submit:active { transform: scale(0.96); opacity: 0.9; }
+
+
+/* MAĞAZA ÖZEL STİLLERİ */
+.info-bar {
+    background: rgba(28, 28, 30, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 25px;
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+}
+
+.info-bar small {
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
+.package-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.popular {
+    border: 1px solid var(--primary) !important;
+    box-shadow: 0 0 20px rgba(0, 122, 255, 0.1);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.kredi-detay strong {
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1;
+    display: block;
+}
+
+.kredi-detay span {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.fiyat-detay { text-align: right; }
+.fiyat-detay strong {
+    font-size: 1.3rem;
+    display: block;
+    color: #fff;
+    font-weight: 800;
+}
+.fiyat-detay small {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+/* LOADER (ÖDEME EKRANI) */
+#loader {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000; flex-direction: column;
+    backdrop-filter: blur(10px);
+}
+.loader-bar {
+    width: 120px; height: 3px;
+    background: #1c1c1e;
+    position: relative; overflow: hidden;
+    border-radius: 10px;
+}
+.loader-bar::after {
+    content: '';
+    position: absolute; left: -100%; width: 100%; height: 100%;
+    background: var(--primary);
+    animation: loading 1.5s infinite;
+}
+@keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
