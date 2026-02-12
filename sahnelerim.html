@@ -13,8 +13,8 @@
 <body>
 
     <div class="nav-header">
-        <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.0.0</div>
+        <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.3.0</div>
     </div>
 
     <div class="header-area">
@@ -39,9 +39,11 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Telegram Native Geri Butonu (Yedek)
+        // Telegram Native Geri Butonu (Akıllı Dönüş)
         tg.BackButton.show();
-        tg.BackButton.onClick(() => { window.location.href = 'index.html'; });
+        tg.BackButton.onClick(() => { 
+            window.history.back(); // Nereden geldiyse oraya döner
+        });
 
         async function loadCollection() {
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
@@ -71,7 +73,7 @@
                     scenes.forEach(scene => {
                         const isActive = (scene.sahne_url === currentActiveUrl);
                         
-                        // Kart HTML Yapısı - CSS v2.1.0 ile tam uyumlu
+                        // Kart HTML Yapısı - CSS v3.0.0 ile tam uyumlu
                         container.innerHTML += `
                             <div class="scene-card ${isActive ? 'active-scene' : ''}">
                                 ${isActive ? '<div class="active-badge">AKTİF FON</div>' : ''}
