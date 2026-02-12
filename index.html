@@ -22,26 +22,38 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow: hidden;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.06) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        /* Dashboard İçeriğini Biraz Aşağı Çekiyoruz */
         #app-container {
             width: 100%;
             max-width: 400px;
-            margin-top: 45px; /* Tepeden profesyonel boşluk */
+            margin-top: 30px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+        }
+
+        /* Kredi Rozeti Stili */
+        .user-status-bar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        .credit-badge {
+            background: rgba(0, 122, 255, 0.1);
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .credit-badge span {
+            font-size: 0.65rem;
+            font-weight: 800;
+            font-family: 'Orbitron';
+            color: var(--accent);
         }
 
         #registration-banner {
@@ -50,10 +62,9 @@
             background: linear-gradient(45deg, #d97706, #f59e0b);
             border-radius: 18px;
             padding: 12px 18px;
-            margin-bottom: 25px; /* Banner ile logo arası nefes alsın */
+            margin-bottom: 25px;
             text-decoration: none;
             color: #000;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
             animation: pulse 2.5s infinite;
         }
 
@@ -87,9 +98,9 @@
             color: white;
         }
 
-        .main-card:active { transform: scale(0.97); background: #0c0c0e; border-color: #2c2c2e; }
-        .main-card h2 { font-size: 1.05rem; font-weight: 900; margin: 0; letter-spacing: -0.2px; }
-        .main-card p { font-size: 0.72rem; color: #8e8e93; margin: 5px 0 0 0; line-height: 1.3; }
+        .main-card:active { transform: scale(0.97); background: #0c0c0e; }
+        .main-card h2 { font-size: 1.05rem; font-weight: 900; margin: 0; }
+        .main-card p { font-size: 0.72rem; color: #8e8e93; margin: 5px 0 0 0; }
         .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
 
         .studio-card { border-left: 4px solid var(--accent); }
@@ -102,8 +113,6 @@
             font-size: 0.58rem; 
             color: #48484a; 
             text-align: center; 
-            line-height: 1.6; 
-            letter-spacing: 0.5px;
         }
 
         @keyframes pulse {
@@ -116,6 +125,13 @@
 <body>
 
     <div id="app-container">
+        <div class="user-status-bar">
+            <div class="credit-badge">
+                <span id="user-credit-count">..</span>
+                <span>KREDİ</span>
+            </div>
+        </div>
+
         <a href="kayit.html" id="registration-banner">
             <div class="promo-content">
                 <h3>🎁 10 KREDİ HEDİYENİZİ ALIN</h3>
@@ -150,8 +166,7 @@
 
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            Tüm hakları OtoFonFX stüdyosuna aittir.<br>
-            <span style="opacity: 0.5;">v1.1.2 PREMIUM ACCESS</span>
+            v1.1.2 PREMIUM ACCESS
         </div>
     </div>
 
@@ -163,30 +178,32 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        async function checkUserRegistration() {
+        async function initDashboard() {
             const userId = tg.initDataUnsafe?.user?.id || 1017604800;
             
+            // Kullanıcı Kaydı ve Kredi Sorgusu
             let { data: record } = await _supabase
                 .from('galeriler')
-                .select('chat_id')
+                .select('chat_id, kalan_kredi, kayitli_arkaplan_url')
                 .eq('chat_id', userId)
                 .maybeSingle();
 
             if (!record) {
                 document.getElementById('registration-banner').style.display = 'block';
-            }
-
-            const savedName = localStorage.getItem('selectedFonName');
-            if (savedName) {
-                document.getElementById('active-status-text').innerText = "Aktif: " + savedName.toUpperCase();
+                document.getElementById('user-credit-count').innerText = "0";
+            } else {
+                document.getElementById('user-credit-count').innerText = record.kalan_kredi || "0";
+                if (record.kayitli_arkaplan_url) {
+                    document.getElementById('active-status-text').innerText = "Aktif fonunuz kullanıma hazır.";
+                }
             }
         }
 
-        document.querySelectorAll('.main-card, #registration-banner').forEach(card => {
+        document.querySelectorAll('.main-card').forEach(card => {
             card.onclick = () => { tg.HapticFeedback.impactOccurred('medium'); };
         });
 
-        window.onload = checkUserRegistration;
+        window.onload = initDashboard;
     </script>
 </body>
 </html>
