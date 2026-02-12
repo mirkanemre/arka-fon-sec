@@ -14,24 +14,22 @@
         
         #choice-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         .btn-back-float { position: absolute; top: 40px; left: 20px; color: var(--accent); text-decoration: none; font-size: 0.8rem; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
-        .choice-card { width: 100%; max-width: 340px; background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%); border: 1px solid var(--border); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: center; text-decoration: none; color: white; transition: 0.2s; }
+        .choice-card { width: 100%; max-width: 340px; background: linear-gradient(145deg, #0a0a0a 0%, #050505 100%); border: 1px solid var(--border); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: center; color: white; transition: 0.2s; cursor: pointer; border: 1px solid transparent; }
         .choice-card:active { transform: scale(0.96); border-color: var(--accent); }
 
         #main-content { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .nav-header { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 15px; }
-        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
+        .grid-box { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #050505; height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
         .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; border: 1px solid var(--accent); background: #000; position: relative; margin-bottom: 15px; }
         img { width: 100%; height: 100%; object-fit: cover; }
         .logo-img { width: auto !important; height: 50px !important; object-fit: contain; margin-bottom: 8px; }
         .btn-generate { width: 100%; background: linear-gradient(45deg, var(--accent), #1e40af); color: #fff; border: none; padding: 20px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .section-label { font-size: 0.55rem; color: #48484a; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; text-align: left; }
         
-        .btn-upload-logo { background: transparent; border: 1px dashed var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 0.55rem; font-weight: 800; cursor: pointer; }
+        .btn-upload-logo { background: transparent; border: 1px dashed var(--accent); color: var(--accent); padding: 6px 10px; border-radius: 8px; font-size: 0.55rem; font-weight: 800; cursor: pointer; text-transform: uppercase; }
 
         #empty-simulator { display: none; text-align: center; padding: 40px 20px; flex-direction: column; align-items: center; }
-        .empty-icon { font-size: 3rem; margin-bottom: 20px; opacity: 0.5; }
-
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
@@ -41,33 +39,37 @@
         <div class="btn-back-float" onclick="location.href='index.html'">❮ GERİ</div>
         <h1 style="font-family:'Orbitron'; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 30px;">STUDIO CONTROL</h1>
         
-        <a href="sahnelerim.html" class="choice-card">
+        <div class="choice-card" onclick="location.href='sahnelerim.html'">
             <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
-            <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
-            <p style="font-size: 0.7rem; color: #636366;">Aktif konseptleriniz arasında geçiş yapın.</p>
-        </a>
+            <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin: 10px 0;">KAYITLI SAHNELERİM</h2>
+            <p style="font-size: 0.65rem; color: #636366; padding: 0 10px;">Daha önce kurduğunuz konseptlere hızlıca geçin.</p>
+        </div>
 
         <div class="choice-card" onclick="openSimulator()">
             <div style="font-size: 2rem; margin-bottom: 10px;">✨</div>
-            <h2 style="font-family:'Orbitron'; font-size: 0.9rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
-            <p style="font-size: 0.7rem; color: #636366;">Katalogdan yeni bir fon sabitleyin (1 Kredi).</p>
+            <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin: 10px 0;">YENİ KONSEPT KUR</h2>
+            <p style="font-size: 0.65rem; color: #636366; padding: 0 10px;">Katalogdan yeni bir fon sabitleyin (1 Kredi).</p>
         </div>
     </div>
 
     <div id="main-content">
         <div class="nav-header">
             <div style="color: var(--accent); font-weight: 800; font-size: 0.75rem; cursor:pointer;" onclick="location.href='aktif_fon.html'">❮ SEÇİME DÖN</div>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.7</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 800;">OTOFONFX v1.1.9</div>
         </div>
 
         <div id="simulator-ui" style="display: none;">
             <div class="selection-grid">
-                <div><div class="section-label">SEÇİLEN FON</div><div class="grid-box"><img id="raw-bg-img" src=""></div></div>
+                <div>
+                    <div class="section-label">SEÇİLEN FON</div>
+                    <div class="grid-box"><img id="raw-bg-img" src=""></div>
+                </div>
                 <div>
                     <div class="section-label">SİZİN LOGONUZ</div>
                     <div class="grid-box">
-                        <img id="user-preview-logo" class="logo-img" src="">
-                        <button class="btn-upload-logo" onclick="goToBotForLogo()">LOGO YÜKLE</button>
+                        <img id="user-preview-logo" class="logo-img" src="" onerror="this.src='https://via.placeholder.com/200x100?text=LOGO+YOK'">
+                        <button class="btn-upload-logo" onclick="document.getElementById('logo-file').click()">LOGO YÜKLE</button>
+                        <input type="file" id="logo-file" style="display:none" accept="image/*" onchange="handleLogoProcess(this)">
                     </div>
                 </div>
             </div>
@@ -80,12 +82,12 @@
 
             <button class="btn-generate" onclick="startProduction()">
                 SİSTEMİ AKTİF ET
-                <span style="font-size: 0.6rem; opacity: 0.8; font-weight: 400;">(1 KREDİ - FON SABİTLENİR)</span>
+                <span style="font-size: 0.6rem; opacity: 0.8; font-weight: 400;">(1 KREDİ)</span>
             </button>
         </div>
 
         <div id="empty-simulator" style="display: none;">
-            <div class="empty-icon">🖼️</div>
+            <div style="font-size: 3rem; margin-bottom: 20px;">🖼️</div>
             <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; margin-bottom: 15px;">KONSEPT SEÇİLMEDİ</h2>
             <button class="btn-generate" onclick="location.href='arka_fon.html'">FON KATALOĞUNA GİT</button>
         </div>
@@ -102,66 +104,61 @@
         }
 
         async function syncDatabase() {
-            const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
-            const simUI = document.getElementById('simulator-ui');
-            const emptyUI = document.getElementById('empty-simulator');
-
+            const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
             try {
                 let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
 
                 if (record && record.secili_stand_gorseli) {
-                    simUI.style.display = 'block';
-                    emptyUI.style.display = 'none';
+                    document.getElementById('simulator-ui').style.display = 'block';
+                    document.getElementById('empty-simulator').style.display = 'none';
 
-                    // Resim ID'sini alıyoruz (Örn: icmekan_0004)
                     const imgID = record.secili_stand_gorseli;
                     const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
                     
-                    // SEÇİLEN FON (Yazısız) -> _a.jpeg
-                    // galeri_bos_arkaplan klasöründen çekiyoruz
+                    // Yazısız Fon
                     document.getElementById('raw-bg-img').src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
-                    
-                    // UYGULAMA ÖRNEĞİ (Yazılı) -> _b.jpeg
-                    // galeri_yazili_ornek_arkaplan klasöründen çekiyoruz
+                    // Yazılı Örnek
                     document.getElementById('sim-bg').src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
-                    
-                    // LOGO KONTROLÜ
-                    const logoImg = document.getElementById('user-preview-logo');
-                    if(record.logo_gorsel_url && record.logo_gorsel_url !== "") {
-                        logoImg.src = record.logo_gorsel_url;
-                        logoImg.style.display = 'block';
-                    } else {
-                        logoImg.src = 'https://via.placeholder.com/200x100?text=LOGO+EKSİK';
+                    // Logo
+                    if(record.logo_gorsel_url) {
+                        document.getElementById('user-preview-logo').src = record.logo_gorsel_url;
                     }
-                    
+
                     tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    simUI.style.display = 'none';
-                    emptyUI.style.display = 'flex';
+                    document.getElementById('simulator-ui').style.display = 'none';
+                    document.getElementById('empty-simulator').style.display = 'flex';
                 }
-            } catch (err) {
-                console.error("Veri çekme hatası:", err);
-                emptyUI.style.display = 'flex';
-            }
+            } catch (err) { console.error(err); }
         }
 
-        function goToBotForLogo() {
-            tg.showPopup({
-                title: 'Logo Yükleme',
-                message: 'Logonuzu sisteme işleyebilmemiz için lütfen Telegram Botumuza "Görsel" olarak gönderin.',
-                buttons: [{id: 'ok', type: 'default', text: 'BOTA GİT'}]
-            }, (id) => {
-                if(id === 'ok') tg.openTelegramLink("https://t.me/galeri_gorsel_bot"); // Kendi bot linkini yaz abi
-            });
+        function handleLogoProcess(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result.split(',')[1];
+                
+                // N8N İçin Kimlikli Paket (Asla diğer resimlerle karışmaz)
+                const dataPacket = JSON.stringify({
+                    action: "save_user_logo",
+                    chat_id: String(tg.initDataUnsafe?.user?.id || "1017604800"),
+                    content: base64
+                });
+
+                tg.showConfirm("Logo güncellensin mi? (Uygulama mesaj göndermek için kapanacaktır)", (ok) => {
+                    if (ok) {
+                        // Telegram sendData: Garantili ve Engellenemez Veri Transferi
+                        tg.sendData(dataPacket);
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
         }
 
         function startProduction() { 
-            tg.showConfirm("Fon dükkanınıza kurulacak. 1 Kredi düşülecektir. Onaylıyor musunuz?", (ok) => { 
-                if (ok) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                    tg.close(); 
-                }
-            }); 
+            tg.showConfirm("Konsept aktif edilsin mi?", (ok) => { if (ok) tg.close(); }); 
         }
 
         window.onload = () => { 
@@ -171,5 +168,3 @@
     </script>
 </body>
 </html>
-
-
