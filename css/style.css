@@ -1,4 +1,4 @@
-/* OtoFonFX Pro Master Style Sheet v3.0.0 - FINAL */
+/* OtoFonFX Pro Master Style Sheet v3.1.0 - FINAL */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;700;800;900&display=swap');
 
 :root {
@@ -15,7 +15,7 @@
 
 /* 1. TEMEL SIFIRLAMA & GÖRSEL KORUMA */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-img { max-width: 100%; height: auto; display: block; } /* Resimlerin taşmasını engeller */
+img { max-width: 100%; height: auto; display: block; } 
 
 body {
     font-family: 'Inter', sans-serif;
@@ -44,7 +44,6 @@ body {
 /* 3. KART SİSTEMİ */
 .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
 
-/* Standart Dikey Kart */
 .main-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -53,7 +52,7 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden; /* Normal kartlarda taşanı gizle */
+    overflow: hidden;
     transition: 0.2s;
     text-decoration: none;
     color: white;
@@ -65,14 +64,13 @@ body {
 
 /* --- MAĞAZA KARTLARI İÇİN ÖZEL (YATAY & ROZET GÖRÜNÜR) --- */
 .store-row {
-    flex-direction: row !important; /* Yan yana */
+    flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
     padding: 24px !important;
-    overflow: visible !important; /* Rozetin dışarı taşmasına izin ver */
+    overflow: visible !important;
 }
 
-/* Renkler */
 .studio-card { border-left: 4px solid var(--primary); }
 .store-card { border-left: 4px solid var(--success); }
 .active-card { border-left: 4px solid var(--gold); }
@@ -80,18 +78,28 @@ body {
 
 .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
 
+/* --- KAYIT BANNER (YENİ EKLENDİ - GÜZELLEŞTİRİLDİ) --- */
+#registration-banner {
+    width: 100%; max-width: 400px; text-decoration: none; margin-bottom: 25px; display: block;
+    animation: pulse 2s infinite ease-in-out;
+}
+.promo-content {
+    background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); /* Mor-Mavi Geçiş */
+    border-radius: 24px; padding: 20px; text-align: center; color: white;
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.promo-content h3 { font-family: 'Orbitron'; margin: 0 0 5px 0; font-size: 1rem; letter-spacing: 1px; color: #fff; }
+.promo-content p { font-size: 0.7rem; margin: 0; opacity: 0.9; color: #e0e7ff; }
+
 /* 4. MAĞAZA DETAYLARI */
 .package-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 450px; }
-
 .kredi-detay { display: flex; flex-direction: column; text-align: left; }
 .kredi-detay strong { font-size: 1.8rem; font-weight: 900; line-height: 1; color: #fff; }
 .kredi-detay span { color: var(--text-dim); font-size: 0.7rem; font-weight: 700; margin-top: 5px; }
-
 .fiyat-detay { text-align: right; display: flex; flex-direction: column; }
 .fiyat-detay strong { font-size: 1.3rem; display: block; color: #fff; font-weight: 800; }
 .fiyat-detay small { color: var(--primary); font-weight: 800; font-size: 0.7rem; margin-top: 2px; }
-
-/* ROZET AYARI (YUKARI ÇIKARILDI) */
 .popular-badge {
     position: absolute; top: -12px; left: 20px; background: var(--primary); color: white;
     padding: 5px 14px; border-radius: 8px; font-size: 0.6rem; font-weight: 900; letter-spacing: 1px;
@@ -102,7 +110,6 @@ body {
 .user-status-bar { width: 100%; max-width: 400px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
 .credit-badge { background: rgba(0, 122, 255, 0.1); border: 1px solid rgba(0, 122, 255, 0.2); padding: 6px 14px; border-radius: 100px; display: flex; gap: 6px; align-items: center; }
 .credit-badge span { font-size: 0.65rem; font-weight: 800; font-family: 'Orbitron'; color: var(--primary); }
-
 .info-bar { background: rgba(28, 28, 30, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 15px; margin-bottom: 25px; text-align: center; width: 100%; max-width: 450px; }
 .info-flex { display: flex; justify-content: space-around; align-items: center; margin-bottom: 8px; }
 .info-divider { width: 1px; height: 30px; background: var(--border); }
@@ -133,7 +140,7 @@ body {
 .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: scan 3s infinite linear; z-index: 10; }
 
 /* 9. MODAL, FORM VE BUTONLAR */
-#preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+#preview-modal, #kvkk-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(5px); }
 .img-frame { width: 100%; max-width: 400px; background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); padding: 8px; margin-top: -40px; }
 #preview-img { width: 100%; border-radius: 18px; display: block; }
 .modal-controls { position: absolute; bottom: 40px; left: 24px; right: 24px; display: flex; flex-direction: column; gap: 15px; }
@@ -158,4 +165,4 @@ input:focus, select:focus { border-color: var(--primary); background: #0a0a0a; b
 
 @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 50% { transform: scale(1.01); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); } 50% { transform: scale(1.02); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); } }
