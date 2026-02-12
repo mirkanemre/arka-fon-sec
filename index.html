@@ -33,29 +33,30 @@
         </div>
 
         <div class="menu-grid">
-            <a href="arka_fon.html" class="main-card studio-card">
+            
+            <div class="main-card studio-card" onclick="navigate('arka_fon.html')">
                 <h2>Stüdyo Konsept Örnekleri</h2>
                 <p>Arka fon konseptinizi seçin ve çekimi başlatın.</p>
                 <div class="card-icon">🖼️</div>
-            </a>
+            </div>
 
-            <a href="kredial.html" class="main-card store-card">
+            <div class="main-card store-card" onclick="navigate('kredial.html')">
                 <h2>Kredi Mağazası</h2>
                 <p>Paket yükleyin, çekime kesintisiz devam edin.</p>
                 <div class="card-icon">💳</div>
-            </a>
+            </div>
 
-            <a href="aktif_fon.html" class="main-card active-card">
+            <div class="main-card active-card" onclick="navigate('aktif_fon.html')">
                 <h2>Seçili Konsept</h2>
                 <p id="active-status-text">Mevcut konseptinizi görüntüleyin.</p>
                 <div class="card-icon">✨</div>
-            </a>
+            </div>
+
         </div>
 
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            Tüm hakları OtoFonFX stüdyosuna aittir.<br>
-            <span style="opacity: 0.5;">v2.0.0 PREMIUM ACCESS</span>
+            <span style="opacity: 0.5;">v2.3.0 PREMIUM ACCESS</span>
         </div>
     </div>
 
@@ -67,10 +68,20 @@
         tg.expand();
         tg.headerColor = "#000000";
 
+        // Tıklama ve Yönlendirme Fonksiyonu
+        function navigate(url) {
+            // Titreşim ver
+            tg.HapticFeedback.impactOccurred('medium');
+            
+            // Sayfaya git
+            setTimeout(() => {
+                window.location.href = url;
+            }, 50); // Çok kısa bir gecikme titreşimin hissedilmesini sağlar
+        }
+
         async function initDashboard() {
             const userId = tg.initDataUnsafe?.user?.id || 1017604800;
             
-            // Kullanıcı Kaydı ve Kredi Sorgusu
             let { data: record } = await _supabase
                 .from('galeriler')
                 .select('chat_id, kalan_kredi, kayitli_arkaplan_url')
@@ -78,22 +89,15 @@
                 .maybeSingle();
 
             if (!record) {
-                // Kayıt yoksa hediye bannerını göster
                 document.getElementById('registration-banner').style.display = 'block';
                 document.getElementById('user-credit-count').innerText = "0";
             } else {
-                // Kayıt varsa krediyi yaz
                 document.getElementById('user-credit-count').innerText = record.kalan_kredi || "0";
                 if (record.kayitli_arkaplan_url) {
                     document.getElementById('active-status-text').innerText = "Aktif fonunuz kullanıma hazır.";
                 }
             }
         }
-
-        // Kartlara tıklandığında hafif titreşim (Haptic) ekle
-        document.querySelectorAll('.main-card').forEach(card => {
-            card.onclick = () => { tg.HapticFeedback.impactOccurred('medium'); };
-        });
 
         window.onload = initDashboard;
     </script>
