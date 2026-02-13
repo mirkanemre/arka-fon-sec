@@ -12,25 +12,9 @@
 </head>
 <body>
 
-    <div id="choice-overlay">
-        <a href="index.html" class="back-link" style="position: absolute; top: 40px; left: 24px;">❮ GERİ</a>
-        
-        <h1 style="font-family:'Orbitron'; font-size: 1.1rem; letter-spacing: 3px; margin-bottom: 35px; color: var(--primary);">STUDIO CONTROL</h1>
-        
-        <div class="choice-card" onclick="location.href='sahnelerim.html'">
-            <div style="font-size: 2.5rem; margin-bottom: 12px;">📂</div>
-            <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin:0;">KAYITLI SAHNELERİM</h2>
-        </div>
-        
-        <div class="choice-card" onclick="openSimulator()">
-            <div style="font-size: 2.5rem; margin-bottom: 12px;">✨</div>
-            <h2 style="font-family:'Orbitron'; font-size: 0.8rem; margin:0;">YENİ KONSEPT KUR</h2>
-        </div>
-    </div>
-
-    <div id="main-content">
+    <div id="main-content" style="display: block;"> 
         <div class="nav-header">
-            <a href="javascript:void(0)" onclick="location.reload()" class="back-link">❮ GERİ</a>
+            <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
             <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.0</div>
         </div>
 
@@ -78,11 +62,8 @@
         let currentRecord = null;
         let isUserRegistered = false;
 
-        function openSimulator() {
-            document.getElementById('choice-overlay').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            syncDatabase();
-        }
+        // Overlay açma/kapama fonksiyonları silindi.
+        // Direkt veritabanı senkronizasyonu başlar.
 
         async function syncDatabase() {
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
@@ -128,7 +109,6 @@
         }
 
         async function startProduction() {
-            // Kayıt Kontrolü
             if (!isUserRegistered) {
                 tg.HapticFeedback.notificationOccurred('warning');
                 tg.showConfirm("İşleme devam etmek ve 10 Ücretsiz Kredi kazanmak için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
@@ -185,9 +165,8 @@
             });
         }
 
-        window.onload = () => {
-            if (new URLSearchParams(window.location.search).get('mode') === 'new') openSimulator();
-        };
+        // Sayfa açılınca direkt verileri çek
+        window.onload = syncDatabase;
     </script>
 </body>
 </html>
