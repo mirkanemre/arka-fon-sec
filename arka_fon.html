@@ -121,43 +121,44 @@
             document.getElementById('preview-modal').style.display = 'none'; 
         }
 
+        // --- ASIL İŞLEM BURADA ---
         async function saveSelection() {
             const btn = document.getElementById('save-btn-text');
             const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
             
-            // 1. ANLIK KONTROL: Butona basıldığı an veritabanına bak
+            // Butonu kilitle
             btn.innerText = "KONTROL EDİLİYOR...";
             btn.disabled = true;
 
+            // 1. ADIM: Kayıt Kontrolü
             const { data: userRecord } = await _supabase
                 .from('galeriler')
                 .select('id')
                 .eq('chat_id', userId)
                 .maybeSingle();
 
-            // --- SENARYO A: KULLANICI KAYITLI DEĞİL ---
+            // SENARYO 1: Kayıtlı Değilse
             if (!userRecord) {
-                btn.innerText = "BU FONU KULLAN"; // Butonu eski haline getir
+                btn.innerText = "BU FONU KULLAN"; 
                 btn.disabled = false;
                 
                 tg.HapticFeedback.notificationOccurred('warning');
-                tg.showConfirm("Sayın Yetkili, bu konsepti dükkanınıza kurabilmemiz için önce sisteme kayıt olmanız gerekmektedir. Kayıt ekranına yönlendiriliyorsunuz.", (ok) => {
+                tg.showConfirm("Sayın Yetkili, bu konsepti kullanabilmek için önce galeri kaydınızı oluşturmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
                     if (ok) {
                         window.location.href = 'kayit.html';
                     }
                 });
-                return; // İşlemi burada kes, aşağıya geçme
+                return; // Buradan aşağısı çalışmaz
             }
 
-            // --- SENARYO B: KULLANICI KAYITLI (DEVAM ET) ---
+            // SENARYO 2: Kayıtlıysa
             const selectedItem = currentCategoryItems[currentIndex];
 
-            // Kullanıcıdan son onay al
-            tg.showConfirm(`${selectedItem.title} seçilsin ve logo yerleşimi için simülatör açılsın mı?`, async (ok) => {
+            // Onay al ve devam et
+            tg.showConfirm(`${selectedItem.title} seçilsin mi? (Daha sonra logonuzu ekleyebileceğiniz stüdyo ekranına yönlendirileceksiniz.)`, async (ok) => {
                 if (ok) {
-                    btn.innerText = "İŞLENİYOR..."; // Tekrar pasifleştir
-                    btn.disabled = true;
-
+                    btn.innerText = "KAYDEDİLİYOR..."; // Kullanıcı anlasın diye metni değiştirdim
+                    
                     const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
                     const { error } = await _supabase
@@ -169,16 +170,25 @@
                         .eq('chat_id', userId);
 
                     if (!error) {
+                        // --- KRİTİK NOKTA: POPUP İLE YÖNLENDİRME ---
                         tg.HapticFeedback.notificationOccurred('success');
-                        // Kayıtlı kullanıcıyı simülatöre gönder
-                        window.location.href = `aktif_fon.html`; 
+                        
+                        tg.showPopup({
+                            title: '✅ Başarılı!',
+                            message: 'Fon seçimi kaydedildi. Şimdi logonuzu yerleştirmek için Stüdyo ekranına gidiyoruz.',
+                            buttons: [{type: 'ok', text: 'STÜDYOYA GİT'}]
+                        }, () => {
+                            // Kullanıcı "Stüdyoya Git"e bastığı an burası çalışır
+                            window.location.href = 'aktif_fon.html';
+                        });
+
                     } else {
-                        tg.showAlert("Hata: " + error.message);
+                        tg.showAlert("Hata oluştu: " + error.message);
                         btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
                     }
                 } else {
-                    // Kullanıcı vazgeçerse butonu düzelt
+                    // Vazgeçerse
                     btn.innerText = "BU FONU KULLAN";
                     btn.disabled = false;
                 }
