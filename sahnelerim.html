@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="js/config.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Sahnelerim</title>
@@ -9,26 +11,52 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* SAHNELERİM ÖZEL STİL DÜZELTMELERİ */
+        body { padding: 0 !important; }
+
+        #main-content {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh; /* Ekranın tamamını kapla */
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            margin: 0 auto;
+        }
+
+        /* Footer'ı en aşağıya iten güç */
+        .footer {
+            margin-top: auto !important; 
+            padding-top: 40px;
+            padding-bottom: 30px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            #main-content { padding: 15px; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="nav-header">
-        <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.2</div>
-    </div>
+    <div id="main-content">
+        <div class="nav-header">
+            <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
+            <div class="version-label" style="font-size: 0.6rem; color: #48484a; font-weight: 600;"></div>
+        </div>
 
-    <div class="header-area">
-        <h1>KAYITLI SAHNELERİM</h1>
-        <p>Studio Koleksiyonunuz</p>
-    </div>
+        <div class="header-area">
+            <h1>KAYITLI SAHNELERİM</h1>
+            <p>Studio Koleksiyonunuz</p>
+        </div>
 
-    <div id="scenes-container">
-        <p style="text-align:center; opacity:0.6; font-size:0.7rem; font-family:'Orbitron'; color: var(--text-dim); margin-top: 50px;">Sahneler taranıyor...</p>
-    </div>
+        <div id="scenes-container" style="width: 100%;">
+            <p style="text-align:center; opacity:0.6; font-size:0.7rem; font-family:'Orbitron'; color: var(--text-dim); margin-top: 50px;">Sahneler taranıyor...</p>
+        </div>
 
-    <div class="footer">
-        © 2026 OTOFONFX TECHNOLOGIES<br>
-        Tüm hakları OtoFonFX stüdyosuna aittir.
+        <div class="footer"></div>
     </div>
 
     <script>
@@ -39,31 +67,26 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Global kayıt durumu
         let isUserRegistered = false;
 
+        // Telegram Native Geri Butonu
         tg.BackButton.show();
-        tg.BackButton.onClick(() => { 
-            window.history.back(); 
-        });
+        tg.BackButton.onClick(() => { window.history.back(); });
 
         async function loadCollection() {
-            // ID'yi String olarak alıyoruz
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
             const container = document.getElementById('scenes-container');
             
             try {
-                // 1. ÖNCE KULLANICI KAYDINI KONTROL ET
+                // 1. Kullanıcı Kaydını Kontrol Et
                 let { data: galleryInfo } = await _supabase
                     .from('galeriler')
                     .select('kayitli_arkaplan_url')
                     .eq('chat_id', rawID)
                     .maybeSingle();
 
-                // --- GÜVENLİK KİLİDİ ---
                 if (!galleryInfo) {
                     isUserRegistered = false;
-                    // Kullanıcı kayıtlı değilse, sahne aramayı bırak ve uyarı göster.
                     container.innerHTML = `
                         <div style="text-align: center; margin-top: 60px; padding: 20px;">
                             <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
@@ -73,15 +96,13 @@
                             </p>
                             <a href="kayit.html" class="btn-submit" style="display:inline-block; text-decoration:none; padding: 15px 25px; font-size:0.7rem; width:auto;">HEMEN KAYIT OL</a>
                         </div>`;
-                    return; // FONKSİYONU BURADA BİTİR (Aşağıdaki kodlar çalışmaz)
+                    return;
                 }
-                // -----------------------
 
-                // Buraya geldiyse kullanıcı kayıtlıdır.
                 isUserRegistered = true;
                 const currentActiveUrl = galleryInfo.kayitli_arkaplan_url;
 
-                // 2. ŞİMDİ SAHNELERİ ÇEK
+                // 2. Sahneleri Çek
                 let { data: scenes, error } = await _supabase
                     .from('galeri_kayitli_arkaplan')
                     .select('*')
@@ -91,7 +112,6 @@
                 if (error) throw error;
 
                 if (scenes && scenes.length > 0) {
-                    
                     // Aktif olanı en başa al
                     scenes.sort((a, b) => {
                         if (a.sahne_url === currentActiveUrl) return -1;
@@ -123,7 +143,6 @@
                             </div>`;
                     });
                 } else {
-                    // Kayıtlı ama hiç sahnesi yok
                     container.innerHTML = `
                         <div style="text-align: center; margin-top: 60px; padding: 20px;">
                             <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;">📂</div>
@@ -138,11 +157,7 @@
         }
 
         async function activateScene(selectedUrl) {
-            // (Bu kontrol aslında yukarıda yapıldı ama güvenlik için kalsın)
-            if (!isUserRegistered) {
-                window.location.href = 'kayit.html';
-                return;
-            }
+            if (!isUserRegistered) { window.location.href = 'kayit.html'; return; }
 
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
             
@@ -156,12 +171,9 @@
                             .eq('chat_id', rawID);
 
                         if (error) throw error;
-
                         tg.showAlert("Sahne başarıyla aktif edildi!");
                         loadCollection(); 
-                    } catch (e) {
-                        tg.showAlert("Hata: " + e.message);
-                    }
+                    } catch (e) { tg.showAlert("Hata: " + e.message); }
                 }
             });
         }
@@ -170,5 +182,3 @@
     </script>
 </body>
 </html>
-
-
