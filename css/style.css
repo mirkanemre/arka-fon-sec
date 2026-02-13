@@ -1,4 +1,4 @@
-/* OtoFonFX Pro Master Style Sheet v3.5.0 - COMPLETE EDITION */
+/* OtoFonFX Pro Master Style Sheet v3.5.1 - WIDE & NAVIGATION FIX */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;700;800;900&display=swap');
 
 :root {
@@ -30,8 +30,25 @@ body {
     overflow-x: hidden;
 }
 
-/* 2. NAVİGASYON */
-.nav-header { width: 100%; max-width: 500px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
+/* --- ANA KONTEYNERLAR (GENİŞLİK FİX) --- */
+#app-container, #main-content {
+    width: 100%;
+    max-width: 500px; /* Genişliği 500px yaparak dar görünümü engelledik */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 2. NAVİGASYON (GERİ TUŞU AŞAĞI ALINDI) */
+.nav-header { 
+    width: 100%; 
+    max-width: 500px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-top: 25px; /* Geri tuşu yukarıdan 25px aşağı indirildi */
+    margin-bottom: 25px; 
+}
 .back-link { text-decoration: none; color: var(--primary); font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 1px; }
 
 .header-area { text-align: center; margin-bottom: 30px; width: 100%; }
@@ -42,14 +59,7 @@ body {
 .logo-area h1 { font-family: 'Orbitron'; font-weight: 900; font-size: 1.9rem; letter-spacing: 4px; margin: 0; }
 
 /* 3. KARTLAR & GRID */
-.menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
-
-/* Simülatör Ana Kapsayıcı */
-#main-content {
-    width: 100%; 
-    max-width: 500px; 
-    display: none; 
-}
+.menu-grid { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
 
 .main-card {
     background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 22px 24px;
@@ -68,26 +78,25 @@ body {
 .card-icon { position: absolute; right: -10px; bottom: -10px; font-size: 3.5rem; opacity: 0.04; transform: rotate(-15deg); }
 
 /* --- KAYIT BANNER --- */
-#registration-banner { width: 100%; max-width: 400px; text-decoration: none; margin-bottom: 25px; display: block; cursor: pointer; animation: pulse 2s infinite ease-in-out; }
+#registration-banner { width: 100%; max-width: 500px; text-decoration: none; margin-bottom: 25px; display: block; cursor: pointer; animation: pulse 2s infinite ease-in-out; }
 .promo-content { background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); border-radius: 24px; padding: 20px; text-align: center; color: white; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); border: 1px solid rgba(255,255,255,0.2); }
 .promo-content h3 { font-family: 'Orbitron'; margin: 0 0 5px 0; font-size: 1rem; letter-spacing: 1px; color: #fff; }
 .promo-content p { font-size: 0.7rem; margin: 0; opacity: 0.9; color: #e0e7ff; }
 
 /* 4. MAĞAZA DETAYLARI */
-.package-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 450px; }
+.package-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 500px; }
 .kredi-detay { display: flex; flex-direction: column; text-align: left; }
 .kredi-detay strong { font-size: 1.8rem; font-weight: 900; line-height: 1; color: #fff; }
 .kredi-detay span { color: var(--text-dim); font-size: 0.7rem; font-weight: 700; margin-top: 5px; }
 .fiyat-detay { text-align: right; display: flex; flex-direction: column; }
 .fiyat-detay strong { font-size: 1.3rem; display: block; color: #fff; font-weight: 800; }
 .fiyat-detay small { color: var(--primary); font-weight: 800; font-size: 0.7rem; margin-top: 2px; }
-.popular-badge { position: absolute; top: -12px; left: 20px; background: var(--primary); color: white; padding: 5px 14px; border-radius: 8px; font-size: 0.6rem; font-weight: 900; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); z-index: 11; }
 
 /* 5. BAKİYE VE INFO BAR */
-.user-status-bar { width: 100%; max-width: 400px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
+.user-status-bar { width: 100%; max-width: 500px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
 .credit-badge { background: rgba(0, 122, 255, 0.1); border: 1px solid rgba(0, 122, 255, 0.2); padding: 6px 14px; border-radius: 100px; display: flex; gap: 6px; align-items: center; }
 .credit-badge span { font-size: 0.65rem; font-weight: 800; font-family: 'Orbitron'; color: var(--primary); }
-.info-bar { background: rgba(28, 28, 30, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 15px; margin-bottom: 25px; text-align: center; width: 100%; max-width: 450px; }
+.info-bar { background: rgba(28, 28, 30, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 15px; margin-bottom: 25px; text-align: center; width: 100%; max-width: 500px; }
 .info-flex { display: flex; justify-content: space-around; align-items: center; margin-bottom: 8px; }
 .info-divider { width: 1px; height: 30px; background: var(--border); }
 
@@ -99,70 +108,48 @@ body {
 .card-title { padding: 10px 5px; text-align: center; font-weight: 800; font-size: 0.6rem; letter-spacing: 1.2px; background: #000; color: var(--text-dim); text-transform: uppercase; }
 
 /* 7. SAHNELERİM */
-.scene-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 12px; position: relative; margin-bottom: 15px; transition: all 0.3s ease; }
-.scene-card.active-scene { border-color: var(--success) !important; box-shadow: 0 0 30px rgba(52, 199, 89, 0.1); transform: scale(1.02); }
+.scene-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 12px; position: relative; margin-bottom: 15px; transition: all 0.3s ease; width: 100%; }
+.scene-card.active-scene { border-color: var(--success) !important; box-shadow: 0 0 30px rgba(52, 199, 89, 0.1); transform: scale(1.01); }
 .scene-preview { width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; margin-bottom: 12px; background: #111; border: 1px solid #111; }
 .scene-preview img { width: 100%; height: 100%; object-fit: cover; }
 .active-badge { position: absolute; top: 20px; right: 20px; background: var(--success); color: #000; font-family: 'Orbitron'; font-size: 0.55rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; z-index: 10; letter-spacing: 1px; }
-.scene-details { display: flex; justify-content: space-between; align-items: center; padding: 0 5px 5px 5px; }
 
 /* 8. SİMÜLATÖR */
-#choice-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; }
-.choice-card { width: 100%; max-width: 340px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 28px; padding: 30px; margin-bottom: 20px; text-align: center; cursor: pointer; transition: 0.2s; }
 .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 20px; }
-.grid-box { border-radius: 20px; border: 1px solid var(--border); background: #050505; height: 135px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
-.logo-img { height: 45px !important; width: auto !important; object-fit: contain; margin-bottom: 10px; }
+.grid-box { border-radius: 20px; border: 1px solid var(--border); background: #050505; height: 135px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; overflow: hidden; position: relative; }
 .simulator-box { width: 100%; aspect-ratio: 16/9; border-radius: 24px; overflow: hidden; border: 1px solid var(--primary); position: relative; margin-bottom: 20px; background: #050505; }
 .simulator-box img { width: 100%; height: 100%; object-fit: cover; }
 .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: scan 3s infinite linear; z-index: 10; }
 
 /* 9. MODAL & FORM */
 #preview-modal, #kvkk-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(5px); }
-.img-frame { width: 100%; max-width: 400px; background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); padding: 8px; margin-top: -40px; }
-#preview-img { width: 100%; border-radius: 18px; display: block; }
-.modal-controls { position: absolute; bottom: 40px; left: 24px; right: 24px; display: flex; flex-direction: column; gap: 15px; }
 
-.form-card { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
-.input-group label { font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
 input, select { background: #050505; border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: #fff; font-family: 'Inter'; font-size: 0.9rem; width: 100%; appearance: none; transition: 0.3s; }
 input:focus, select:focus { border-color: var(--primary); background: #0a0a0a; box-shadow: 0 0 15px rgba(0, 122, 255, 0.15); }
 
-/* Özel Checkbox */
-input[type="checkbox"] { -webkit-appearance: none; appearance: none; background-color: #fff !important; border: 2px solid var(--primary); border-radius: 6px; width: 24px; height: 24px; display: grid; place-content: center; cursor: pointer; margin-right: 10px; flex-shrink: 0; }
-input[type="checkbox"]:checked { background-color: var(--primary) !important; }
-input[type="checkbox"]:checked::before { content: "✔"; color: white; font-size: 14px; font-weight: 900; }
-
 .btn-submit { background: linear-gradient(45deg, var(--gold), #d97706); color: #000; border: none; padding: 18px; border-radius: 18px; width: 100%; font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.2); }
-.btn-activate { background: #1c1c1e; color: #fff; border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; cursor: pointer; }
-.btn-activate.current { background: rgba(52, 199, 89, 0.1); color: var(--success); border: 1px solid var(--success); cursor: default; }
-.btn-upload-logo { background: transparent; border: 1px dashed var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 10px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
 
-/* 10. BOŞ DURUM TASARIMI (Simülatör İçin) */
+/* 10. BOŞ DURUM TASARIMI (Simulator Fix) */
 .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; text-align: center; color: var(--text-dim); font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.2s; position: absolute; top: 0; left: 0; z-index: 5; }
-.empty-state:active { opacity: 0.7; transform: scale(0.98); }
 .empty-icon { font-size: 1.5rem; margin-bottom: 8px; opacity: 0.5; }
 .empty-text { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: var(--primary); }
-.pulse-border { animation: borderPulse 2s infinite; }
 
 /* 11. DİĞER */
-.footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; line-height: 1.6; }
+.footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; line-height: 1.6; width: 100%; }
 .section-label { font-size: 0.6rem; color: var(--text-dim); font-weight: 800; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
-
-#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; backdrop-filter: blur(10px); }
-.loader-bar { width: 120px; height: 3px; background: #1c1c1e; position: relative; overflow: hidden; border-radius: 10px; }
-.loader-bar::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--primary); animation: loading 1.5s infinite; }
 
 /* --- MOBİL UYUMLULUK (CRITICAL FIX) --- */
 @media (max-width: 480px) {
-    body { padding: 12px !important; }
+    body { padding: 10px !important; } /* Ekranın daha geniş görünmesi için padding düşürüldü */
+    .nav-header { 
+        margin-top: 30px !important; /* Geri tuşu mobilde biraz daha aşağıda */
+        margin-bottom: 15px; 
+    }
     .main-card { padding: 18px !important; }
-    .nav-header { margin-bottom: 15px; }
     .selection-grid { gap: 8px !important; }
-    .grid-box { height: 120px; padding: 5px !important; }
-    #main-content { width: 100% !important; }
+    .grid-box { height: 120px; }
+    #app-container, #main-content { width: 100% !important; max-width: 100% !important; }
 }
 
-@keyframes borderPulse { 0% { border-color: var(--border); } 50% { border-color: var(--primary); } 100% { border-color: var(--border); } }
-@keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); } 50% { transform: scale(1.02); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
