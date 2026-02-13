@@ -14,7 +14,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.3.0</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.1</div>
     </div>
 
     <div class="header-area">
@@ -98,19 +98,43 @@
 
         // Bakiye Yükle
         async function loadUserCredit() {
-            const userId = tg.initDataUnsafe?.user?.id || 1017604800;
-            let { data } = await _supabase.from('galeriler').select('kalan_kredi').eq('chat_id', userId).single();
+            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            
+            // maybeSingle kullanıyoruz ki kayıt yoksa hata vermesin, null dönsün
+            let { data } = await _supabase.from('galeriler').select('kalan_kredi').eq('chat_id', userId).maybeSingle();
+            
             if (data) {
                 document.getElementById('current-credit-val').innerText = data.kalan_kredi;
+            } else {
+                document.getElementById('current-credit-val').innerText = "0";
             }
         }
 
-        // Ödeme Başlat
-        function pay(miktar, fiyat) {
+        // Ödeme Başlat (KORUMALI)
+        async function pay(miktar, fiyat) {
+            tg.HapticFeedback.impactOccurred('medium');
+            
+            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
+
+            // --- 1. KAYIT KONTROLÜ ---
+            // Ödeme ekranını açmadan önce adam kayıtlı mı diye bakıyoruz
+            const { data: userRecord } = await _supabase.from('galeriler').select('id').eq('chat_id', userId).maybeSingle();
+
+            if (!userRecord) {
+                tg.HapticFeedback.notificationOccurred('warning');
+                tg.showConfirm("Satın alma işlemi yapabilmek için önce galeri kaydınızı oluşturmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
+                    if (ok) {
+                        window.location.href = 'kayit.html';
+                    }
+                });
+                return; // İşlemi durdur, webhook tetikleme!
+            }
+            // -------------------------
+
+            // Kayıtlıysa işleme devam et
             tg.HapticFeedback.notificationOccurred('success');
             document.getElementById('loader').style.display = 'flex';
             
-            const userId = tg.initDataUnsafe?.user?.id || "unknown";
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
             
             // Beacon (Arka planda tetikleme)
