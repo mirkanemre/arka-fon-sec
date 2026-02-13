@@ -32,7 +32,7 @@
     <div id="main-content" style="display: block;"> 
         <div class="nav-header">
             <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.0</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.1</div>
         </div>
 
         <div id="simulator-ui">
@@ -81,7 +81,7 @@
         
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            v3.4.0 PRO SIMULATOR
+            v3.4.1 PRO SIMULATOR
         </div>
     </div>
 
@@ -101,7 +101,6 @@
         async function syncDatabase() {
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
             
-            // Elementler
             const imgRaw = document.getElementById('raw-bg-img');
             const msgRaw = document.getElementById('msg-raw');
             const boxRaw = document.getElementById('box-raw');
@@ -120,26 +119,19 @@
                     isUserRegistered = false;
                 }
 
-                // --- GÖRSEL KONTROLÜ ---
-                // Kayıtlı URL varsa ve bir konsept ID'si seçilmişse
                 if (record && record.kayitli_arkaplan_url && record.secili_stand_gorseli) {
-                    
-                    // 1. SEÇİLEN FON (Veritabanındaki Link)
-                    // Tarayıcı önbelleğini aşmak için sonuna ?t= ekledik
+                    // Dolu Durum
                     imgRaw.src = record.kayitli_arkaplan_url + "?t=" + new Date().getTime();
                     imgRaw.style.display = 'block';
-                    msgRaw.style.display = 'none'; // Yazıyı gizle
+                    msgRaw.style.display = 'none';
                     boxRaw.classList.remove('pulse-border');
 
-                    // 2. UYGULAMA ÖRNEĞİ (Otomatik _b.jpeg Bulma)
-                    const imgID = record.secili_stand_gorseli; // örn: icmekan_0001
-                    // _b.jpeg linkini oluşturuyoruz
+                    const imgID = record.secili_stand_gorseli; 
                     imgSim.src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
                     imgSim.style.display = 'block';
-                    msgSim.style.display = 'none'; // Yazıyı gizle
-                    scanLine.style.display = 'block'; // Efekti aç
+                    msgSim.style.display = 'none';
+                    scanLine.style.display = 'block';
 
-                    // 3. LOGO
                     const logo = record.logo_gorsel_url || record.logo_yazisi;
                     if(logo) {
                         const logoImg = document.getElementById('user-preview-logo');
@@ -147,19 +139,16 @@
                         logoImg.style.display = 'block';
                         document.getElementById('upload-btn').innerText = "LOGOYU DEĞİŞTİR";
                     }
-
                     tg.HapticFeedback.impactOccurred('light');
 
                 } else {
-                    // --- BOŞ DURUM (Görsel Yoksa) ---
-                    // Raw Kutu
+                    // Boş Durum
                     imgRaw.style.display = 'none';
-                    msgRaw.style.display = 'flex'; // Yazıyı göster
-                    boxRaw.classList.add('pulse-border'); // Dikkat çek
+                    msgRaw.style.display = 'flex';
+                    boxRaw.classList.add('pulse-border');
 
-                    // Sim Kutu
                     imgSim.style.display = 'none';
-                    msgSim.style.display = 'flex'; // Yazıyı göster
+                    msgSim.style.display = 'flex';
                     scanLine.style.display = 'none';
                 }
 
@@ -167,6 +156,21 @@
         }
 
         async function handleLogoUpload(input) {
+            // --- 1. KAYIT KONTROLÜ (BURASI EKLENDİ) ---
+            if (!isUserRegistered) {
+                // Seçilen dosyayı temizle ki bir dahaki sefere tekrar tetiklenebilsin
+                input.value = ""; 
+                
+                tg.HapticFeedback.notificationOccurred('warning');
+                tg.showConfirm("Logo yükleyebilmek ve işlem yapabilmek için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
+                    if (ok) {
+                        window.location.href = 'kayit.html';
+                    }
+                });
+                return; // İşlemi durdur
+            }
+            // ------------------------------------------
+
             const file = input.files[0];
             if (!file) return;
             const btn = document.getElementById('upload-btn');
@@ -185,6 +189,7 @@
         }
 
         async function startProduction() {
+            // Buton için de ayrıca kontrol
             if (!isUserRegistered) {
                 tg.HapticFeedback.notificationOccurred('warning');
                 tg.showConfirm("İşleme devam etmek için kayıt olmanız gerekiyor. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
