@@ -14,7 +14,6 @@
 
     <div id="choice-overlay">
         <a href="index.html" class="back-link" style="position: absolute; top: 40px; left: 24px;">❮ GERİ</a>
-        
         <h1 style="font-family:'Orbitron'; font-size: 1.1rem; letter-spacing: 3px; margin-bottom: 35px; color: var(--primary);">STUDIO CONTROL</h1>
         
         <div class="choice-card" onclick="location.href='sahnelerim.html'">
@@ -31,7 +30,7 @@
     <div id="main-content">
         <div class="nav-header">
             <a href="javascript:void(0)" onclick="location.reload()" class="back-link">❮ GERİ</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.0.0</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.2.0</div>
         </div>
 
         <div id="simulator-ui">
@@ -54,7 +53,8 @@
             
             <div class="section-label">UYGULAMA ÖRNEĞİ</div>
             <div class="simulator-box">
-                <div class="scan-line"></div> <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover;">
+                <div class="scan-line"></div> 
+                <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover;">
             </div>
 
             <button class="btn-submit" id="production-btn" onclick="startProduction()">
@@ -65,7 +65,7 @@
         
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            v3.0.0 PRO SIMULATOR
+            v3.2.0 PRO SIMULATOR
         </div>
     </div>
 
@@ -73,7 +73,9 @@
         const tg = window.Telegram.WebApp;
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
         const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
+        
         let currentRecord = null;
+        let isUserRegistered = false; // Kayıt durumu
 
         function openSimulator() {
             document.getElementById('choice-overlay').style.display = 'none';
@@ -85,11 +87,17 @@
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
             try {
                 let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
-                currentRecord = record;
+                
+                // Kullanıcı kayıtlı mı kontrolü
+                if(record) {
+                    isUserRegistered = true;
+                    currentRecord = record;
+                } else {
+                    isUserRegistered = false;
+                }
 
                 if (record && record.secili_stand_gorseli) {
                     const imgID = record.secili_stand_gorseli;
-                    // Resim yollarını veritabanı mantığına göre ayarladık
                     document.getElementById('raw-bg-img').src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
                     document.getElementById('sim-bg').src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
                     
@@ -120,6 +128,16 @@
         }
 
         async function startProduction() {
+            // --- KAYIT KONTROLÜ (YENİ) ---
+            if (!isUserRegistered) {
+                tg.HapticFeedback.notificationOccurred('warning');
+                tg.showConfirm("İşleme devam etmek ve 10 Ücretsiz Kredi kazanmak için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
+                    if (ok) window.location.href = 'kayit.html';
+                });
+                return;
+            }
+            // -----------------------------
+
             if (!currentRecord || !currentRecord.secili_stand_gorseli) return;
             const btn = document.getElementById('production-btn');
             const chatId = currentRecord.chat_id;
@@ -133,20 +151,16 @@
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    // Webhook URL'si
                     const webhookUrl = "https://asininventory.com/webhook/ai_arkafon_uretim_onay";
-                    // Fon URL'leri
                     const rawFonUrl = `${supabaseBase}galeri_bos_arkaplan/${sahneId}_a.jpeg`;
                     const exampleFonUrl = `${supabaseBase}galeri_yazili_ornek_arkaplan/${sahneId}_b.jpeg`;
 
                     try {
-                        // 1. Supabase'e Kayıt
                         await _supabase.from('galeri_kayitli_arkaplan').upsert({ 
                             chat_id: chatId, sahne_id: sahneId,
                             sahne_url: `${supabaseBase}galeri_arkaplan/${chatId}/${sahneId}.png` 
                         }, { onConflict: 'chat_id,sahne_id' });
 
-                        // 2. n8n Tetikleme
                         fetch(webhookUrl, {
                             method: 'POST', mode: 'no-cors',
                             headers: { 'Content-Type': 'application/json' },
