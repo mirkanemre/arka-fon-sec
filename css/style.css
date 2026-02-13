@@ -1,4 +1,4 @@
-/* OtoFonFX Pro Master Style Sheet v3.3.0 - WIDE MOBILE */
+/* OtoFonFX Pro Master Style Sheet v3.5.0 - COMPLETE EDITION */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@400;600;700;800;900&display=swap');
 
 :root {
@@ -21,7 +21,7 @@ body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
     margin: 0;
-    padding: 24px; /* PC için normal boşluk */
+    padding: 24px;
     color: #fff;
     min-height: 100vh;
     display: flex;
@@ -44,11 +44,11 @@ body {
 /* 3. KARTLAR & GRID */
 .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
 
-/* Simülatör Ana Kapsayıcı (YENİ EKLENDİ) */
+/* Simülatör Ana Kapsayıcı */
 #main-content {
     width: 100%; 
-    max-width: 500px; /* PC'de taşmasın */
-    display: none; /* JS ile açılacak */
+    max-width: 500px; 
+    display: none; 
 }
 
 .main-card {
@@ -137,7 +137,14 @@ input[type="checkbox"]:checked::before { content: "✔"; color: white; font-size
 .btn-activate.current { background: rgba(52, 199, 89, 0.1); color: var(--success); border: 1px solid var(--success); cursor: default; }
 .btn-upload-logo { background: transparent; border: 1px dashed var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 10px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
 
-/* 10. DİĞER */
+/* 10. BOŞ DURUM TASARIMI (Simülatör İçin) */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; text-align: center; color: var(--text-dim); font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.2s; position: absolute; top: 0; left: 0; z-index: 5; }
+.empty-state:active { opacity: 0.7; transform: scale(0.98); }
+.empty-icon { font-size: 1.5rem; margin-bottom: 8px; opacity: 0.5; }
+.empty-text { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: var(--primary); }
+.pulse-border { animation: borderPulse 2s infinite; }
+
+/* 11. DİĞER */
 .footer { margin-top: auto; padding: 30px 0 20px; font-size: 0.6rem; color: #48484a; text-align: center; line-height: 1.6; }
 .section-label { font-size: 0.6rem; color: var(--text-dim); font-weight: 800; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
 
@@ -147,14 +154,15 @@ input[type="checkbox"]:checked::before { content: "✔"; color: white; font-size
 
 /* --- MOBİL UYUMLULUK (CRITICAL FIX) --- */
 @media (max-width: 480px) {
-    body { padding: 12px !important; } /* Kenar boşluğu yarıya indi */
+    body { padding: 12px !important; }
     .main-card { padding: 18px !important; }
     .nav-header { margin-bottom: 15px; }
-    .selection-grid { gap: 8px !important; } /* Grid arası sıkılaştı */
+    .selection-grid { gap: 8px !important; }
     .grid-box { height: 120px; padding: 5px !important; }
-    #main-content { width: 100% !important; } /* Tam genişlik zorlandı */
+    #main-content { width: 100% !important; }
 }
 
+@keyframes borderPulse { 0% { border-color: var(--border); } 50% { border-color: var(--primary); } 100% { border-color: var(--border); } }
 @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); } 50% { transform: scale(1.02); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); } }
