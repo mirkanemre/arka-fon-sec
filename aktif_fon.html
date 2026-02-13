@@ -32,7 +32,7 @@
     <div id="main-content" style="display: block;"> 
         <div class="nav-header">
             <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.1</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.2</div>
         </div>
 
         <div id="simulator-ui">
@@ -55,7 +55,8 @@
                     <div class="grid-box" style="position: relative;">
                         <img id="user-preview-logo" class="logo-img" src="" onerror="this.style.display='none'" style="z-index: 1; position: relative;">
                         
-                        <button id="upload-btn" class="btn-upload-logo" onclick="document.getElementById('logo-file').click()" style="z-index: 2; position: relative;">LOGO YÜKLE</button>
+                        <button id="upload-btn" class="btn-upload-logo" onclick="triggerLogoUpload()" style="z-index: 2; position: relative;">LOGO YÜKLE</button>
+                        
                         <input type="file" id="logo-file" style="display:none" accept="image/*" onchange="handleLogoUpload(this)">
                     </div>
                 </div>
@@ -81,7 +82,7 @@
         
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            v3.4.1 PRO SIMULATOR
+            v3.4.2 PRO SIMULATOR
         </div>
     </div>
 
@@ -155,22 +156,26 @@
             } catch (err) { console.error("Veri Çekme Hatası:", err); }
         }
 
-        async function handleLogoUpload(input) {
-            // --- 1. KAYIT KONTROLÜ (BURASI EKLENDİ) ---
+        // --- YENİ EKLENEN TETİKLEYİCİ FONKSİYON ---
+        function triggerLogoUpload() {
+            // Önce Kayıt Kontrolü
             if (!isUserRegistered) {
-                // Seçilen dosyayı temizle ki bir dahaki sefere tekrar tetiklenebilsin
-                input.value = ""; 
-                
                 tg.HapticFeedback.notificationOccurred('warning');
                 tg.showConfirm("Logo yükleyebilmek ve işlem yapabilmek için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
                     if (ok) {
                         window.location.href = 'kayit.html';
                     }
                 });
-                return; // İşlemi durdur
+                return; // Kayıtlı değilse burada durur, dosya seçici açılmaz.
             }
-            // ------------------------------------------
+            
+            // Kayıtlıysa Dosya Seçiciyi Aç
+            document.getElementById('logo-file').click();
+        }
+        // -------------------------------------------
 
+        async function handleLogoUpload(input) {
+            // Dosya seçildikten sonraki işlem
             const file = input.files[0];
             if (!file) return;
             const btn = document.getElementById('upload-btn');
@@ -189,7 +194,6 @@
         }
 
         async function startProduction() {
-            // Buton için de ayrıca kontrol
             if (!isUserRegistered) {
                 tg.HapticFeedback.notificationOccurred('warning');
                 tg.showConfirm("İşleme devam etmek için kayıt olmanız gerekiyor. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
