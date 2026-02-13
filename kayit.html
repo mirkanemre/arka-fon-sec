@@ -10,29 +10,31 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
-        /* Checkbox'ı beyaz yap ve belirginleştir */
+        /* Kutucuğun kendisi */
         input[type="checkbox"] {
             -webkit-appearance: none;
             appearance: none;
-            background-color: #fff;
-            border: 1px solid var(--primary);
-            border-radius: 4px;
-            width: 22px;
-            height: 22px;
+            background-color: #fff !important; /* Kesinlikle beyaz */
+            border: 2px solid var(--primary); /* Belirgin mavi çerçeve */
+            border-radius: 6px; /* Kenarları yumuşatılmış */
+            width: 24px;
+            height: 24px;
             display: grid;
             place-content: center;
             cursor: pointer;
+            margin-right: 10px;
+            flex-shrink: 0; /* Küçülmesini engeller */
         }
-        /* İşaretlendiğinde içi mavi olsun */
+        /* İşaretlenince */
         input[type="checkbox"]:checked {
-            background-color: var(--primary);
+            background-color: var(--primary) !important;
         }
-        /* İşaretlendiğinde tık işareti (✔) */
+        /* Tık işareti */
         input[type="checkbox"]:checked::before {
             content: "✔";
             color: white;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 900;
         }
     </style>
 </head>
@@ -75,7 +77,7 @@
             </div>
         </div>
 
-        <div class="input-group" style="flex-direction: row; align-items: flex-start; gap: 12px; margin-top: 5px;">
+        <div class="input-group" style="flex-direction: row; align-items: center; margin-top: 8px;">
             <input type="checkbox" id="kvkk-check">
             <label for="kvkk-check" style="font-size: 0.7rem; color: #fff; text-transform: none; padding: 0; cursor: pointer; line-height: 1.4;">
                 <span onclick="openKvkk(event)" style="color: var(--primary); text-decoration: underline; font-weight: 800;">KVKK Aydınlatma Metni</span>'ni okudum ve onaylıyorum.
@@ -132,7 +134,7 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Şehir Listesi (İstanbul En Başta)
+        // İstanbul, Ankara, İzmir En Başta
         const sehirler = ["İstanbul", "Ankara", "İzmir", "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis", "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"];
         
         const select = document.getElementById('sehir-select');
