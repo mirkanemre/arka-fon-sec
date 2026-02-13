@@ -9,6 +9,28 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: var(--text-dim);
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .empty-state:active { opacity: 0.7; transform: scale(0.98); }
+        .empty-icon { font-size: 1.5rem; margin-bottom: 8px; opacity: 0.5; }
+        .empty-text { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: var(--primary); }
+        
+        /* Boşken kutunun kenarlığı yanıp sönsün */
+        .pulse-border { animation: borderPulse 2s infinite; }
+        @keyframes borderPulse { 0% { border-color: var(--border); } 50% { border-color: var(--primary); } 100% { border-color: var(--border); } }
+    </style>
 </head>
 <body>
 
@@ -20,12 +42,19 @@
 
         <div id="simulator-ui">
             <div class="selection-grid">
+                
                 <div>
                     <div class="section-label">SEÇİLEN FON</div>
-                    <div class="grid-box">
-                        <img id="raw-bg-img" src="" style="width:100%; height:100%; object-fit:cover;">
+                    <div class="grid-box" id="box-raw">
+                        <img id="raw-bg-img" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+                        
+                        <div id="msg-raw" class="empty-state" onclick="goToSelection()">
+                            <div class="empty-icon">🎨</div>
+                            <div class="empty-text">FON SEÇMEK İÇİN<br>TIKLAYINIZ</div>
+                        </div>
                     </div>
                 </div>
+
                 <div>
                     <div class="section-label">SİZİN LOGONUZ</div>
                     <div class="grid-box">
@@ -37,9 +66,17 @@
             </div>
             
             <div class="section-label">UYGULAMA ÖRNEĞİ</div>
-            <div class="simulator-box">
-                <div class="scan-line"></div> 
-                <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover;">
+            <div class="simulator-box" id="box-sim">
+                <div id="scan-line" class="scan-line" style="display:none;"></div> 
+                
+                <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+
+                <div id="msg-sim" class="empty-state" style="height: 100%; justify-content: center; display:flex;" onclick="goToSelection()">
+                    <div>
+                        <div class="empty-icon">🖼️</div>
+                        <div class="empty-text">ÖNİZLEME İÇİN<br>ÖNCE FON SEÇİNİZ</div>
+                    </div>
+                </div>
             </div>
 
             <button class="btn-submit" id="production-btn" onclick="startProduction()">
@@ -62,11 +99,25 @@
         let currentRecord = null;
         let isUserRegistered = false;
 
-        // Overlay açma/kapama fonksiyonları silindi.
-        // Direkt veritabanı senkronizasyonu başlar.
+        // Arka Fon Seçim Sayfasına Yönlendirme
+        function goToSelection() {
+            tg.HapticFeedback.impactOccurred('medium');
+            window.location.href = 'arka_fon.html';
+        }
 
         async function syncDatabase() {
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            
+            // UI Elementlerini Seç
+            const imgRaw = document.getElementById('raw-bg-img');
+            const msgRaw = document.getElementById('msg-raw');
+            const boxRaw = document.getElementById('box-raw');
+
+            const imgSim = document.getElementById('sim-bg');
+            const msgSim = document.getElementById('msg-sim');
+            const boxSim = document.getElementById('box-sim');
+            const scanLine = document.getElementById('scan-line');
+
             try {
                 let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
                 
@@ -77,16 +128,43 @@
                     isUserRegistered = false;
                 }
 
+                // --- SENARYO KONTROLÜ ---
                 if (record && record.secili_stand_gorseli) {
+                    // 1. Durum: Kayıtlı ve Görsel Seçili (RESİMLERİ GÖSTER)
                     const imgID = record.secili_stand_gorseli;
-                    document.getElementById('raw-bg-img').src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
-                    document.getElementById('sim-bg').src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
                     
+                    // Raw Box Ayarları
+                    imgRaw.src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
+                    imgRaw.style.display = 'block';
+                    msgRaw.style.display = 'none';
+                    boxRaw.classList.remove('pulse-border');
+
+                    // Sim Box Ayarları
+                    imgSim.src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
+                    imgSim.style.display = 'block';
+                    msgSim.style.display = 'none';
+                    scanLine.style.display = 'block'; // Çizgiyi aç
+                    
+                    // Logo Ayarı
                     const logo = record.logo_gorsel_url || record.logo_yazisi;
                     if(logo) document.getElementById('user-preview-logo').src = logo + "?t=" + new Date().getTime();
                     
                     tg.HapticFeedback.impactOccurred('light');
+
+                } else {
+                    // 2. Durum: Kayıt Yok veya Görsel Seçilmemiş (UYARI GÖSTER & TIKLANABİLİR YAP)
+                    
+                    // Raw Box - Boş Mod
+                    imgRaw.style.display = 'none';
+                    msgRaw.style.display = 'flex';
+                    boxRaw.classList.add('pulse-border'); // Dikkat çekmesi için
+
+                    // Sim Box - Boş Mod
+                    imgSim.style.display = 'none';
+                    msgSim.style.display = 'flex';
+                    scanLine.style.display = 'none'; // Çizgiyi gizle
                 }
+
             } catch (err) { console.error(err); }
         }
 
@@ -117,7 +195,11 @@
                 return;
             }
 
-            if (!currentRecord || !currentRecord.secili_stand_gorseli) return;
+            if (!currentRecord || !currentRecord.secili_stand_gorseli) {
+                tg.showAlert("Lütfen önce yukarıdaki kutuya tıklayarak bir arka fon seçiniz.");
+                return;
+            }
+
             const btn = document.getElementById('production-btn');
             const chatId = currentRecord.chat_id;
             const sahneId = currentRecord.secili_stand_gorseli;
@@ -165,7 +247,6 @@
             });
         }
 
-        // Sayfa açılınca direkt verileri çek
         window.onload = syncDatabase;
     </script>
 </body>
