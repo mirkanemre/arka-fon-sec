@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="js/config.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Hediye Kayıt</title>
     
     <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
+        /* KAYIT SAYFASI ÖZEL STİLLERİ */
+        body { padding: 0 !important; }
+
+        #main-content {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            margin: 0 auto;
+        }
+
+        /* Checkbox Özel Tasarımı */
         input[type="checkbox"] {
             -webkit-appearance: none; appearance: none;
             background-color: #fff !important; border: 2px solid var(--primary);
@@ -18,56 +35,68 @@
         }
         input[type="checkbox"]:checked { background-color: var(--primary) !important; }
         input[type="checkbox"]:checked::before { content: "✔"; color: white; font-size: 14px; font-weight: 900; }
+
+        /* Footer Alt Sabitleme */
+        .footer {
+            margin-top: auto !important; 
+            padding-top: 40px;
+            padding-bottom: 30px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            #main-content { padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="nav-header">
-        <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.3</div>
-    </div>
+    <div id="main-content">
+        <div class="nav-header">
+            <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
+            <div class="version-label" style="font-size: 0.6rem; color: #48484a; font-weight: 600;"></div>
+        </div>
 
-    <div id="registration-banner" style="display: block; cursor: default;">
-        <div class="promo-content">
-            <h3>🎁 KAYIT OL, 10 KREDİ KAZAN!</h3>
-            <p>Bilgilerini doldur, ilk 10 çekimin bizden olsun.</p>
-        </div>
-    </div>
-
-    <div class="form-card">
-        <div class="input-group">
-            <label>Galeri Adı *</label>
-            <input type="text" id="galeri-adi" placeholder="Örn: OtoFon Galeri">
-        </div>
-        <div class="input-group">
-            <label>Yetkili Adı Soyadı *</label>
-            <input type="text" id="yetkili-adi" placeholder="Ad Soyad">
-        </div>
-        <div class="input-group">
-            <label>Telefon Numarası *</label>
-            <input type="tel" id="tel-no" placeholder="05XX XXX XX XX">
-        </div>
-        <div class="input-group">
-            <label>Şehir *</label>
-            <div style="position: relative;">
-                <select id="sehir-select">
-                    <option value="">Lütfen Şehir Seçin</option>
-                </select>
+        <div id="registration-banner" style="display: block; cursor: default;">
+            <div class="promo-content">
+                <h3>🎁 KAYIT OL, 10 KREDİ KAZAN!</h3>
+                <p>Bilgilerini doldur, ilk 10 çekimin bizden olsun.</p>
             </div>
         </div>
-        <div class="input-group" style="flex-direction: row; align-items: center; margin-top: 8px;">
-            <input type="checkbox" id="kvkk-check">
-            <label for="kvkk-check" style="font-size: 0.7rem; color: #fff; text-transform: none; padding: 0; cursor: pointer; line-height: 1.4;">
-                <span onclick="openKvkk(event)" style="color: var(--primary); text-decoration: underline; font-weight: 800;">KVKK Aydınlatma Metni</span>'ni okudum ve onaylıyorum.
-            </label>
-        </div>
-        <button class="btn-submit" id="submit-btn" onclick="handleRegister()">
-            10 Kredimi Tanımla ve Kaydol
-        </button>
-    </div>
 
-    <div class="footer">
-        © 2026 OTOFONFX TECHNOLOGIES<br>Tüm hakları OtoFonFX stüdyosuna aittir.
+        <div class="form-card">
+            <div class="input-group">
+                <label>Galeri Adı *</label>
+                <input type="text" id="galeri-adi" placeholder="Örn: OtoFon Galeri">
+            </div>
+            <div class="input-group">
+                <label>Yetkili Adı Soyadı *</label>
+                <input type="text" id="yetkili-adi" placeholder="Ad Soyad">
+            </div>
+            <div class="input-group">
+                <label>Telefon Numarası *</label>
+                <input type="tel" id="tel-no" placeholder="05XX XXX XX XX">
+            </div>
+            <div class="input-group">
+                <label>Şehir *</label>
+                <div style="position: relative;">
+                    <select id="sehir-select">
+                        <option value="">Lütfen Şehir Seçin</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group" style="flex-direction: row; align-items: center; margin-top: 8px;">
+                <input type="checkbox" id="kvkk-check">
+                <label for="kvkk-check" style="font-size: 0.7rem; color: #fff; text-transform: none; padding: 0; cursor: pointer; line-height: 1.4;">
+                    <span onclick="openKvkk(event)" style="color: var(--primary); text-decoration: underline; font-weight: 800;">KVKK Aydınlatma Metni</span>'ni okudum ve onaylıyorum.
+                </label>
+            </div>
+            <button class="btn-submit" id="submit-btn" onclick="handleRegister()">
+                10 Kredimi Tanımla ve Kaydol
+            </button>
+        </div>
+
+        <div class="footer"></div>
     </div>
 
     <div id="kvkk-modal">
@@ -97,10 +126,8 @@
 
         async function handleRegister() {
             const btn = document.getElementById('submit-btn');
-            
             const chat_id = String(tg.initDataUnsafe?.user?.id || "1017604800");
             const user_name = tg.initDataUnsafe?.user?.username || "Bilinmiyor";
-            
             const gAdi = document.getElementById('galeri-adi').value;
             const yAdi = document.getElementById('yetkili-adi').value;
             const tNo = document.getElementById('tel-no').value;
@@ -115,29 +142,24 @@
             btn.disabled = true;
 
             try {
-                // 1. DİREKT SUPABASE KAYDI (Sütun isimleri n8n ile eşleşti)
                 const { error } = await _supabase
                     .from('galeriler')
                     .upsert({
                         chat_id: chat_id,
                         galeri_adi: gAdi,
-                        yetkili: yAdi,        // DÜZELDİ: 'yetkili' (n8n JSON'a uygun)
+                        yetkili: yAdi,
                         telefon: tNo,
                         sehir: sSehir,
                         kalan_kredi: 10,
-                        logo_gorsel_url: "",  // DÜZELDİ: Boş string olarak başlatıyoruz
-                        adres: sSehir         // DÜZELDİ: Adres sorulmadığı için Şehir bilgisini buraya da yazdım (Boş kalmasın diye)
+                        logo_gorsel_url: "",
+                        adres: sSehir
                     }, { onConflict: 'chat_id' });
 
                 if (error) throw error;
 
-                // 2. Webhook Tetikleme (Sadece Bildirim İçin)
                 const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${encodeURIComponent(user_name)}&galeri_adi=${encodeURIComponent(gAdi)}&yetkili=${encodeURIComponent(yAdi)}&telefon=${encodeURIComponent(tNo)}&sehir=${encodeURIComponent(sSehir)}`;
-                
-                // Cevap beklemeden gönder (no-cors)
                 fetch(webhookUrl, { mode: 'no-cors' }).catch(console.error);
 
-                // 3. Başarılı Yönlendirme
                 tg.HapticFeedback.notificationOccurred('success');
                 tg.showPopup({
                     title: '🎉 Tebrikler!',
