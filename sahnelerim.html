@@ -14,7 +14,7 @@
 
     <div class="nav-header">
         <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v2.3.0</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.1.0</div>
     </div>
 
     <div class="header-area">
@@ -39,6 +39,9 @@
         tg.expand();
         tg.headerColor = "#000000";
 
+        // Global kayıt durumu değişkeni
+        let isUserRegistered = false;
+
         // Telegram Native Geri Butonu
         tg.BackButton.show();
         tg.BackButton.onClick(() => { 
@@ -50,16 +53,23 @@
             const container = document.getElementById('scenes-container');
             
             try {
-                // 1. Mevcut aktif fonu bul
+                // 1. Kullanıcı Kayıtlı mı? (maybeSingle hata vermez, yoksa null döner)
                 let { data: galleryInfo } = await _supabase
                     .from('galeriler')
                     .select('kayitli_arkaplan_url')
                     .eq('chat_id', rawID)
-                    .single();
+                    .maybeSingle();
 
                 const currentActiveUrl = galleryInfo?.kayitli_arkaplan_url;
+                
+                // Durumu kaydet
+                if (galleryInfo) {
+                    isUserRegistered = true;
+                } else {
+                    isUserRegistered = false;
+                }
 
-                // 2. Kullanıcının sahnelerini çek (Tarihe göre yeniler üstte)
+                // 2. Kullanıcının sahnelerini çek
                 let { data: scenes, error } = await _supabase
                     .from('galeri_kayitli_arkaplan')
                     .select('*')
@@ -70,16 +80,12 @@
 
                 if (scenes && scenes.length > 0) {
                     
-                    // --- KRİTİK DÜZENLEME: AKTİF OLANI EN BAŞA AL ---
+                    // Aktif olanı en başa al (Sıralama)
                     scenes.sort((a, b) => {
-                        // Eğer a aktifse, a'yı öne al (-1)
                         if (a.sahne_url === currentActiveUrl) return -1;
-                        // Eğer b aktifse, b'yi öne al (1)
                         if (b.sahne_url === currentActiveUrl) return 1;
-                        // Değilse sıralamayı bozma (0)
                         return 0;
                     });
-                    // -----------------------------------------------
 
                     container.innerHTML = "";
                     scenes.forEach(scene => {
@@ -120,6 +126,18 @@
         }
 
         async function activateScene(selectedUrl) {
+            // --- YENİ EKLENEN KONTROL ---
+            if (!isUserRegistered) {
+                tg.HapticFeedback.notificationOccurred('warning');
+                tg.showConfirm("Bu sahneyi aktif edebilmek için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
+                    if (ok) {
+                        window.location.href = 'kayit.html';
+                    }
+                });
+                return; // Fonksiyonu burada durdur
+            }
+            // ----------------------------
+
             const rawID = tg.initDataUnsafe?.user?.id || 1017604800;
             
             tg.showConfirm("Bu sahneyi aktif dükkan fonu yapmak istiyor musunuz?", async (ok) => {
@@ -134,7 +152,6 @@
                         if (error) throw error;
 
                         tg.showAlert("Sahne başarıyla aktif edildi!");
-                        // Sayfayı yeniden yükle ki sıralama güncellensin
                         loadCollection(); 
                     } catch (e) {
                         tg.showAlert("Hata: " + e.message);
