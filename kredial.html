@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="js/config.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Ultra Store</title>
@@ -9,74 +11,106 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* MAĞAZA ÖZEL STİL DÜZELTMELERİ */
+        body { padding: 0 !important; }
+
+        #main-content {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh; /* Ekranın tamamını kapla */
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            margin: 0 auto;
+        }
+
+        /* Paket listesinin genişliğini zorla */
+        .package-list {
+            width: 100%;
+            max-width: 100% !important;
+        }
+
+        /* Footer'ı en aşağıya iten güç */
+        .footer {
+            margin-top: auto !important; 
+            padding-top: 40px;
+            padding-bottom: 30px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            #main-content { padding: 15px; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="nav-header">
-        <a href="index.html" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.5.1</div>
-    </div>
-
-    <div class="header-area">
-        <h1>OTOFONFX</h1>
-        <p>Studio Marketplace</p>
-    </div>
-
-    <div class="info-bar">
-        <div class="info-flex">
-            <div style="text-align: center;">
-                <small style="display: block; margin-bottom: 4px;">MEVCUT BAKİYE</small>
-                <strong id="current-credit-val" style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.3rem;">--</strong>
-            </div>
-            <div class="info-divider"></div>
-            <div style="text-align: center;">
-                <small style="display: block; margin-bottom: 4px;">BİRİM MALİYET</small>
-                <strong style="font-family: 'Orbitron'; font-size: 1.2rem;">1 <span style="font-size: 0.6rem; color: var(--text-dim);">KREDİ</span></strong>
-            </div>
-        </div>
-        <small style="opacity: 0.6; font-size: 0.65rem;">Kredilerinizin kullanım süresi yoktur.</small>
-    </div>
-
-    <div class="package-list">
-        
-        <div class="main-card store-row" onclick="pay(10, 500)">
-            <div class="kredi-detay">
-                <strong>10</strong>
-                <span>KREDİ PAKETİ</span>
-            </div>
-            <div class="fiyat-detay">
-                <strong>500 ₺</strong>
-                <small>50₺ / GÖRSEL</small>
-            </div>
+    <div id="main-content">
+        <div class="nav-header">
+            <a href="index.html" class="back-link">❮ GERİ</a>
+            <div class="version-label" style="font-size: 0.6rem; color: #48484a; font-weight: 600;"></div>
         </div>
 
-        <div class="main-card store-row popular" onclick="pay(25, 1100)">
-            <div class="popular-badge">SİSTEM ÖNERİSİ</div>
-            <div class="kredi-detay">
-                <strong>25</strong>
-                <span>KREDİ PAKETİ</span>
+        <div class="header-area">
+            <h1>OTOFONFX</h1>
+            <p>Studio Marketplace</p>
+        </div>
+
+        <div class="info-bar">
+            <div class="info-flex">
+                <div style="text-align: center;">
+                    <small style="display: block; margin-bottom: 4px;">MEVCUT BAKİYE</small>
+                    <strong id="current-credit-val" style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.3rem;">--</strong>
+                </div>
+                <div class="info-divider"></div>
+                <div style="text-align: center;">
+                    <small style="display: block; margin-bottom: 4px;">BİRİM MALİYET</small>
+                    <strong style="font-family: 'Orbitron'; font-size: 1.2rem;">1 <span style="font-size: 0.6rem; color: var(--text-dim);">KREDİ</span></strong>
+                </div>
             </div>
-            <div class="fiyat-detay">
-                <strong>1.100 ₺</strong>
-                <small>44₺ / GÖRSEL</small>
+            <small style="opacity: 0.6; font-size: 0.65rem;">Kredilerinizin kullanım süresi yoktur.</small>
+        </div>
+
+        <div class="package-list">
+            
+            <div class="main-card store-row" onclick="pay(10, 500)">
+                <div class="kredi-detay">
+                    <strong>10</strong>
+                    <span>KREDİ PAKETİ</span>
+                </div>
+                <div class="fiyat-detay">
+                    <strong>500 ₺</strong>
+                    <small>50₺ / GÖRSEL</small>
+                </div>
+            </div>
+
+            <div class="main-card store-row popular" onclick="pay(25, 1100)">
+                <div class="popular-badge">SİSTEM ÖNERİSİ</div>
+                <div class="kredi-detay">
+                    <strong>25</strong>
+                    <span>KREDİ PAKETİ</span>
+                </div>
+                <div class="fiyat-detay">
+                    <strong>1.100 ₺</strong>
+                    <small>44₺ / GÖRSEL</small>
+                </div>
+            </div>
+
+            <div class="main-card store-row" onclick="pay(50, 2000)">
+                <div class="kredi-detay">
+                    <strong>50</strong>
+                    <span>KREDİ PAKETİ</span>
+                </div>
+                <div class="fiyat-detay">
+                    <strong>2.000 ₺</strong>
+                    <small>40₺ / GÖRSEL</small>
+                </div>
             </div>
         </div>
 
-        <div class="main-card store-row" onclick="pay(50, 2000)">
-            <div class="kredi-detay">
-                <strong>50</strong>
-                <span>KREDİ PAKETİ</span>
-            </div>
-            <div class="fiyat-detay">
-                <strong>2.000 ₺</strong>
-                <small>40₺ / GÖRSEL</small>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer">
-        © 2026 OTOFONFX TECHNOLOGIES<br>
-        Tüm hakları OtoFonFX stüdyosuna aittir.
+        <div class="footer"></div>
     </div>
 
     <div id="loader">
@@ -110,16 +144,14 @@
             tg.HapticFeedback.impactOccurred('medium');
             const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
 
-            // --- KRİTİK DÜZELTME BURADA YAPILDI ---
-            // .select('id') olan kısım .select('chat_id') olarak değiştirildi
-            const { data: userRecord, error } = await _supabase
+            // Kayıt Kontrolü (chat_id üzerinden)
+            const { data: userRecord } = await _supabase
                 .from('galeriler')
                 .select('chat_id') 
                 .eq('chat_id', userId)
                 .maybeSingle();
 
             if (!userRecord) {
-                // Eğer kullanıcı kayıtlı değilse uyar ve yönlendir
                 tg.HapticFeedback.notificationOccurred('warning');
                 tg.showConfirm("Satın alma işlemi yapabilmek için önce galeri kaydınızı oluşturmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
                     if (ok) window.location.href = 'kayit.html';
@@ -127,19 +159,16 @@
                 return;
             }
 
-            // Kullanıcı kayıtlıysa ödeme loader'ını göster ve webhook'u tetikle
             tg.HapticFeedback.notificationOccurred('success');
             document.getElementById('loader').style.display = 'flex';
             
             const n8nUrl = `https://asininventory.com/webhook/kredi-satin-al?chat_id=${userId}&miktar=${miktar}&fiyat=${fiyat}`;
             
-            // Beacon tekniği ile webhook tetikleme
             const img = new Image();
             img.onload = () => finish();
             img.onerror = () => finish();
             img.src = n8nUrl;
             
-            // Maksimum 3.5 saniye sonra loader'ı kapat
             setTimeout(finish, 3500);
         }
 
