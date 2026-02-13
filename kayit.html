@@ -6,43 +6,25 @@
     <title>OtoFonFX | Hediye Kayıt</title>
     
     <link rel="stylesheet" href="css/style.css">
-    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        /* Kutucuğun kendisi */
         input[type="checkbox"] {
-            -webkit-appearance: none;
-            appearance: none;
-            background-color: #fff !important; /* Kesinlikle beyaz */
-            border: 2px solid var(--primary); /* Belirgin mavi çerçeve */
-            border-radius: 6px; /* Kenarları yumuşatılmış */
-            width: 24px;
-            height: 24px;
-            display: grid;
-            place-content: center;
-            cursor: pointer;
-            margin-right: 10px;
-            flex-shrink: 0; /* Küçülmesini engeller */
+            -webkit-appearance: none; appearance: none;
+            background-color: #fff !important; border: 2px solid var(--primary);
+            border-radius: 6px; width: 24px; height: 24px;
+            display: grid; place-content: center; cursor: pointer; margin-right: 10px; flex-shrink: 0;
         }
-        /* İşaretlenince */
-        input[type="checkbox"]:checked {
-            background-color: var(--primary) !important;
-        }
-        /* Tık işareti */
-        input[type="checkbox"]:checked::before {
-            content: "✔";
-            color: white;
-            font-size: 14px;
-            font-weight: 900;
-        }
+        input[type="checkbox"]:checked { background-color: var(--primary) !important; }
+        input[type="checkbox"]:checked::before { content: "✔"; color: white; font-size: 14px; font-weight: 900; }
     </style>
 </head>
 <body>
 
     <div class="nav-header">
         <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.1.0</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.2</div>
     </div>
 
     <div id="registration-banner" style="display: block; cursor: default;">
@@ -57,104 +39,69 @@
             <label>Galeri Adı *</label>
             <input type="text" id="galeri-adi" placeholder="Örn: OtoFon Galeri">
         </div>
-        
         <div class="input-group">
             <label>Yetkili Adı Soyadı *</label>
             <input type="text" id="yetkili-adi" placeholder="Ad Soyad">
         </div>
-        
         <div class="input-group">
             <label>Telefon Numarası *</label>
             <input type="tel" id="tel-no" placeholder="05XX XXX XX XX">
         </div>
-        
         <div class="input-group">
             <label>Şehir *</label>
             <div style="position: relative;">
                 <select id="sehir-select">
                     <option value="">Lütfen Şehir Seçin</option>
-                    </select>
+                </select>
             </div>
         </div>
-
         <div class="input-group" style="flex-direction: row; align-items: center; margin-top: 8px;">
             <input type="checkbox" id="kvkk-check">
             <label for="kvkk-check" style="font-size: 0.7rem; color: #fff; text-transform: none; padding: 0; cursor: pointer; line-height: 1.4;">
                 <span onclick="openKvkk(event)" style="color: var(--primary); text-decoration: underline; font-weight: 800;">KVKK Aydınlatma Metni</span>'ni okudum ve onaylıyorum.
             </label>
         </div>
-
         <button class="btn-submit" id="submit-btn" onclick="handleRegister()">
             10 Kredimi Tanımla ve Kaydol
         </button>
     </div>
 
     <div class="footer">
-        © 2026 OTOFONFX TECHNOLOGIES<br>
-        Tüm hakları OtoFonFX stüdyosuna aittir.
+        © 2026 OTOFONFX TECHNOLOGIES<br>Tüm hakları OtoFonFX stüdyosuna aittir.
     </div>
 
     <div id="kvkk-modal">
         <div style="background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 24px; max-height: 80vh; width: 100%; max-width: 500px; display: flex; flex-direction: column;">
-            
             <h3 style="margin-top: 0; font-family: 'Orbitron'; font-size: 1rem; text-align: center; color: var(--primary); margin-bottom: 15px;">AYDINLATMA METNİ</h3>
-            
             <div style="overflow-y: auto; text-align: left; font-size: 0.7rem; color: #ccc; line-height: 1.6; margin-bottom: 20px; padding-right: 5px; border-top: 1px solid var(--border); padding-top: 10px;">
-                <p><strong>1. Veri Sorumlusu:</strong><br>
-                Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") kapsamında, <strong>OtoFonFX</strong> tarafından hazırlanmıştır.</p>
-
-                <p><strong>2. Hangi Verilerinizi Alıyoruz?</strong><br>
-                Hizmet sunabilmek için şu bilgilerinizi işliyoruz:
-                <br>• Kimlik: Ad, Soyad.
-                <br>• İletişim: Telefon Numarası, Şehir.
-                <br>• İşlem: Galeri Adı.</p>
-
-                <p><strong>3. Neden İstiyoruz?</strong><br>
-                • Size özel üyelik oluşturmak ve hediye kredi tanımlamak.<br>
-                • Yapay zeka ile fotoğraf işleme hizmetini sunmak.<br>
-                • Teknik destek gerektiğinde size ulaşabilmek.</p>
-
-                <p><strong>4. Paylaşıyor Muyuz?</strong><br>
-                Hayır. Verileriniz, yasal zorunluluklar (resmi makam talepleri) haricinde <strong>asla üçüncü şahıslara satılmaz veya paylaşılmaz.</strong></p>
-
-                <p><strong>5. Haklarınız (KVKK Madde 11):</strong><br>
-                Dilediğiniz zaman verilerinizin silinmesini, düzeltilmesini veya ne şekilde kullanıldığını sorma hakkına sahipsiniz.</p>
-                
-                <br>
-                <em style="font-size: 0.6rem; opacity: 0.7;">Devam ederek bu metni okuduğunuzu ve onayladığınızı kabul etmiş sayılırsınız.</em>
+                <p><strong>1. Veri Sorumlusu:</strong><br>OtoFonFX tarafından işlenmektedir.</p>
+                <p><strong>2. Amaç:</strong><br>Üyelik oluşturma ve hizmet sunumu.</p>
+                <p><strong>3. Paylaşım:</strong><br>Verileriniz üçüncü şahıslarla paylaşılmaz.</p>
             </div>
-            
             <button onclick="closeKvkk()" class="btn-submit" style="padding: 14px; font-size: 0.75rem; margin-top: auto;">OKUDUM, ANLADIM</button>
         </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready(); 
-        tg.expand();
-        tg.headerColor = "#000000";
+        // Supabase Bağlantısı
+        const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
-        // İstanbul, Ankara, İzmir En Başta
+        tg.ready(); tg.expand(); tg.headerColor = "#000000";
+
+        // Şehirler: İstanbul, Ankara, İzmir başta
         const sehirler = ["İstanbul", "Ankara", "İzmir", "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis", "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"];
-        
         const select = document.getElementById('sehir-select');
-        sehirler.forEach(s => {
-            let opt = document.createElement('option');
-            opt.value = s; opt.innerHTML = s; select.appendChild(opt);
-        });
+        sehirler.forEach(s => { let opt = document.createElement('option'); opt.value = s; opt.innerHTML = s; select.appendChild(opt); });
 
-        function openKvkk(e) {
-            if(e) e.preventDefault(); 
-            document.getElementById('kvkk-modal').style.display = 'flex';
-        }
-        function closeKvkk() {
-            document.getElementById('kvkk-modal').style.display = 'none';
-        }
+        function openKvkk(e) { if(e) e.preventDefault(); document.getElementById('kvkk-modal').style.display = 'flex'; }
+        function closeKvkk() { document.getElementById('kvkk-modal').style.display = 'none'; }
 
-        function handleRegister() {
+        async function handleRegister() {
             const btn = document.getElementById('submit-btn');
+            
             const chat_id = String(tg.initDataUnsafe?.user?.id || "1017604800");
-            const user_name = encodeURIComponent(tg.initDataUnsafe?.user?.username || "Bilinmiyor");
+            const user_name = tg.initDataUnsafe?.user?.username || "Bilinmiyor";
             
             const gAdi = document.getElementById('galeri-adi').value;
             const yAdi = document.getElementById('yetkili-adi').value;
@@ -162,38 +109,54 @@
             const sSehir = document.getElementById('sehir-select').value;
             const kvkkOnay = document.getElementById('kvkk-check').checked;
 
-            if (!gAdi || !yAdi || !tNo || !sSehir) {
-                tg.showAlert("Lütfen tüm alanları doldurunuz!");
-                return;
-            }
-
-            if (!kvkkOnay) {
-                tg.HapticFeedback.notificationOccurred('error');
-                tg.showAlert("Lütfen KVKK Aydınlatma Metni'ni onaylayınız.");
-                return;
-            }
+            if (!gAdi || !yAdi || !tNo || !sSehir) { tg.showAlert("Lütfen tüm alanları doldurunuz!"); return; }
+            if (!kvkkOnay) { tg.HapticFeedback.notificationOccurred('error'); tg.showAlert("Lütfen KVKK metnini onaylayınız."); return; }
 
             tg.HapticFeedback.impactOccurred('medium');
-            btn.innerText = "SİSTEME GİRİLİYOR...";
+            btn.innerText = "KAYIT YAPILIYOR...";
             btn.disabled = true;
 
-            const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${user_name}&galeri_adi=${encodeURIComponent(gAdi)}&yetkili=${encodeURIComponent(yAdi)}&telefon=${encodeURIComponent(tNo)}&sehir=${encodeURIComponent(sSehir)}`;
+            try {
+                // ADIM 1: Veritabanına Garanti Kayıt (Upsert: Varsa güncelle, yoksa ekle)
+                // Bu işlem sayesinde 'Arka Fon Seçimi' sayfası sizi anında tanır.
+                const { error } = await _supabase
+                    .from('galeriler')
+                    .upsert({
+                        chat_id: chat_id,
+                        galeri_adi: gAdi,
+                        yetkili_ad_soyad: yAdi,
+                        telefon: tNo,
+                        sehir: sSehir,
+                        kullanici_adi: user_name,
+                        kalan_kredi: 10,  // Hediye kredi
+                        paket_id: 1       // Başlangıç paketi
+                    }, { onConflict: 'chat_id' }); // ID çakışırsa güncelle, hata verme.
 
-            const img = new Image();
-            img.onload = () => finishRegistration();
-            img.onerror = () => setTimeout(finishRegistration, 1200);
-            img.src = webhookUrl;
-        }
+                if (error) throw error;
 
-        function finishRegistration() {
-            tg.HapticFeedback.notificationOccurred('success');
-            tg.showPopup({
-                title: 'Hoş Geldin! 🎁',
-                message: 'Kaydınız ve 10 ücretsiz krediniz başarıyla tanımlandı. Şimdi ilk konseptinizi seçebilirsiniz.',
-                buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
-            }, () => { 
-                window.location.href = 'arka_fon.html'; 
-            });
+                // ADIM 2: Webhook Tetikleme (Hoş Geldin Mesajı İçin)
+                // 'no-cors' modunda gönderiyoruz, cevap beklemiyoruz (Fire & Forget)
+                // Böylece webhook yavaş olsa bile arayüz donmaz.
+                const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${encodeURIComponent(user_name)}&galeri_adi=${encodeURIComponent(gAdi)}&yetkili=${encodeURIComponent(yAdi)}&telefon=${encodeURIComponent(tNo)}&sehir=${encodeURIComponent(sSehir)}`;
+                
+                fetch(webhookUrl, { mode: 'no-cors' }).catch(e => console.log("Webhook tetiklendi (sessiz)"));
+
+                // ADIM 3: Başarılı Yönlendirme
+                tg.HapticFeedback.notificationOccurred('success');
+                tg.showPopup({
+                    title: '🎉 Tebrikler!',
+                    message: 'Kaydınız başarıyla oluşturuldu ve 10 Kredi hesabınıza tanımlandı. Hoş geldin mesajınız Telegram\'a gönderildi.',
+                    buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
+                }, () => { 
+                    // Kullanıcı tamam diyince fon seçimine at
+                    window.location.href = 'arka_fon.html'; 
+                });
+
+            } catch (err) {
+                tg.showAlert("Kayıt Hatası: " + err.message);
+                btn.innerText = "TEKRAR DENE";
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
