@@ -14,6 +14,7 @@
 
     <div id="choice-overlay">
         <a href="index.html" class="back-link" style="position: absolute; top: 40px; left: 24px;">❮ GERİ</a>
+        
         <h1 style="font-family:'Orbitron'; font-size: 1.1rem; letter-spacing: 3px; margin-bottom: 35px; color: var(--primary);">STUDIO CONTROL</h1>
         
         <div class="choice-card" onclick="location.href='sahnelerim.html'">
@@ -30,7 +31,7 @@
     <div id="main-content">
         <div class="nav-header">
             <a href="javascript:void(0)" onclick="location.reload()" class="back-link">❮ GERİ</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.2.0</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.0</div>
         </div>
 
         <div id="simulator-ui">
@@ -65,7 +66,7 @@
         
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            v3.2.0 PRO SIMULATOR
+            v3.3.0 PRO SIMULATOR
         </div>
     </div>
 
@@ -75,7 +76,7 @@
         const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
         
         let currentRecord = null;
-        let isUserRegistered = false; // Kayıt durumu
+        let isUserRegistered = false;
 
         function openSimulator() {
             document.getElementById('choice-overlay').style.display = 'none';
@@ -88,7 +89,6 @@
             try {
                 let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
                 
-                // Kullanıcı kayıtlı mı kontrolü
                 if(record) {
                     isUserRegistered = true;
                     currentRecord = record;
@@ -128,7 +128,7 @@
         }
 
         async function startProduction() {
-            // --- KAYIT KONTROLÜ (YENİ) ---
+            // Kayıt Kontrolü
             if (!isUserRegistered) {
                 tg.HapticFeedback.notificationOccurred('warning');
                 tg.showConfirm("İşleme devam etmek ve 10 Ücretsiz Kredi kazanmak için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
@@ -136,7 +136,6 @@
                 });
                 return;
             }
-            // -----------------------------
 
             if (!currentRecord || !currentRecord.secili_stand_gorseli) return;
             const btn = document.getElementById('production-btn');
