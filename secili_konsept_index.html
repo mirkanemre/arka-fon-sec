@@ -1,54 +1,92 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="js/config.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Konsept Yönetimi</title>
     
     <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        /* YÖNETİM SAYFASI ÖZEL STİL DÜZELTMELERİ */
+        body { padding: 0 !important; }
+
+        #main-content {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh; /* Ekran yüksekliğini kapla */
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            margin: 0 auto;
+        }
+
+        .menu-grid {
+            width: 100%;
+            max-width: 100% !important;
+        }
+
+        /* Footer'ı en aşağıya iten güç */
+        .footer {
+            margin-top: auto !important; 
+            padding-top: 40px;
+            padding-bottom: 30px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            #main-content { padding: 15px; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="nav-header">
-        <a href="index.html" class="back-link">❮ GERİ </a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.0</div>
-    </div>
-
-    <div class="header-area">
-        <h1>KONSEPT YÖNETİMİ</h1>
-        <p>Studio Control Center</p>
-    </div>
-
-    <div class="menu-grid">
-        
-        <div class="main-card active-card" onclick="navigate('sahnelerim.html')">
-            <h2>KAYITLI SAHNELERİM</h2>
-            <p>Daha önce oluşturduğunuz ve satın aldığınız sahneler arasından seçim yapın.</p>
-            <div class="card-icon">📂</div>
+    <div id="main-content">
+        <div class="nav-header">
+            <a href="index.html" class="back-link">❮ GERİ</a>
+            <div class="version-label" style="font-size: 0.6rem; color: #48484a; font-weight: 600;"></div>
         </div>
 
-        <div class="main-card studio-card" onclick="navigate('aktif_fon.html')">
-            <h2>YENİ KONSEPT KUR</h2>
-            <p>Seçtiğiniz yeni fonu logonuzla test edin ve dükkanınıza kurun.</p>
-            <div class="card-icon">✨</div>
+        <div class="header-area">
+            <h1>KONSEPT YÖNETİMİ</h1>
+            <p>Studio Control Center</p>
         </div>
 
-    </div>
+        <div class="menu-grid">
+            
+            <div class="main-card active-card" onclick="navigate('sahnelerim.html')">
+                <h2>KAYITLI SAHNELERİM</h2>
+                <p>Daha önce oluşturduğunuz ve aktif ettiğiniz sahneler arasından seçim yapın.</p>
+                <div class="card-icon">📂</div>
+            </div>
 
-    <div class="footer">
-        © 2026 OTOFONFX TECHNOLOGIES<br>
-        Tüm hakları OtoFonFX stüdyosuna aittir.
+            <div class="main-card studio-card" onclick="navigate('aktif_fon.html')">
+                <h2>YENİ KONSEPT KUR</h2>
+                <p>Seçtiğiniz yeni fonu logonuzla test edin ve dükkanınıza kurun.</p>
+                <div class="card-icon">✨</div>
+            </div>
+
+        </div>
+
+        <div class="footer"></div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready(); tg.expand(); tg.headerColor = "#000000";
+        tg.ready(); 
+        tg.expand(); 
+        tg.headerColor = "#000000";
 
-        // Geçiş Fonksiyonu
+        // Sayfa Geçiş Fonksiyonu
         function navigate(url) {
             tg.HapticFeedback.impactOccurred('medium');
-            setTimeout(() => { window.location.href = url; }, 50);
+            setTimeout(() => { 
+                window.location.href = url; 
+            }, 50);
         }
     </script>
 </body>
