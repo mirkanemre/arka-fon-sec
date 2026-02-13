@@ -32,7 +32,7 @@
     <div id="main-content" style="display: block;"> 
         <div class="nav-header">
             <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.2</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.3</div>
         </div>
 
         <div id="simulator-ui">
@@ -56,7 +56,6 @@
                         <img id="user-preview-logo" class="logo-img" src="" onerror="this.style.display='none'" style="z-index: 1; position: relative;">
                         
                         <button id="upload-btn" class="btn-upload-logo" onclick="triggerLogoUpload()" style="z-index: 2; position: relative;">LOGO YÜKLE</button>
-                        
                         <input type="file" id="logo-file" style="display:none" accept="image/*" onchange="handleLogoUpload(this)">
                     </div>
                 </div>
@@ -82,7 +81,7 @@
         
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            v3.4.2 PRO SIMULATOR
+            v3.4.3 PRO SIMULATOR
         </div>
     </div>
 
@@ -121,8 +120,10 @@
                 }
 
                 if (record && record.kayitli_arkaplan_url && record.secili_stand_gorseli) {
-                    // Dolu Durum
-                    imgRaw.src = record.kayitli_arkaplan_url + "?t=" + new Date().getTime();
+                    // --- DÜZELTME BURADA: Cache Busting (?t=) Kaldırıldı ---
+                    // Artık resim hafızadan okunur ve çok hızlı yüklenir.
+                    imgRaw.src = record.kayitli_arkaplan_url; 
+                    
                     imgRaw.style.display = 'block';
                     msgRaw.style.display = 'none';
                     boxRaw.classList.remove('pulse-border');
@@ -136,7 +137,8 @@
                     const logo = record.logo_gorsel_url || record.logo_yazisi;
                     if(logo) {
                         const logoImg = document.getElementById('user-preview-logo');
-                        logoImg.src = logo + "?t=" + new Date().getTime();
+                        // Logoda cache busting kalmalı çünkü dosya adı değişmiyor
+                        logoImg.src = logo + "?t=" + new Date().getTime(); 
                         logoImg.style.display = 'block';
                         document.getElementById('upload-btn').innerText = "LOGOYU DEĞİŞTİR";
                     }
@@ -156,26 +158,19 @@
             } catch (err) { console.error("Veri Çekme Hatası:", err); }
         }
 
-        // --- YENİ EKLENEN TETİKLEYİCİ FONKSİYON ---
+        // Logo Yükleme Tetikleyici
         function triggerLogoUpload() {
-            // Önce Kayıt Kontrolü
             if (!isUserRegistered) {
                 tg.HapticFeedback.notificationOccurred('warning');
                 tg.showConfirm("Logo yükleyebilmek ve işlem yapabilmek için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
-                    if (ok) {
-                        window.location.href = 'kayit.html';
-                    }
+                    if (ok) window.location.href = 'kayit.html';
                 });
-                return; // Kayıtlı değilse burada durur, dosya seçici açılmaz.
+                return;
             }
-            
-            // Kayıtlıysa Dosya Seçiciyi Aç
             document.getElementById('logo-file').click();
         }
-        // -------------------------------------------
 
         async function handleLogoUpload(input) {
-            // Dosya seçildikten sonraki işlem
             const file = input.files[0];
             if (!file) return;
             const btn = document.getElementById('upload-btn');
