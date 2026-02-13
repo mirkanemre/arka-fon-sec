@@ -14,7 +14,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ ANA MENÜ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.2</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.5</div>
     </div>
 
     <div class="header-area">
@@ -109,16 +109,16 @@
             btn.disabled = true;
 
             try {
-                // 1. DÜZELTME BURADA YAPILDI: .select('id') YERİNE .select('chat_id') YAZILDI
+                // 1. Önce Kayıt Kontrolü (Garantili Yöntem: chat_id sorgula)
                 const { data: userRecord, error: checkError } = await _supabase
                     .from('galeriler')
-                    .select('chat_id') // <--- HATA BURADAYDI, DÜZELDİ.
+                    .select('chat_id')
                     .eq('chat_id', userId)
                     .maybeSingle();
 
                 if (checkError) throw checkError;
 
-                // --- KAYIT YOKSA ---
+                // --- KAYITLI DEĞİLSE ---
                 if (!userRecord) {
                     btn.innerText = "BU FONU KULLAN";
                     btn.disabled = false;
@@ -129,22 +129,25 @@
                     return;
                 }
 
-                // --- KAYIT VARSA DEVAM ET ---
+                // --- KAYITLIYSA DEVAM ET ---
                 const selectedItem = currentCategoryItems[currentIndex];
+                
+                // Seçilen fonun tam linkini oluştur
                 const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
-                // 2. Güncelleme Yap
+                // 2. Veritabanına Anında Yaz
+                // NOT: 'kayitli_arkaplan_url' sütununu kullanıyoruz çünkü aktif_fon.html buradan okuyor.
                 const { error: updateError } = await _supabase
                     .from('galeriler')
                     .update({ 
-                        kayitli_arkaplan_url: finalStorageUrl,
-                        secili_stand_gorseli: selectedItem.id 
+                        kayitli_arkaplan_url: finalStorageUrl, // URL'yi buraya yazıyoruz
+                        secili_stand_gorseli: selectedItem.id  // ID'yi buraya yazıyoruz
                     })
                     .eq('chat_id', userId);
 
                 if (updateError) throw updateError;
 
-                // 3. Başarılı - Yönlendir
+                // 3. Başarılı - Simülatöre Gönder
                 tg.HapticFeedback.notificationOccurred('success');
                 tg.showPopup({
                     title: '✅ Seçim Başarılı!',
