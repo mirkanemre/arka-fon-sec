@@ -24,7 +24,7 @@
 
     <div class="nav-header">
         <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.2</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.3</div>
     </div>
 
     <div id="registration-banner" style="display: block; cursor: default;">
@@ -84,12 +84,10 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        // Supabase Bağlantısı
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
 
         tg.ready(); tg.expand(); tg.headerColor = "#000000";
 
-        // Şehirler: İstanbul, Ankara, İzmir başta
         const sehirler = ["İstanbul", "Ankara", "İzmir", "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kilis", "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"];
         const select = document.getElementById('sehir-select');
         sehirler.forEach(s => { let opt = document.createElement('option'); opt.value = s; opt.innerHTML = s; select.appendChild(opt); });
@@ -117,38 +115,35 @@
             btn.disabled = true;
 
             try {
-                // ADIM 1: Veritabanına Garanti Kayıt (Upsert: Varsa güncelle, yoksa ekle)
-                // Bu işlem sayesinde 'Arka Fon Seçimi' sayfası sizi anında tanır.
+                // 1. DİREKT SUPABASE KAYDI (Sütun isimleri n8n ile eşleşti)
                 const { error } = await _supabase
                     .from('galeriler')
                     .upsert({
                         chat_id: chat_id,
                         galeri_adi: gAdi,
-                        yetkili_ad_soyad: yAdi,
+                        yetkili: yAdi,        // DÜZELDİ: 'yetkili' (n8n JSON'a uygun)
                         telefon: tNo,
                         sehir: sSehir,
-                        kullanici_adi: user_name,
-                        kalan_kredi: 10,  // Hediye kredi
-                        paket_id: 1       // Başlangıç paketi
-                    }, { onConflict: 'chat_id' }); // ID çakışırsa güncelle, hata verme.
+                        kalan_kredi: 10,
+                        logo_gorsel_url: "",  // DÜZELDİ: Boş string olarak başlatıyoruz
+                        adres: sSehir         // DÜZELDİ: Adres sorulmadığı için Şehir bilgisini buraya da yazdım (Boş kalmasın diye)
+                    }, { onConflict: 'chat_id' });
 
                 if (error) throw error;
 
-                // ADIM 2: Webhook Tetikleme (Hoş Geldin Mesajı İçin)
-                // 'no-cors' modunda gönderiyoruz, cevap beklemiyoruz (Fire & Forget)
-                // Böylece webhook yavaş olsa bile arayüz donmaz.
+                // 2. Webhook Tetikleme (Sadece Bildirim İçin)
                 const webhookUrl = `https://asininventory.com/webhook/kayit-verisi-al?chat_id=${chat_id}&user_name=${encodeURIComponent(user_name)}&galeri_adi=${encodeURIComponent(gAdi)}&yetkili=${encodeURIComponent(yAdi)}&telefon=${encodeURIComponent(tNo)}&sehir=${encodeURIComponent(sSehir)}`;
                 
-                fetch(webhookUrl, { mode: 'no-cors' }).catch(e => console.log("Webhook tetiklendi (sessiz)"));
+                // Cevap beklemeden gönder (no-cors)
+                fetch(webhookUrl, { mode: 'no-cors' }).catch(console.error);
 
-                // ADIM 3: Başarılı Yönlendirme
+                // 3. Başarılı Yönlendirme
                 tg.HapticFeedback.notificationOccurred('success');
                 tg.showPopup({
                     title: '🎉 Tebrikler!',
-                    message: 'Kaydınız başarıyla oluşturuldu ve 10 Kredi hesabınıza tanımlandı. Hoş geldin mesajınız Telegram\'a gönderildi.',
+                    message: 'Kaydınız oluşturuldu ve 10 Kredi hesabınıza tanımlandı.',
                     buttons: [{type: 'ok', text: 'KONSEPT SEÇ'}]
                 }, () => { 
-                    // Kullanıcı tamam diyince fon seçimine at
                     window.location.href = 'arka_fon.html'; 
                 });
 
