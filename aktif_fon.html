@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* Boş Durum Tasarımı */
         .empty-state {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100%; width: 100%; text-align: center;
@@ -21,8 +20,6 @@
         .empty-state:active { opacity: 0.7; transform: scale(0.98); }
         .empty-icon { font-size: 1.5rem; margin-bottom: 8px; opacity: 0.5; }
         .empty-text { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: var(--primary); }
-        
-        /* Yanıp Sönen Kenarlık */
         .pulse-border { animation: borderPulse 2s infinite; }
         @keyframes borderPulse { 0% { border-color: var(--border); } 50% { border-color: var(--primary); } 100% { border-color: var(--border); } }
     </style>
@@ -32,12 +29,11 @@
     <div id="main-content" style="display: block;"> 
         <div class="nav-header">
             <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.4.4</div>
+            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.5.0</div>
         </div>
 
         <div id="simulator-ui">
             <div class="selection-grid">
-                
                 <div>
                     <div class="section-label">SEÇİLEN FON</div>
                     <div class="grid-box" id="box-raw" style="position: relative;">
@@ -54,7 +50,6 @@
                     <div class="section-label">SİZİN LOGONUZ</div>
                     <div class="grid-box" style="position: relative;">
                         <img id="user-preview-logo" class="logo-img" src="" onerror="this.style.display='none'" style="z-index: 1; position: relative;">
-                        
                         <button id="upload-btn" class="btn-upload-logo" onclick="triggerLogoUpload()" style="z-index: 2; position: relative;">LOGO YÜKLE</button>
                         <input type="file" id="logo-file" style="display:none" accept="image/*" onchange="handleLogoUpload(this)">
                     </div>
@@ -64,9 +59,7 @@
             <div class="section-label">UYGULAMA ÖRNEĞİ</div>
             <div class="simulator-box" id="box-sim" style="position: relative; margin-bottom: 10px;">
                 <div id="scan-line" class="scan-line" style="display:none; z-index: 3;"></div> 
-                
                 <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover; display:none; position: absolute; top:0; left:0; z-index: 1;">
-
                 <div id="msg-sim" class="empty-state" onclick="goToSelection()">
                     <div class="empty-icon">🖼️</div>
                     <div class="empty-text">ÖNİZLEME İÇİN<br>ÖNCE FON SEÇİNİZ</div>
@@ -85,7 +78,7 @@
         
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            v3.4.4 PRO SIMULATOR
+            v3.5.0 PRO SIMULATOR
         </div>
     </div>
 
@@ -123,23 +116,27 @@
                     isUserRegistered = false;
                 }
 
-                if (record && record.kayitli_arkaplan_url && record.secili_stand_gorseli) {
-                    // Cache Busting Kaldırıldı (Hızlı Yükleme)
-                    imgRaw.src = record.kayitli_arkaplan_url;
+                // --- GÜNCELLEME BURADA: 'stand_gorseli_url' KONTROLÜ ---
+                // Artık kayitli_arkaplan_url değil, stand_gorseli_url dolu mu diye bakıyoruz.
+                if (record && record.stand_gorseli_url && record.secili_stand_gorseli) {
+                    
+                    // 1. SEÇİLEN FON (Doğru sütundan geliyor)
+                    imgRaw.src = record.stand_gorseli_url;
                     imgRaw.style.display = 'block';
                     msgRaw.style.display = 'none';
                     boxRaw.classList.remove('pulse-border');
 
+                    // 2. UYGULAMA ÖRNEĞİ
                     const imgID = record.secili_stand_gorseli; 
                     imgSim.src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
                     imgSim.style.display = 'block';
                     msgSim.style.display = 'none';
                     scanLine.style.display = 'block';
 
+                    // 3. LOGO
                     const logo = record.logo_gorsel_url || record.logo_yazisi;
                     if(logo) {
                         const logoImg = document.getElementById('user-preview-logo');
-                        // Logoda cache busting var
                         logoImg.src = logo + "?t=" + new Date().getTime(); 
                         logoImg.style.display = 'block';
                         document.getElementById('upload-btn').innerText = "LOGOYU DEĞİŞTİR";
@@ -147,6 +144,7 @@
                     tg.HapticFeedback.impactOccurred('light');
 
                 } else {
+                    // Boş Durum
                     imgRaw.style.display = 'none';
                     msgRaw.style.display = 'flex';
                     boxRaw.classList.add('pulse-border');
@@ -214,13 +212,17 @@
                     const chatId = currentRecord.chat_id;
                     const sahneId = currentRecord.secili_stand_gorseli;
                     const webhookUrl = "https://asininventory.com/webhook/ai_arkafon_uretim_onay";
-                    const rawFonUrl = `${supabaseBase}galeri_bos_arkaplan/${sahneId}_a.jpeg`;
+                    
+                    // --- BURASI ÖNEMLİ: n8n'e ham görseli (stand_gorseli_url) gönderiyoruz ---
+                    const rawFonUrl = currentRecord.stand_gorseli_url; // DÜZELTİLDİ
+                    
                     const exampleFonUrl = `${supabaseBase}galeri_yazili_ornek_arkaplan/${sahneId}_b.jpeg`;
 
                     try {
+                        // Sahnelerim tablosuna kaydederken de artık doğru veriyi basıyoruz
                         await _supabase.from('galeri_kayitli_arkaplan').upsert({ 
                             chat_id: chatId, sahne_id: sahneId,
-                            sahne_url: `${supabaseBase}galeri_arkaplan/${chatId}/${sahneId}.png` 
+                            sahne_url: rawFonUrl // Ham görseli kaydet (veya üretim sonrası değişecekse n8n çıktısını bekle)
                         }, { onConflict: 'chat_id,sahne_id' });
 
                         fetch(webhookUrl, {
@@ -228,7 +230,8 @@
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 chat_id: chatId, sahne_id: sahneId,
-                                raw_fon_url: rawFonUrl, example_fon_url: exampleFonUrl,
+                                raw_fon_url: rawFonUrl, // Webhook'a doğru URL gidiyor
+                                example_fon_url: exampleFonUrl,
                                 logo_url: userLogoUrl, action: "start_ai_production"
                             })
                         });
