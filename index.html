@@ -9,6 +9,17 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        #app-container {
+            width: 100%;
+            max-width: 500px; /* Simülatör ile aynı genişlik */
+        }
+        /* Menü grid'i 400px sınırından kurtarıp 500px'e yayıyoruz */
+        .menu-grid {
+            max-width: 100% !important; 
+        }
+    </style>
 </head>
 <body>
 
@@ -48,7 +59,7 @@
 
             <div class="main-card active-card" onclick="navigate('secili_konsept_index.html')">
                 <h2>Seçili Konsept</h2>
-                <p id="active-status-text">Mevcut konseptinizi görüntüleyin.</p>
+                <p id="active-status-text">Henüz bir konsept seçilmedi.</p>
                 <div class="card-icon">✨</div>
             </div>
 
@@ -56,7 +67,7 @@
 
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            <span style="opacity: 0.5;">v3.3.0 PREMIUM ACCESS</span>
+            <span style="opacity: 0.5;">v3.5.0 PREMIUM ACCESS</span>
         </div>
     </div>
 
@@ -68,7 +79,6 @@
         tg.expand();
         tg.headerColor = "#000000";
 
-        // Sayfa Değiştirme Fonksiyonu
         function navigate(url) {
             tg.HapticFeedback.impactOccurred('medium');
             setTimeout(() => {
@@ -79,20 +89,38 @@
         async function initDashboard() {
             const userId = tg.initDataUnsafe?.user?.id || 1017604800;
             
+            // Tüm gerekli sütunları çekiyoruz
             let { data: record } = await _supabase
                 .from('galeriler')
-                .select('chat_id, kalan_kredi, kayitli_arkaplan_url')
+                .select('chat_id, kalan_kredi, kayitli_arkaplan_url, stand_gorseli_url')
                 .eq('chat_id', userId)
                 .maybeSingle();
 
             if (!record) {
-                // Kayıtlı değilse Mor Banner görünür
+                // Kayıtlı değilse
                 document.getElementById('registration-banner').style.display = 'block';
                 document.getElementById('user-credit-count').innerText = "0";
             } else {
+                // Kayıtlıysa
                 document.getElementById('user-credit-count').innerText = record.kalan_kredi || "0";
+                
+                // --- DURUM METNİ MANTIĞI ---
+                const statusText = document.getElementById('active-status-text');
+                
                 if (record.kayitli_arkaplan_url) {
-                    document.getElementById('active-status-text').innerText = "Aktif fonunuz kullanıma hazır.";
+                    // 1. En iyi durum: Aktif sahne var
+                    statusText.innerText = "Aktif fonunuz kullanıma hazır.";
+                    statusText.style.color = "#34c759"; // Yeşil
+                } 
+                else if (record.stand_gorseli_url) {
+                    // 2. Ara durum: Fon seçmiş ama henüz logo koyup üretmemiş
+                    statusText.innerText = "Taslak konseptiniz var. Kurulumu tamamlayın.";
+                    statusText.style.color = "#f59e0b"; // Sarı
+                } 
+                else {
+                    // 3. Başlangıç: Hiçbir şey yok
+                    statusText.innerText = "Mevcut konseptinizi görüntüleyin.";
+                    statusText.style.color = "#8e8e93"; // Gri
                 }
             }
         }
