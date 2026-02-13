@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="js/config.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Arka Fon Seçimi</title>
@@ -9,46 +11,75 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* SAYFA ÖZEL STİL DÜZELTMELERİ */
+        body { padding: 0 !important; }
+
+        #main-content {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            margin: 0 auto;
+        }
+
+        /* Footer'ı en alta iten güç */
+        .footer {
+            margin-top: auto !important; 
+            padding-top: 40px;
+            padding-bottom: 30px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            #main-content { padding: 15px; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="nav-header">
-        <a href="index.html" class="back-link">❮ GERİ </a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.5.0</div>
-    </div>
-
-    <div class="header-area">
-        <h1>STÜDYO</h1>
-        <p id="view-title">Kategori Seçiniz</p>
-    </div>
-
-    <div id="category-view" class="grid">
-        <div class="card" onclick="renderSubMenu('ic_mekan', 'İÇ MEKAN')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001_c.jpeg"></div>
-            <div class="card-title">İÇ MEKAN</div>
+    <div id="main-content">
+        <div class="nav-header">
+            <a href="index.html" class="back-link">❮ GERİ</a>
+            <div class="version-label" style="font-size: 0.6rem; color: #48484a; font-weight: 600;"></div>
         </div>
-        <div class="card" onclick="renderSubMenu('dis_mekan', 'DIŞ MEKAN')">
-            <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dismekan_0001_c.jpeg"></div>
-            <div class="card-title">DIŞ MEKAN</div>
+
+        <div class="header-area">
+            <h1>STÜDYO</h1>
+            <p id="view-title">Kategori Seçiniz</p>
         </div>
-    </div>
 
-    <div id="image-view" class="grid" style="display: none;"></div>
-    
-    <button id="back-btn" class="btn-submit" style="display: none; background: #333; margin-top: 20px;" onclick="showCategoryMenu()">← KATEGORİLERE DÖN</button>
-
-    <div class="footer">© 2026 OTOFONFX TECHNOLOGIES</div>
-
-    <div id="preview-modal">
-        <button style="position: absolute; top: 40px; right: 24px; background: #1c1c1e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index:1005; font-weight:bold;" onclick="closePreview()">✕</button>
-        <div class="img-frame"><img id="preview-img" src=""></div>
-        <div class="modal-controls">
-            <div style="text-align: center;">
-                <span id="preview-title" style="font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; letter-spacing: 2px; display: block;"></span>
-                <span style="font-size: 0.6rem; color: #8e8e93; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block;">Stüdyo Konsepti Seçildi</span>
+        <div id="category-view" class="grid">
+            <div class="card" onclick="renderSubMenu('ic_mekan', 'İÇ MEKAN')">
+                <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001_c.jpeg"></div>
+                <div class="card-title">İÇ MEKAN</div>
             </div>
-            <button class="btn-submit" id="save-btn-text" onclick="saveSelection()">BU FONU KULLAN</button>
+            <div class="card" onclick="renderSubMenu('dis_mekan', 'DIŞ MEKAN')">
+                <div class="img-wrapper"><img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dismekan_0001_c.jpeg"></div>
+                <div class="card-title">DIŞ MEKAN</div>
+            </div>
         </div>
+
+        <div id="image-view" class="grid" style="display: none;"></div>
+        
+        <button id="back-btn" class="btn-submit" style="display: none; background: #333; margin-top: 20px;" onclick="showCategoryMenu()">← KATEGORİLERE DÖN</button>
+
+        <div id="preview-modal">
+            <button style="position: absolute; top: 40px; right: 24px; background: #1c1c1e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index:1005; font-weight:bold;" onclick="closePreview()">✕</button>
+            <div class="img-frame"><img id="preview-img" src=""></div>
+            <div class="modal-controls">
+                <div style="text-align: center;">
+                    <span id="preview-title" style="font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; letter-spacing: 2px; display: block;"></span>
+                    <span style="font-size: 0.6rem; color: #8e8e93; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block;">Stüdyo Konsepti Seçildi</span>
+                </div>
+                <button class="btn-submit" id="save-btn-text" onclick="saveSelection()">BU FONU KULLAN</button>
+            </div>
+        </div>
+
+        <div class="footer"></div>
     </div>
 
     <script>
@@ -60,7 +91,10 @@
         let currentCategoryItems = [];
         let currentIndex = 0;
         
-        const config = { ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], dis_mekan: ['dismekan_0001', 'dismekan_0002'] };
+        const config = { 
+            ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], 
+            dis_mekan: ['dismekan_0001', 'dismekan_0002'] 
+        };
         const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
 
         function renderSubMenu(cat, title) {
@@ -109,7 +143,6 @@
             btn.disabled = true;
 
             try {
-                // 1. Kayıt Kontrolü
                 const { data: userRecord, error: checkError } = await _supabase
                     .from('galeriler')
                     .select('chat_id')
@@ -128,11 +161,9 @@
                     return;
                 }
 
-                // 2. Kayıt İşlemi
                 const selectedItem = currentCategoryItems[currentIndex];
                 const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
-                // Doğru sütun: stand_gorseli_url
                 const { error: updateError } = await _supabase
                     .from('galeriler')
                     .update({ 
@@ -161,4 +192,3 @@
     </script>
 </body>
 </html>
-
