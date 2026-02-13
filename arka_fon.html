@@ -128,15 +128,15 @@
                     return;
                 }
 
-                // --- GÜNCELLEME BURADA YAPILDI ---
+                // 2. Kayıt İşlemi
                 const selectedItem = currentCategoryItems[currentIndex];
                 const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
-                // 'stand_gorseli_url' sütununa kaydediyoruz (kayitli_arkaplan_url DEĞİL)
+                // Doğru sütun: stand_gorseli_url
                 const { error: updateError } = await _supabase
                     .from('galeriler')
                     .update({ 
-                        stand_gorseli_url: finalStorageUrl, // YENİ SÜTUN
+                        stand_gorseli_url: finalStorageUrl, 
                         secili_stand_gorseli: selectedItem.id 
                     })
                     .eq('chat_id', userId);
