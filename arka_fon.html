@@ -14,7 +14,7 @@
 
     <div class="nav-header">
         <a href="index.html" class="back-link">❮ ANA MENÜ</a>
-        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.1</div>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.2</div>
     </div>
 
     <div class="header-area">
@@ -60,7 +60,6 @@
         let currentCategoryItems = [];
         let currentIndex = 0;
         
-        // Config ve BaseUrl
         const config = { ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], dis_mekan: ['dismekan_0001', 'dismekan_0002'] };
         const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
 
@@ -104,17 +103,16 @@
 
         async function saveSelection() {
             const btn = document.getElementById('save-btn-text');
-            // ID'yi kesinlikle String'e çeviriyoruz
             const userId = String(tg.initDataUnsafe?.user?.id || "1017604800"); 
             
             btn.innerText = "KONTROL EDİLİYOR...";
             btn.disabled = true;
 
             try {
-                // 1. Önce Veritabanında Kullanıcı Var mı Bak
+                // 1. DÜZELTME BURADA YAPILDI: .select('id') YERİNE .select('chat_id') YAZILDI
                 const { data: userRecord, error: checkError } = await _supabase
                     .from('galeriler')
-                    .select('id')
+                    .select('chat_id') // <--- HATA BURADAYDI, DÜZELDİ.
                     .eq('chat_id', userId)
                     .maybeSingle();
 
