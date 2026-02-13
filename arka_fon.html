@@ -3,251 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OtoFonFX | Pro Simulator</title>
+    <title>OtoFonFX | Arka Fon Seçimi</title>
     
     <link rel="stylesheet" href="css/style.css">
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
-            color: var(--text-dim);
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .empty-state:active { opacity: 0.7; transform: scale(0.98); }
-        .empty-icon { font-size: 1.5rem; margin-bottom: 8px; opacity: 0.5; }
-        .empty-text { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: var(--primary); }
-        
-        /* Boşken kutunun kenarlığı yanıp sönsün */
-        .pulse-border { animation: borderPulse 2s infinite; }
-        @keyframes borderPulse { 0% { border-color: var(--border); } 50% { border-color: var(--primary); } 100% { border-color: var(--border); } }
-    </style>
 </head>
 <body>
 
-    <div id="main-content" style="display: block;"> 
-        <div class="nav-header">
-            <a href="javascript:void(0)" onclick="window.history.back()" class="back-link">❮ GERİ</a>
-            <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.0</div>
+    <div class="nav-header">
+        <a href="index.html" class="back-link">❮ ANA MENÜ</a>
+        <div style="font-size: 0.6rem; color: #48484a; font-weight: 600;">OTOFONFX v3.3.0</div>
+    </div>
+
+    <div class="header-area">
+        <h1>STÜDYO</h1>
+        <p id="view-title">Kategori Seçiniz</p>
+    </div>
+
+    <div id="category-view" class="grid">
+        <div class="card" onclick="renderSubMenu('ic_mekan', 'İÇ MEKAN')">
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/ic/icmekan_0001_c.jpeg">
+            </div>
+            <div class="card-title">İÇ MEKAN</div>
         </div>
-
-        <div id="simulator-ui">
-            <div class="selection-grid">
-                
-                <div>
-                    <div class="section-label">SEÇİLEN FON</div>
-                    <div class="grid-box" id="box-raw">
-                        <img id="raw-bg-img" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
-                        
-                        <div id="msg-raw" class="empty-state" onclick="goToSelection()">
-                            <div class="empty-icon">🎨</div>
-                            <div class="empty-text">FON SEÇMEK İÇİN<br>TIKLAYINIZ</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="section-label">SİZİN LOGONUZ</div>
-                    <div class="grid-box">
-                        <img id="user-preview-logo" class="logo-img" src="" onerror="this.src='https://via.placeholder.com/200x100?text=LOGO+YOK'">
-                        <button id="upload-btn" class="btn-upload-logo" onclick="document.getElementById('logo-file').click()">LOGO YÜKLE</button>
-                        <input type="file" id="logo-file" style="display:none" accept="image/*" onchange="handleLogoUpload(this)">
-                    </div>
-                </div>
+        <div class="card" onclick="renderSubMenu('dis_mekan', 'DIŞ MEKAN')">
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/dis/dismekan_0001_c.jpeg">
             </div>
-            
-            <div class="section-label">UYGULAMA ÖRNEĞİ</div>
-            <div class="simulator-box" id="box-sim">
-                <div id="scan-line" class="scan-line" style="display:none;"></div> 
-                
-                <img id="sim-bg" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+            <div class="card-title">DIŞ MEKAN</div>
+        </div>
+    </div>
 
-                <div id="msg-sim" class="empty-state" style="height: 100%; justify-content: center; display:flex;" onclick="goToSelection()">
-                    <div>
-                        <div class="empty-icon">🖼️</div>
-                        <div class="empty-text">ÖNİZLEME İÇİN<br>ÖNCE FON SEÇİNİZ</div>
-                    </div>
-                </div>
-            </div>
+    <div id="image-view" class="grid" style="display: none;"></div>
+    
+    <button id="back-btn" class="btn-submit" style="display: none; background: #333; margin-top: 20px;" onclick="showCategoryMenu()">← KATEGORİLERE DÖN</button>
 
-            <button class="btn-submit" id="production-btn" onclick="startProduction()">
-                ARKA FONUMU OLUŞTUR
-                <div style="font-size: 0.6rem; opacity: 0.7; font-weight: 400; margin-top: 4px;">(1 KREDİ HARCANIR)</div>
-            </button>
+    <div class="footer">
+        © 2026 OTOFONFX TECHNOLOGIES<br>
+        Tüm hakları OtoFonFX stüdyosuna aittir.
+    </div>
+
+    <div id="preview-modal">
+        <button style="position: absolute; top: 40px; right: 24px; background: #1c1c1e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index:1005; font-weight:bold;" onclick="closePreview()">✕</button>
+        
+        <div class="img-frame">
+            <img id="preview-img" src="">
         </div>
         
-        <div class="footer">
-            © 2026 OTOFONFX TECHNOLOGIES<br>
-            v3.3.0 PRO SIMULATOR
+        <div class="modal-controls">
+            <div style="text-align: center;">
+                <span id="preview-title" style="font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; letter-spacing: 2px; display: block;"></span>
+                <span style="font-size: 0.6rem; color: #8e8e93; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block;">Stüdyo Konsepti Seçildi</span>
+            </div>
+            <button class="btn-submit" id="save-btn-text" onclick="saveSelection()">BU FONU KULLAN</button>
         </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         const _supabase = supabase.createClient("https://bhyeemsvcforqnddhoot.supabase.co", "sb_publishable_9txqLMJcZ5XSNd-DuOWRbg_kXhwlR6q");
-        const supabaseBase = "https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/";
-        
-        let currentRecord = null;
-        let isUserRegistered = false;
 
-        // Arka Fon Seçim Sayfasına Yönlendirme
-        function goToSelection() {
-            tg.HapticFeedback.impactOccurred('medium');
-            window.location.href = 'arka_fon.html';
+        tg.ready(); tg.expand(); tg.headerColor = "#000000";
+
+        let currentCategoryItems = [];
+        let currentIndex = 0;
+        let isUserRegistered = false; // Kayıt kontrolü için global değişken
+
+        const config = {
+            ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], 
+            dis_mekan: ['dismekan_0001', 'dismekan_0002'] 
+        };
+        const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
+
+        // 1. Sayfa açılınca Kayıt Kontrolü Yap
+        async function checkRegistration() {
+            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            const { data } = await _supabase.from('galeriler').select('id').eq('chat_id', userId).maybeSingle();
+            if (data) {
+                isUserRegistered = true;
+            } else {
+                isUserRegistered = false;
+            }
         }
 
-        async function syncDatabase() {
-            const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
+        function renderSubMenu(cat, title) {
+            document.getElementById('category-view').style.display = 'none';
+            const iv = document.getElementById('image-view');
+            iv.innerHTML = ''; 
+            iv.style.display = 'grid';
+            document.getElementById('view-title').innerText = title;
+            document.getElementById('back-btn').style.display = 'block';
             
-            // UI Elementlerini Seç
-            const imgRaw = document.getElementById('raw-bg-img');
-            const msgRaw = document.getElementById('msg-raw');
-            const boxRaw = document.getElementById('box-raw');
+            currentCategoryItems = config[cat].map((fileName, index) => {
+                const folder = cat === 'ic_mekan' ? 'ic/' : 'dis/';
+                return { id: fileName, url: `${baseUrl}${folder}${fileName}_c.jpeg`, title: `KONSEPT ${index + 1}` };
+            });
 
-            const imgSim = document.getElementById('sim-bg');
-            const msgSim = document.getElementById('msg-sim');
-            const boxSim = document.getElementById('box-sim');
-            const scanLine = document.getElementById('scan-line');
-
-            try {
-                let { data: record } = await _supabase.from('galeriler').select('*').eq('chat_id', rawID).maybeSingle();
-                
-                if(record) {
-                    isUserRegistered = true;
-                    currentRecord = record;
-                } else {
-                    isUserRegistered = false;
-                }
-
-                // --- SENARYO KONTROLÜ ---
-                if (record && record.secili_stand_gorseli) {
-                    // 1. Durum: Kayıtlı ve Görsel Seçili (RESİMLERİ GÖSTER)
-                    const imgID = record.secili_stand_gorseli;
-                    
-                    // Raw Box Ayarları
-                    imgRaw.src = `${supabaseBase}galeri_bos_arkaplan/${imgID}_a.jpeg`;
-                    imgRaw.style.display = 'block';
-                    msgRaw.style.display = 'none';
-                    boxRaw.classList.remove('pulse-border');
-
-                    // Sim Box Ayarları
-                    imgSim.src = `${supabaseBase}galeri_yazili_ornek_arkaplan/${imgID}_b.jpeg`;
-                    imgSim.style.display = 'block';
-                    msgSim.style.display = 'none';
-                    scanLine.style.display = 'block'; // Çizgiyi aç
-                    
-                    // Logo Ayarı
-                    const logo = record.logo_gorsel_url || record.logo_yazisi;
-                    if(logo) document.getElementById('user-preview-logo').src = logo + "?t=" + new Date().getTime();
-                    
-                    tg.HapticFeedback.impactOccurred('light');
-
-                } else {
-                    // 2. Durum: Kayıt Yok veya Görsel Seçilmemiş (UYARI GÖSTER & TIKLANABİLİR YAP)
-                    
-                    // Raw Box - Boş Mod
-                    imgRaw.style.display = 'none';
-                    msgRaw.style.display = 'flex';
-                    boxRaw.classList.add('pulse-border'); // Dikkat çekmesi için
-
-                    // Sim Box - Boş Mod
-                    imgSim.style.display = 'none';
-                    msgSim.style.display = 'flex';
-                    scanLine.style.display = 'none'; // Çizgiyi gizle
-                }
-
-            } catch (err) { console.error(err); }
+            currentCategoryItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card'; // CSS v3.3.0 stilini kullanır
+                card.innerHTML = `<div class="img-wrapper"><img src="${item.url}"></div><div class="card-title">${item.title}</div>`;
+                card.onclick = () => openPreview(index);
+                iv.appendChild(card);
+            });
+            tg.HapticFeedback.impactOccurred('light');
         }
 
-        async function handleLogoUpload(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const btn = document.getElementById('upload-btn');
-            btn.innerText = "YÜKLENİYOR...";
-            const chatId = String(tg.initDataUnsafe?.user?.id || "1017604800");
-            const fileName = `${chatId}_logo.png`;
-
-            try {
-                await _supabase.storage.from('galeri_logo').upload(fileName, file, { upsert: true });
-                const publicUrl = `${supabaseBase}galeri_logo/${fileName}`;
-                await _supabase.from('galeriler').update({ logo_gorsel_url: publicUrl, logo_yazisi: publicUrl }).eq('chat_id', chatId);
-                tg.showAlert("Logo güncellendi!");
-                syncDatabase(); 
-            } catch (err) { tg.showAlert("Hata: " + err.message); }
-            finally { btn.innerText = "LOGO YÜKLE"; }
+        function showCategoryMenu() { 
+            document.getElementById('image-view').style.display = 'none'; 
+            document.getElementById('category-view').style.display = 'grid'; 
+            document.getElementById('view-title').innerText = 'KATEGORİ SEÇİNİZ'; 
+            document.getElementById('back-btn').style.display = 'none'; 
+            tg.HapticFeedback.impactOccurred('light');
         }
 
-        async function startProduction() {
+        function openPreview(index) { 
+            currentIndex = index; 
+            const item = currentCategoryItems[currentIndex]; 
+            document.getElementById('preview-img').src = item.url; 
+            document.getElementById('preview-title').innerText = item.title; 
+            document.getElementById('preview-modal').style.display = 'flex'; 
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        function closePreview() { 
+            document.getElementById('preview-modal').style.display = 'none'; 
+        }
+
+        async function saveSelection() {
+            // --- SENARYO 1: KULLANICI KAYITLI DEĞİLSE ---
             if (!isUserRegistered) {
                 tg.HapticFeedback.notificationOccurred('warning');
-                tg.showConfirm("İşleme devam etmek ve 10 Ücretsiz Kredi kazanmak için önce kayıt olmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
-                    if (ok) window.location.href = 'kayit.html';
+                tg.showConfirm("Bu stüdyo konseptini kullanabilmek için önce galeri kaydınızı oluşturmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
+                    if (ok) {
+                        window.location.href = 'kayit.html';
+                    }
                 });
-                return;
+                return; // İşlemi durdur
             }
 
-            if (!currentRecord || !currentRecord.secili_stand_gorseli) {
-                tg.showAlert("Lütfen önce yukarıdaki kutuya tıklayarak bir arka fon seçiniz.");
-                return;
-            }
+            // --- SENARYO 2: KULLANICI KAYITLIYSA ---
+            const selectedItem = currentCategoryItems[currentIndex];
+            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            const btn = document.getElementById('save-btn-text');
 
-            const btn = document.getElementById('production-btn');
-            const chatId = currentRecord.chat_id;
-            const sahneId = currentRecord.secili_stand_gorseli;
-            const userLogoUrl = currentRecord.logo_gorsel_url || currentRecord.logo_yazisi;
-
-            if(!userLogoUrl) { tg.showAlert("Lütfen önce logonuzu yükleyin!"); return; }
-
-            tg.showConfirm("Arka fon oluşturulsun mu? (1 Kredi)", async (ok) => {
+            // Mesajı mantıklı hale getirdik: "Seçimi kaydet ve logoyu eklemeye git"
+            tg.showConfirm(`${selectedItem.title} seçilsin ve logo yerleşimi için simülatör açılsın mı?`, async (ok) => {
                 if (ok) {
                     btn.innerText = "İŞLENİYOR...";
                     btn.disabled = true;
 
-                    const webhookUrl = "https://asininventory.com/webhook/ai_arkafon_uretim_onay";
-                    const rawFonUrl = `${supabaseBase}galeri_bos_arkaplan/${sahneId}_a.jpeg`;
-                    const exampleFonUrl = `${supabaseBase}galeri_yazili_ornek_arkaplan/${sahneId}_b.jpeg`;
+                    // Sabit Storage URL mantığı (Veritabanı için)
+                    const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
-                    try {
-                        await _supabase.from('galeri_kayitli_arkaplan').upsert({ 
-                            chat_id: chatId, sahne_id: sahneId,
-                            sahne_url: `${supabaseBase}galeri_arkaplan/${chatId}/${sahneId}.png` 
-                        }, { onConflict: 'chat_id,sahne_id' });
+                    const { error } = await _supabase
+                        .from('galeriler')
+                        .update({ 
+                            kayitli_arkaplan_url: finalStorageUrl,
+                            secili_stand_gorseli: selectedItem.id 
+                        })
+                        .eq('chat_id', userId);
 
-                        fetch(webhookUrl, {
-                            method: 'POST', mode: 'no-cors',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                chat_id: chatId, 
-                                sahne_id: sahneId,
-                                raw_fon_url: rawFonUrl,
-                                example_fon_url: exampleFonUrl,
-                                logo_url: userLogoUrl, 
-                                action: "start_ai_production"
-                            })
-                        });
-
+                    if (!error) {
                         tg.HapticFeedback.notificationOccurred('success');
-                        tg.showAlert("Üretim başladı! Arka fonunuz hazırlanıyor.");
-                        setTimeout(() => tg.close(), 2000);
-                    } catch (err) {
-                        tg.showAlert("Hata: " + err.message);
+                        // BURASI DEĞİŞTİ: Artık Simülatöre Yönlendiriyor
+                        window.location.href = `aktif_fon.html`; 
+                    } else {
+                        tg.showAlert("Hata: " + error.message);
+                        btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
-                        btn.innerHTML = `ARKA FONUMU OLUŞTUR <div style="font-size: 0.6rem;">(1 KREDİ HARCANIR)</div>`;
                     }
                 }
             });
         }
 
-        window.onload = syncDatabase;
+        // Sayfa açılınca kontrolü başlat
+        window.onload = checkRegistration;
     </script>
 </body>
 </html>
