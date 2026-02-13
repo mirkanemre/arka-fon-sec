@@ -70,24 +70,12 @@
 
         let currentCategoryItems = [];
         let currentIndex = 0;
-        let isUserRegistered = false; // Kayıt kontrolü için global değişken
 
         const config = {
             ic_mekan: ['icmekan_0001', 'icmekan_0002', 'icmekan_0003', 'icmekan_0004', 'icmekan_0005', 'icmekan_0006', 'icmekan_0007', 'icmekan_0008', 'icmekan_0009', 'icmekan_0010', 'icmekan_0011'], 
             dis_mekan: ['dismekan_0001', 'dismekan_0002'] 
         };
         const baseUrl = "https://raw.githubusercontent.com/mirkanemre/arka-fon-sec/main/img/";
-
-        // 1. Sayfa açılınca Kayıt Kontrolü Yap
-        async function checkRegistration() {
-            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
-            const { data } = await _supabase.from('galeriler').select('id').eq('chat_id', userId).maybeSingle();
-            if (data) {
-                isUserRegistered = true;
-            } else {
-                isUserRegistered = false;
-            }
-        }
 
         function renderSubMenu(cat, title) {
             document.getElementById('category-view').style.display = 'none';
@@ -104,7 +92,7 @@
 
             currentCategoryItems.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = 'card'; // CSS v3.3.0 stilini kullanır
+                card.className = 'card'; 
                 card.innerHTML = `<div class="img-wrapper"><img src="${item.url}"></div><div class="card-title">${item.title}</div>`;
                 card.onclick = () => openPreview(index);
                 iv.appendChild(card);
@@ -134,29 +122,42 @@
         }
 
         async function saveSelection() {
-            // --- SENARYO 1: KULLANICI KAYITLI DEĞİLSE ---
-            if (!isUserRegistered) {
+            const btn = document.getElementById('save-btn-text');
+            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
+            
+            // 1. ANLIK KONTROL: Butona basıldığı an veritabanına bak
+            btn.innerText = "KONTROL EDİLİYOR...";
+            btn.disabled = true;
+
+            const { data: userRecord } = await _supabase
+                .from('galeriler')
+                .select('id')
+                .eq('chat_id', userId)
+                .maybeSingle();
+
+            // --- SENARYO A: KULLANICI KAYITLI DEĞİL ---
+            if (!userRecord) {
+                btn.innerText = "BU FONU KULLAN"; // Butonu eski haline getir
+                btn.disabled = false;
+                
                 tg.HapticFeedback.notificationOccurred('warning');
-                tg.showConfirm("Bu stüdyo konseptini kullanabilmek için önce galeri kaydınızı oluşturmalısınız. Kayıt sayfasına gitmek ister misiniz?", (ok) => {
+                tg.showConfirm("Sayın Yetkili, bu konsepti dükkanınıza kurabilmemiz için önce sisteme kayıt olmanız gerekmektedir. Kayıt ekranına yönlendiriliyorsunuz.", (ok) => {
                     if (ok) {
                         window.location.href = 'kayit.html';
                     }
                 });
-                return; // İşlemi durdur
+                return; // İşlemi burada kes, aşağıya geçme
             }
 
-            // --- SENARYO 2: KULLANICI KAYITLIYSA ---
+            // --- SENARYO B: KULLANICI KAYITLI (DEVAM ET) ---
             const selectedItem = currentCategoryItems[currentIndex];
-            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
-            const btn = document.getElementById('save-btn-text');
 
-            // Mesajı mantıklı hale getirdik: "Seçimi kaydet ve logoyu eklemeye git"
+            // Kullanıcıdan son onay al
             tg.showConfirm(`${selectedItem.title} seçilsin ve logo yerleşimi için simülatör açılsın mı?`, async (ok) => {
                 if (ok) {
-                    btn.innerText = "İŞLENİYOR...";
+                    btn.innerText = "İŞLENİYOR..."; // Tekrar pasifleştir
                     btn.disabled = true;
 
-                    // Sabit Storage URL mantığı (Veritabanı için)
                     const finalStorageUrl = `https://bhyeemsvcforqnddhoot.supabase.co/storage/v1/object/public/galeri_bos_arkaplan/${selectedItem.id}_a.jpeg`;
 
                     const { error } = await _supabase
@@ -169,19 +170,20 @@
 
                     if (!error) {
                         tg.HapticFeedback.notificationOccurred('success');
-                        // BURASI DEĞİŞTİ: Artık Simülatöre Yönlendiriyor
+                        // Kayıtlı kullanıcıyı simülatöre gönder
                         window.location.href = `aktif_fon.html`; 
                     } else {
                         tg.showAlert("Hata: " + error.message);
                         btn.innerText = "BU FONU KULLAN";
                         btn.disabled = false;
                     }
+                } else {
+                    // Kullanıcı vazgeçerse butonu düzelt
+                    btn.innerText = "BU FONU KULLAN";
+                    btn.disabled = false;
                 }
             });
         }
-
-        // Sayfa açılınca kontrolü başlat
-        window.onload = checkRegistration;
     </script>
 </body>
 </html>
