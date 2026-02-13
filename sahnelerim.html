@@ -146,7 +146,7 @@
 
             const rawID = String(tg.initDataUnsafe?.user?.id || "1017604800");
             
-            tg.showConfirm("Bu sahne aktif edilsin mi? Yeni araç görselleriniz artık bu arka fon ile oluşturulacak", async (ok) => {
+            tg.showConfirm("Yeni araç görselleriniz artık bu arka fon ile oluşturulacak. Bu sahne aktif edilsin mi?", async (ok) => {
                 if (ok) { 
                     tg.HapticFeedback.notificationOccurred('success');
                     try {
@@ -170,4 +170,5 @@
     </script>
 </body>
 </html>
+
 
