@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="js/config.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OtoFonFX | Dashboard</title>
@@ -12,36 +14,30 @@
 
     <style>
         /* DASHBOARD ÖZEL STİL DÜZELTMELERİ */
-        body {
-            /* Body padding'i 0 yapalım ki container tam yüksekliği kontrol edebilsin */
-            padding: 0 !important; 
-        }
+        body { padding: 0 !important; }
 
         #app-container {
             width: 100%;
             max-width: 500px;
-            min-height: 100vh; /* Ekranın tamamını kapla */
+            min-height: 100vh; /* Ekran yüksekliğine yayılır */
             display: flex;
             flex-direction: column;
-            padding: 24px; /* Boşluğu içeriye aldık */
-            margin: 0 auto; /* Ortala */
+            padding: 24px;
+            margin: 0 auto;
         }
 
-        .menu-grid {
-            max-width: 100% !important; 
-            width: 100%;
-        }
+        .menu-grid { width: 100%; max-width: 100% !important; }
 
-        /* Footer'ı en aşağıya zorlayan komut */
+        /* Footer'ı en alta iten güç */
         .footer {
             margin-top: auto !important; 
             padding-top: 40px;
-            padding-bottom: 20px; /* Telefonun alt barı için pay */
+            padding-bottom: 30px; /* Telefonun alt barı için güvenli alan */
+            text-align: center;
         }
 
         @media (max-width: 480px) {
             #app-container { padding: 15px; }
-            .footer { padding-bottom: 30px; } /* Mobilde biraz daha pay bırak */
         }
     </style>
 </head>
@@ -68,7 +64,6 @@
         </div>
 
         <div class="menu-grid">
-            
             <div class="main-card studio-card" onclick="navigate('arka_fon.html')">
                 <h2>Stüdyo Konsept Örnekleri</h2>
                 <p>Arka fon konseptinizi seçin ve çekimi başlatın.</p>
@@ -86,13 +81,9 @@
                 <p id="active-status-text">Henüz bir konsept seçilmedi.</p>
                 <div class="card-icon">✨</div>
             </div>
-
         </div>
 
-        <div class="footer">
-            © 2026 OTOFONFX TECHNOLOGIES<br>
-            <span style="opacity: 0.5;">v3.5.1 PREMIUM ACCESS</span>
-        </div>
+        <div class="footer"></div>
     </div>
 
     <script>
@@ -105,9 +96,7 @@
 
         function navigate(url) {
             tg.HapticFeedback.impactOccurred('medium');
-            setTimeout(() => {
-                window.location.href = url;
-            }, 50);
+            setTimeout(() => { window.location.href = url; }, 50);
         }
 
         async function initDashboard() {
