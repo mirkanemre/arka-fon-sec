@@ -11,13 +11,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* DASHBOARD ÖZEL STİL DÜZELTMELERİ */
+        body {
+            /* Body padding'i 0 yapalım ki container tam yüksekliği kontrol edebilsin */
+            padding: 0 !important; 
+        }
+
         #app-container {
             width: 100%;
-            max-width: 500px; /* Simülatör ile aynı genişlik */
+            max-width: 500px;
+            min-height: 100vh; /* Ekranın tamamını kapla */
+            display: flex;
+            flex-direction: column;
+            padding: 24px; /* Boşluğu içeriye aldık */
+            margin: 0 auto; /* Ortala */
         }
-        /* Menü grid'i 400px sınırından kurtarıp 500px'e yayıyoruz */
+
         .menu-grid {
             max-width: 100% !important; 
+            width: 100%;
+        }
+
+        /* Footer'ı en aşağıya zorlayan komut */
+        .footer {
+            margin-top: auto !important; 
+            padding-top: 40px;
+            padding-bottom: 20px; /* Telefonun alt barı için pay */
+        }
+
+        @media (max-width: 480px) {
+            #app-container { padding: 15px; }
+            .footer { padding-bottom: 30px; } /* Mobilde biraz daha pay bırak */
         }
     </style>
 </head>
@@ -67,7 +91,7 @@
 
         <div class="footer">
             © 2026 OTOFONFX TECHNOLOGIES<br>
-            <span style="opacity: 0.5;">v3.5.0 PREMIUM ACCESS</span>
+            <span style="opacity: 0.5;">v3.5.1 PREMIUM ACCESS</span>
         </div>
     </div>
 
@@ -87,9 +111,8 @@
         }
 
         async function initDashboard() {
-            const userId = tg.initDataUnsafe?.user?.id || 1017604800;
+            const userId = String(tg.initDataUnsafe?.user?.id || "1017604800");
             
-            // Tüm gerekli sütunları çekiyoruz
             let { data: record } = await _supabase
                 .from('galeriler')
                 .select('chat_id, kalan_kredi, kayitli_arkaplan_url, stand_gorseli_url')
@@ -97,30 +120,23 @@
                 .maybeSingle();
 
             if (!record) {
-                // Kayıtlı değilse
                 document.getElementById('registration-banner').style.display = 'block';
                 document.getElementById('user-credit-count').innerText = "0";
             } else {
-                // Kayıtlıysa
                 document.getElementById('user-credit-count').innerText = record.kalan_kredi || "0";
-                
-                // --- DURUM METNİ MANTIĞI ---
                 const statusText = document.getElementById('active-status-text');
                 
                 if (record.kayitli_arkaplan_url) {
-                    // 1. En iyi durum: Aktif sahne var
                     statusText.innerText = "Aktif fonunuz kullanıma hazır.";
-                    statusText.style.color = "#34c759"; // Yeşil
+                    statusText.style.color = "#34c759";
                 } 
                 else if (record.stand_gorseli_url) {
-                    // 2. Ara durum: Fon seçmiş ama henüz logo koyup üretmemiş
                     statusText.innerText = "Taslak konseptiniz var. Kurulumu tamamlayın.";
-                    statusText.style.color = "#f59e0b"; // Sarı
+                    statusText.style.color = "#f59e0b";
                 } 
                 else {
-                    // 3. Başlangıç: Hiçbir şey yok
                     statusText.innerText = "Mevcut konseptinizi görüntüleyin.";
-                    statusText.style.color = "#8e8e93"; // Gri
+                    statusText.style.color = "#8e8e93";
                 }
             }
         }
